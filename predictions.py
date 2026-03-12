@@ -1183,10 +1183,38 @@ def run_full_backtest(df, category_mapping, accuracy) -> pd.DataFrame:
         ),
     }
 
+    ml_results = []
     for key, (cls, kwargs) in ml_models.items():
         print(f"  Backtesting: {key}...")
         res = backtest_frontrunner_ml(df, category_mapping, cls, kwargs, key)
         all_results.append(res)
+        ml_results.append(res)
+
+    # Ensemble backtests: aggregate ML confidence values per (Year, Category).
+    # Binary accuracy is identical to individual ML models (same frontrunner),
+    # but confidence values differ — matters for calibration.
+    if ml_results:
+        from ensemble import _aggregate_probabilities
+        ml_combined = pd.concat(ml_results, ignore_index=True)
+
+        for method, model_key in [("mean", "Mean Ensemble"),
+                                  ("logodds", "LogOdds Ensemble")]:
+            print(f"  Backtesting: {model_key}...")
+            ens_rows = []
+            for (year, cat), group in ml_combined.groupby(["Year", "Category"]):
+                probs = group["Confidence"].tolist()
+                agg = _aggregate_probabilities(probs, method)
+                row = group.iloc[0]
+                ens_rows.append({
+                    "Year": year,
+                    "Category": cat,
+                    "Predicted": row["Predicted"],
+                    "Actual": row["Actual"],
+                    "Correct": row["Correct"],
+                    "Confidence": agg,
+                    "Model": model_key,
+                })
+            all_results.append(pd.DataFrame(ens_rows))
 
     combined = pd.concat(all_results, ignore_index=True)
     return combined
@@ -1357,7 +1385,8 @@ def main() -> None:
 
         # Save results
         out_path = SCRIPT_DIR / "backtest_results.csv"
-        bt_results.to_csv(out_path, index=False)
+        import csv
+        bt_results.to_csv(out_path, index=False, quoting=csv.QUOTE_ALL)
         print(f"\nDetailed results saved to: {out_path}")
 
     elif mode in ALL_MODELS:
