@@ -27,70 +27,42 @@ import matplotlib.ticker as mticker
 import seaborn as sns
 from pathlib import Path
 from collections import defaultdict
-import re
-import textwrap
 import warnings
 warnings.filterwarnings("ignore")
+
+from helpers import (
+    SCRIPT_DIR,
+    DATA_FILES,
+    HISTORICAL_START,
+    HISTORICAL_END,
+    AWARD_SHORT,
+    load_data,
+    build_category_mapping,
+    compute_historical_accuracy,
+    names_match,
+    PrecursorAccuracy,
+)
 
 # ---------------------------------------------------------------------------
 # Setup
 # ---------------------------------------------------------------------------
 
-SCRIPT_DIR = Path(__file__).resolve().parent
 PLOT_DIR = SCRIPT_DIR / "plots"
 PLOT_DIR.mkdir(exist_ok=True)
-
-DATA_FILES = [
-    SCRIPT_DIR / "film awards research part 1.csv",
-    SCRIPT_DIR / "film awards research part 2.csv",
-]
 
 # Style
 sns.set_theme(style="whitegrid", font_scale=1.1)
 PALETTE = sns.color_palette("tab20", 20)
-
-HISTORICAL_START = 2000
-HISTORICAL_END = 2025
-
-# Short labels for award names (for plot readability)
-AWARD_SHORT = {
-    "ACE Eddie Awards": "ACE Eddie",
-    "BAFTA": "BAFTA",
-    "Cannes Palme d'Or": "Cannes",
-    "Critics Choice Awards": "Critics Choice",
-    "DGA Awards": "DGA",
-    "Golden Globes": "Golden Globes",
-    "Los Angeles Film Critics Association": "LAFCA",
-    "National Board of Review": "NBR",
-    "National Society of Film Critics": "NSFC",
-    "New York Film Critics Circle": "NYFCC",
-    "PGA Awards": "PGA",
-    "SAG Awards": "SAG",
-    "Toronto People's Choice Award": "TIFF",
-    "Venice Golden Lion": "Venice",
-    "WGA Awards": "WGA",
-}
-
-# ---------------------------------------------------------------------------
-# Reuse the category mapping and matching logic from oscar_predictions.py
-# ---------------------------------------------------------------------------
-
-from oscar_predictions import (
-    build_category_mapping,
-    load_data,
-    compute_historical_accuracy,
-    _names_match,
-)
 
 
 # ---------------------------------------------------------------------------
 # Data Loading
 # ---------------------------------------------------------------------------
 
-def load_all_data():
-    df = load_data(DATA_FILES)
-    df = df[df["winner"].notna() & (df["winner"] != "")]
-    return df
+def load_winners_only() -> pd.DataFrame:
+    """Load data and filter to rows that have a recorded winner."""
+    df = load_data()
+    return df[df["winner"].notna() & (df["winner"] != "")]
 
 
 # ---------------------------------------------------------------------------
@@ -244,7 +216,7 @@ def plot_accuracy_over_time(df, accuracy, category_mapping):
             oscar_w = oscar_lookup.get((year, oscar_cat))
             prec_w = prec_lookup.get((award, prec_cat, year))
             if oscar_w and prec_w:
-                yearly_data[year][short] = 1 if _names_match(oscar_w, prec_w) else 0
+                yearly_data[year][short] = 1 if names_match(oscar_w, prec_w) else 0
 
     # Build DataFrame and compute rolling average
     years = sorted(yearly_data.keys())
@@ -309,7 +281,7 @@ def plot_award_agreement(df, category_mapping):
                 w2 = prec_lookup.get((a2, c2, year))
                 if w1 and w2:
                     total += 1
-                    if _names_match(w1, w2):
+                    if names_match(w1, w2):
                         matches += 1
             if total > 0:
                 s1 = AWARD_SHORT.get(a1, a1)
@@ -378,7 +350,7 @@ def analyze_sweeps(df, category_mapping, accuracy):
                 pw = prec_lookup.get((award, prec_cat, year))
                 if pw:
                     prec_available += 1
-                    if _names_match(oscar_w, pw):
+                    if names_match(oscar_w, pw):
                         prec_wins += 1
 
             if prec_available > 0:
@@ -475,7 +447,7 @@ def find_upsets(df, category_mapping):
                 pw = prec_lookup.get((award, prec_cat, year))
                 if pw:
                     prec_winners.append((AWARD_SHORT.get(award, award), pw))
-                    if _names_match(oscar_w, pw):
+                    if names_match(oscar_w, pw):
                         any_match = True
 
             if not any_match and len(prec_winners) >= 3:
@@ -621,7 +593,7 @@ def plot_dga_deep_dive(df, accuracy, category_mapping):
         oscar_w = oscar_lookup.get((year, "Best Director"))
         dga_w = prec_lookup.get(("DGA Awards", dga_cat, year))
         if oscar_w and dga_w:
-            matched = _names_match(oscar_w, dga_w)
+            matched = names_match(oscar_w, dga_w)
             match_data.append({
                 "Year": year,
                 "DGA Winner": dga_w[:30],
@@ -693,7 +665,7 @@ def plot_consensus_vs_outcome(df, category_mapping):
                     # Cluster nominees
                     matched_existing = False
                     for existing in list(nominee_counts.keys()):
-                        if _names_match(pw, existing):
+                        if names_match(pw, existing):
                             nominee_counts[existing] += 1
                             matched_existing = True
                             break
@@ -708,7 +680,7 @@ def plot_consensus_vs_outcome(df, category_mapping):
             consensus = nominee_counts[frontrunner] / total_reporting
 
             # Did the frontrunner win the Oscar?
-            frontrunner_won = _names_match(frontrunner, oscar_w)
+            frontrunner_won = names_match(frontrunner, oscar_w)
 
             data.append({
                 "Year": year,
@@ -1028,10 +1000,10 @@ def main():
     print("=" * 60)
 
     # Load raw data (including empty winners for overview plot)
-    df_raw = pd.concat([pd.read_csv(fp) for fp in DATA_FILES], ignore_index=True)
+    df_raw = load_data()
 
     # Load data with winners only
-    df = load_all_data()
+    df = load_winners_only()
     category_mapping = build_category_mapping()
 
     print("\nComputing historical accuracy...")

@@ -1,27 +1,13 @@
 """
-2026 Oscar Predictions — Weighted Precursor Model
-==================================================
+helpers.py — Shared utilities for Oscar prediction project
+==========================================================
 
-Predicts Oscar winners using historically-weighted precursor award signals.
-
-Methodology:
-  For each Oscar category, precursor awards (BAFTA, Golden Globes, SAG, etc.)
-  are mapped to the analogous Oscar category. Each precursor is weighted by its
-  historical accuracy at predicting the Oscar winner (2000–2025). The 2026
-  precursor winners are then aggregated using these weights to produce a
-  prediction with a confidence score.
-
-Usage:
-  python oscar_predictions.py
-
-  By default, reads from:
-    - "film awards research part 1.csv"
-    - "film awards research part 2.csv"
-  in the same directory as this script.
-
-  Outputs:
-    - Prints predictions to console
-    - Saves "2026_oscar_predictions.md" in the same directory
+Contains:
+  - Configuration constants (file paths, year ranges, category lists)
+  - Data loading functions
+  - Category mapping (precursor award → Oscar category)
+  - Name matching and nominee clustering logic
+  - Historical accuracy computation
 """
 
 import pandas as pd
@@ -39,7 +25,6 @@ DATA_FILES = [
     SCRIPT_DIR / "film awards research part 1.csv",
     SCRIPT_DIR / "film awards research part 2.csv",
 ]
-OUTPUT_FILE = SCRIPT_DIR / "2026_oscar_predictions.md"
 
 # Year range for computing historical accuracy
 HISTORICAL_START = 2000
@@ -79,6 +64,26 @@ OSCAR_CATEGORIES = [
     "Best Documentary Short Film",
     "Best Casting",
 ]
+
+# Short labels for award names (for plot readability / display)
+AWARD_SHORT = {
+    "ACE Eddie Awards": "ACE Eddie",
+    "BAFTA": "BAFTA",
+    "Cannes Palme d'Or": "Cannes",
+    "Critics Choice Awards": "Critics Choice",
+    "DGA Awards": "DGA",
+    "Golden Globes": "Golden Globes",
+    "Los Angeles Film Critics Association": "LAFCA",
+    "National Board of Review": "NBR",
+    "National Society of Film Critics": "NSFC",
+    "New York Film Critics Circle": "NYFCC",
+    "Oscars": "Oscars",
+    "PGA Awards": "PGA",
+    "SAG Awards": "SAG",
+    "Toronto People's Choice Award": "TIFF",
+    "Venice Golden Lion": "Venice",
+    "WGA Awards": "WGA",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -296,8 +301,10 @@ def build_category_mapping() -> dict[str, list[tuple[str, str]]]:
 # Data Loading
 # ---------------------------------------------------------------------------
 
-def load_data(file_paths: list[Path]) -> pd.DataFrame:
+def load_data(file_paths: list[Path] | None = None) -> pd.DataFrame:
     """Load and concatenate all CSV data files."""
+    if file_paths is None:
+        file_paths = DATA_FILES
     frames = [pd.read_csv(fp) for fp in file_paths]
     df = pd.concat(frames, ignore_index=True)
     print(f"Loaded {len(df)} records from {len(file_paths)} files")
@@ -333,73 +340,10 @@ def build_winner_lookup(
 
 
 # ---------------------------------------------------------------------------
-# Historical Accuracy Computation
-# ---------------------------------------------------------------------------
-
-@dataclass
-class PrecursorAccuracy:
-    """Stores the historical accuracy of one precursor for one Oscar category."""
-    award: str
-    precursor_category: str
-    matches: int = 0
-    total: int = 0
-    match_years: list[int] = field(default_factory=list)
-
-    @property
-    def accuracy(self) -> float:
-        return self.matches / self.total if self.total > 0 else 0.0
-
-
-def compute_historical_accuracy(
-    df: pd.DataFrame,
-    category_mapping: dict[str, list[tuple[str, str]]],
-    start_year: int = HISTORICAL_START,
-    end_year: int = HISTORICAL_END,
-) -> dict[str, list[PrecursorAccuracy]]:
-    """
-    For each Oscar category and each mapped precursor, compute how often
-    the precursor winner matched the Oscar winner over the historical period.
-
-    Returns:
-      {oscar_category: [PrecursorAccuracy, ...]}
-    """
-    # Build lookups
-    oscar_lookup = build_winner_lookup(df, award_filter="Oscars")
-    precursor_lookup = build_winner_lookup(df, exclude_award="Oscars")
-
-    results: dict[str, list[PrecursorAccuracy]] = {}
-
-    for oscar_cat, precursors in category_mapping.items():
-        cat_results = []
-
-        for award_name, prec_cat in precursors:
-            pa = PrecursorAccuracy(award=award_name, precursor_category=prec_cat)
-
-            for year in range(start_year, end_year + 1):
-                oscar_key = ("Oscars", oscar_cat, year)
-                prec_key = (award_name, prec_cat, year)
-
-                oscar_winner = oscar_lookup.get(oscar_key)
-                prec_winner = precursor_lookup.get(prec_key)
-
-                if oscar_winner and prec_winner:
-                    pa.total += 1
-                    if _names_match(oscar_winner, prec_winner):
-                        pa.matches += 1
-                        pa.match_years.append(year)
-
-            cat_results.append(pa)
-
-        results[oscar_cat] = cat_results
-
-    return results
-
-
-# ---------------------------------------------------------------------------
 # Name Matching
 # ---------------------------------------------------------------------------
 
-def _names_match(a: str, b: str) -> bool:
+def names_match(a: str, b: str) -> bool:
     """
     Check if two winner strings refer to the same entity.
 
@@ -443,7 +387,7 @@ def _names_match(a: str, b: str) -> bool:
     return False
 
 
-def _cluster_nominees(
+def cluster_nominees(
     raw_votes: list[tuple[str, float, list[tuple[str, str, float]]]],
 ) -> list[tuple[str, float, list[tuple[str, str, float]]]]:
     """
@@ -459,7 +403,7 @@ def _cluster_nominees(
     for i, (name, _, _) in enumerate(raw_votes):
         matched_cluster = None
         for ci, canon in enumerate(canonical):
-            if _names_match(name, canon):
+            if names_match(name, canon):
                 matched_cluster = ci
                 break
 
@@ -485,340 +429,62 @@ def _cluster_nominees(
 
 
 # ---------------------------------------------------------------------------
-# Prediction
+# Historical Accuracy
 # ---------------------------------------------------------------------------
 
 @dataclass
-class Prediction:
-    """A single Oscar category prediction."""
-    oscar_category: str
-    predicted_winner: str
-    confidence: float  # 0.0 to 1.0
-    precursors_available: int
-    precursors_total: int
-    supporting_awards: list[tuple[str, str, float]]  # (award, category, weight)
-    all_candidates: list[tuple[str, float]]  # (name, confidence) — top 5
-    runner_up: str = ""
-    runner_up_confidence: float = 0.0
+class PrecursorAccuracy:
+    """Stores the historical accuracy of one precursor for one Oscar category."""
+    award: str
+    precursor_category: str
+    matches: int = 0
+    total: int = 0
+    match_years: list[int] = field(default_factory=list)
 
     @property
-    def confidence_pct(self) -> float:
-        return round(self.confidence * 100, 1)
-
-    @property
-    def confidence_label(self) -> str:
-        if self.confidence >= 0.70:
-            return "HIGH"
-        elif self.confidence >= 0.40:
-            return "MEDIUM"
-        elif self.confidence > 0:
-            return "LOW"
-        return "NO DATA"
-
-    @property
-    def confidence_emoji(self) -> str:
-        if self.confidence >= 0.70:
-            return "\U0001f7e2"  # green
-        elif self.confidence >= 0.40:
-            return "\U0001f7e1"  # yellow
-        elif self.confidence > 0:
-            return "\U0001f7e0"  # orange
-        return "\U0001f534"  # red
+    def accuracy(self) -> float:
+        return self.matches / self.total if self.total > 0 else 0.0
 
 
-def generate_predictions(
+def compute_historical_accuracy(
     df: pd.DataFrame,
     category_mapping: dict[str, list[tuple[str, str]]],
-    accuracy: dict[str, list[PrecursorAccuracy]],
-    prediction_year: int = PREDICTION_YEAR,
-) -> list[Prediction]:
+    start_year: int = HISTORICAL_START,
+    end_year: int = HISTORICAL_END,
+) -> dict[str, list[PrecursorAccuracy]]:
     """
-    Generate Oscar predictions for the given year using weighted precursor votes.
+    For each Oscar category and each mapped precursor, compute how often
+    the precursor winner matched the Oscar winner over the historical period.
+
+    Returns:
+      {oscar_category: [PrecursorAccuracy, ...]}
     """
-    # Build 2026 precursor winner lookup: (Award, Category) -> winner
-    mask = (
-        (df["Year of award ceremony"] == prediction_year)
-        & (df["Award"] != "Oscars")
-        & df["winner"].notna()
-        & (df["winner"] != "")
-    )
-    precursor_2026 = {}
-    for _, row in df[mask].iterrows():
-        precursor_2026[(row["Award"], row["Category"])] = row["winner"].strip()
+    oscar_lookup = build_winner_lookup(df, award_filter="Oscars")
+    precursor_lookup = build_winner_lookup(df, exclude_award="Oscars")
 
-    # Build accuracy lookup for quick access
-    acc_lookup: dict[str, dict[tuple[str, str], float]] = {}
-    for oscar_cat, pa_list in accuracy.items():
-        acc_lookup[oscar_cat] = {
-            (pa.award, pa.precursor_category): pa.accuracy for pa in pa_list
-        }
+    results: dict[str, list[PrecursorAccuracy]] = {}
 
-    predictions = []
-
-    for oscar_cat in OSCAR_CATEGORIES:
-        precursors = category_mapping.get(oscar_cat, [])
-        raw_votes: list[tuple[str, float, list[tuple[str, str, float]]]] = []
-        total_weight = 0.0
-        available = 0
+    for oscar_cat, precursors in category_mapping.items():
+        cat_results = []
 
         for award_name, prec_cat in precursors:
-            winner = precursor_2026.get((award_name, prec_cat))
-            if not winner:
-                continue
+            pa = PrecursorAccuracy(award=award_name, precursor_category=prec_cat)
 
-            weight = acc_lookup.get(oscar_cat, {}).get(
-                (award_name, prec_cat), 0.0
-            )
-            weight = max(weight, MIN_PRECURSOR_WEIGHT)
+            for year in range(start_year, end_year + 1):
+                oscar_key = ("Oscars", oscar_cat, year)
+                prec_key = (award_name, prec_cat, year)
 
-            raw_votes.append((winner, weight, [(award_name, prec_cat, weight)]))
-            total_weight += weight
-            available += 1
+                oscar_winner = oscar_lookup.get(oscar_key)
+                prec_winner = precursor_lookup.get(prec_key)
 
-        # Handle no-data case
-        if total_weight == 0:
-            predictions.append(Prediction(
-                oscar_category=oscar_cat,
-                predicted_winner="N/A — No precursor data",
-                confidence=0.0,
-                precursors_available=0,
-                precursors_total=len(precursors),
-                supporting_awards=[],
-                all_candidates=[],
-            ))
-            continue
+                if oscar_winner and prec_winner:
+                    pa.total += 1
+                    if names_match(oscar_winner, prec_winner):
+                        pa.matches += 1
+                        pa.match_years.append(year)
 
-        # Cluster similar nominee names
-        clustered = _cluster_nominees(raw_votes)
+            cat_results.append(pa)
 
-        # Normalize to confidence scores and sort
-        scored = [
-            (name, score / total_weight, details)
-            for name, score, details in clustered
-        ]
-        scored.sort(key=lambda x: -x[1])
+        results[oscar_cat] = cat_results
 
-        top_name, top_conf, top_details = scored[0]
-        top_details_sorted = sorted(top_details, key=lambda x: -x[2])
-
-        runner_up_name = scored[1][0] if len(scored) > 1 else ""
-        runner_up_conf = scored[1][1] if len(scored) > 1 else 0.0
-
-        predictions.append(Prediction(
-            oscar_category=oscar_cat,
-            predicted_winner=top_name,
-            confidence=top_conf,
-            precursors_available=available,
-            precursors_total=len(precursors),
-            supporting_awards=top_details_sorted,
-            all_candidates=[(n, round(c * 100, 1)) for n, c, _ in scored[:5]],
-            runner_up=runner_up_name,
-            runner_up_confidence=runner_up_conf,
-        ))
-
-    return predictions
-
-
-# ---------------------------------------------------------------------------
-# Output: Console
-# ---------------------------------------------------------------------------
-
-def print_predictions(predictions: list[Prediction]) -> None:
-    """Print predictions to console in a readable format."""
-    print()
-    print("=" * 100)
-    print("  2026 OSCAR PREDICTIONS — WEIGHTED PRECURSOR MODEL")
-    print("=" * 100)
-
-    for p in predictions:
-        print()
-        print(f"{p.oscar_category}")
-        print(f"  Prediction: {p.predicted_winner}")
-        print(
-            f"  Confidence: {p.confidence_pct}% "
-            f"[{p.confidence_emoji} {p.confidence_label}] "
-            f"(precursors: {p.precursors_available}/{p.precursors_total})"
-        )
-        if p.runner_up:
-            print(
-                f"  Runner-up:  {p.runner_up} "
-                f"({round(p.runner_up_confidence * 100, 1)}%)"
-            )
-        if p.supporting_awards:
-            awards_str = ", ".join(
-                f"{a} ({w:.0%})" for a, _, w in p.supporting_awards[:4]
-            )
-            print(f"  Supported by: {awards_str}")
-
-
-# ---------------------------------------------------------------------------
-# Output: Markdown Report
-# ---------------------------------------------------------------------------
-
-def generate_markdown_report(
-    predictions: list[Prediction],
-    accuracy: dict[str, list[PrecursorAccuracy]],
-) -> str:
-    """Generate a full markdown report of predictions."""
-    lines = [
-        "# 2026 Oscar Predictions — Weighted Precursor Model",
-        "",
-        "## Methodology",
-        "",
-        "This forecast uses a **weighted precursor model** built on "
-        f"{HISTORICAL_END - HISTORICAL_START + 1} years of historical data "
-        f"({HISTORICAL_START}–{HISTORICAL_END}).",
-        "For each Oscar category, precursor awards (BAFTA, Golden Globes, SAG, "
-        "Critics Choice, DGA, PGA, WGA, etc.) are weighted by their historical "
-        "accuracy at predicting the Oscar winner in that specific category. "
-        f"The {PREDICTION_YEAR} precursor winners are then aggregated using "
-        "these weights to produce a prediction with a confidence score.",
-        "",
-        "**Confidence interpretation:**",
-        "",
-        "- \U0001f7e2 HIGH (70%+): Strong precursor consensus",
-        "- \U0001f7e1 MEDIUM (40–69%): Moderate consensus; leading but not locked in",
-        "- \U0001f7e0 LOW (20–39%): Weak consensus; competitive race",
-        "- \U0001f534 VERY LOW (<20%): No meaningful signal from precursors",
-        "",
-        "---",
-        "",
-        "## Summary Table",
-        "",
-        "| Category | Predicted Winner | Confidence | Runner-Up |",
-        "|----------|-----------------|------------|-----------|",
-    ]
-
-    for p in predictions:
-        pred = p.predicted_winner[:60]
-        ru = p.runner_up[:45] if p.runner_up else "—"
-        ru_conf = f" ({round(p.runner_up_confidence * 100, 1)}%)" if p.runner_up else ""
-        lines.append(
-            f"| {p.oscar_category} | {pred} "
-            f"| {p.confidence_emoji} {p.confidence_pct}% "
-            f"| {ru}{ru_conf} |"
-        )
-
-    lines += ["", "---", "", "## Detailed Predictions", ""]
-
-    for p in predictions:
-        lines.append(f"### {p.oscar_category}")
-        lines.append("")
-        lines.append(f"**Prediction:** {p.predicted_winner}")
-        lines.append(
-            f"**Confidence:** {p.confidence_pct}% — "
-            f"{p.confidence_emoji} {p.confidence_label}"
-        )
-        lines.append(
-            f"**Precursors reporting:** "
-            f"{p.precursors_available}/{p.precursors_total}"
-        )
-
-        if p.supporting_awards:
-            awards_str = ", ".join(
-                f"{a} ({w:.0%})" for a, _, w in p.supporting_awards[:4]
-            )
-            lines.append(f"**Basis:** {awards_str}")
-
-        if len(p.all_candidates) > 1:
-            lines.append("")
-            lines.append("Full rankings:")
-            lines.append("")
-            for i, (name, c) in enumerate(p.all_candidates):
-                marker = "→" if i == 0 else " "
-                lines.append(f"  {marker} {name} — {c}%")
-
-        if p.runner_up:
-            lines.append("")
-            lines.append(
-                f"**Runner-up:** {p.runner_up} "
-                f"({round(p.runner_up_confidence * 100, 1)}%)"
-            )
-
-        lines += ["", "---", ""]
-
-    # Historical accuracy section for key categories
-    lines += ["## Historical Accuracy of Top Precursors", ""]
-    key_cats = [
-        "Best Picture", "Best Director", "Best Actor", "Best Actress",
-        "Best Supporting Actor", "Best Supporting Actress",
-        "Best Animated Feature Film",
-    ]
-    for cat in key_cats:
-        if cat in accuracy:
-            lines.append(f"**{cat}:**")
-            lines.append("")
-            sorted_precs = sorted(
-                accuracy[cat], key=lambda pa: -pa.accuracy
-            )
-            for pa in sorted_precs[:5]:
-                if pa.total > 0 and pa.accuracy > 0:
-                    lines.append(
-                        f"  - {pa.award}: {pa.accuracy:.0%} "
-                        f"({pa.matches}/{pa.total} years matched)"
-                    )
-            lines.append("")
-
-    # Caveats
-    lines += [
-        "---",
-        "",
-        "## Caveats",
-        "",
-        "1. **Short films and Documentary Short**: Very few precursor awards "
-        "cover these categories. Predictions here are low-confidence.",
-        "2. **Best Casting**: A new Oscar category with no historical baseline. "
-        "All precursors get minimum weight.",
-        "3. **Best Actor race**: Unusually competitive — four different precursors "
-        "picked four different winners.",
-        "4. **Festival awards** (Cannes, Venice, Toronto): Not yet held for the "
-        "current season, so their signal is missing.",
-        "5. **Name matching**: Some precursors list winners by person name, "
-        "others by film title. Fuzzy matching handles most cases but some "
-        "signal may be lost.",
-    ]
-
-    return "\n".join(lines)
-
-
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
-
-def main() -> None:
-    # 1. Load data
-    print("Loading data...")
-    df = load_data(DATA_FILES)
-
-    # 2. Build category mapping
-    print("Building category mapping...")
-    category_mapping = build_category_mapping()
-    print(f"  Mapped {len(category_mapping)} Oscar categories")
-
-    # 3. Compute historical accuracy
-    print("Computing historical accuracy...")
-    accuracy = compute_historical_accuracy(df, category_mapping)
-
-    # Print top precursors for key categories
-    for cat in ["Best Picture", "Best Director", "Best Actor", "Best Actress"]:
-        top = sorted(accuracy[cat], key=lambda pa: -pa.accuracy)[:3]
-        top_str = ", ".join(
-            f"{pa.award} ({pa.accuracy:.0%})" for pa in top if pa.accuracy > 0
-        )
-        print(f"  {cat}: {top_str}")
-
-    # 4. Generate predictions
-    print(f"\nGenerating {PREDICTION_YEAR} predictions...")
-    predictions = generate_predictions(df, category_mapping, accuracy)
-
-    # 5. Print to console
-    print_predictions(predictions)
-
-    # 6. Save markdown report
-    report = generate_markdown_report(predictions, accuracy)
-    OUTPUT_FILE.write_text(report)
-    print(f"\nReport saved to: {OUTPUT_FILE}")
-
-
-if __name__ == "__main__":
-    main()
+    return results

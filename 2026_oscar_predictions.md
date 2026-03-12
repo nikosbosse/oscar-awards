@@ -1,4 +1,4 @@
-# 2026 Oscar Predictions — Weighted Precursor Model
+# 2026 Oscar Predictions — Weighted Precursor
 
 ## Methodology
 
