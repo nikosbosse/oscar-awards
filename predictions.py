@@ -34,6 +34,9 @@ import numpy as np
 from dataclasses import dataclass, field
 from collections import defaultdict
 from typing import Any
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.base import clone
 
 from helpers import (
     OSCAR_CATEGORIES,
@@ -536,236 +539,22 @@ def build_candidate_features(
 
 
 # ============================================================================
-# ML MODEL: Logistic Regression (from scratch, L2-regularised)
+# Sklearn model adapter: normalises predict_proba to 1D positive-class output
 # ============================================================================
 
-class LogisticRegressionFromScratch:
-    """
-    L2-regularised logistic regression via gradient descent.
-    Minimal implementation — no dependencies beyond numpy.
-    """
+class _SklearnAdapter:
+    """Wraps a sklearn classifier so predict_proba returns 1D P(y=1)."""
 
-    def __init__(self, C: float = 1.0, lr: float = 0.1, max_iter: int = 500):
-        self.C = C          # regularisation strength (higher = more regularisation)
-        self.lr = lr
-        self.max_iter = max_iter
-        self.w = None
-        self.b = 0.0
-
-    def _sigmoid(self, z):
-        z = np.clip(z, -500, 500)
-        return 1.0 / (1.0 + np.exp(-z))
+    def __init__(self, estimator):
+        self.estimator = estimator
 
     def fit(self, X, y):
-        n, d = X.shape
-        self.w = np.zeros(d)
-        self.b = 0.0
-
-        for _ in range(self.max_iter):
-            z = X @ self.w + self.b
-            p = self._sigmoid(z)
-            error = p - y
-
-            grad_w = (X.T @ error) / n + self.C * self.w
-            grad_b = error.mean()
-
-            self.w -= self.lr * grad_w
-            self.b -= self.lr * grad_b
-
+        self.estimator.fit(X, y)
         return self
 
     def predict_proba(self, X):
-        z = X @ self.w + self.b
-        return self._sigmoid(z)
-
-
-# ============================================================================
-# ML MODEL: Decision Tree (from scratch, shallow)
-# ============================================================================
-
-class DecisionTreeFromScratch:
-    """
-    Minimal binary classification tree. Splits on the binary feature that
-    maximises information gain. Constrained by max_depth and min_samples_leaf.
-    """
-
-    def __init__(self, max_depth: int = 3, min_samples_leaf: int = 3):
-        self.max_depth = max_depth
-        self.min_samples_leaf = min_samples_leaf
-        self.tree = None
-
-    def _gini(self, y):
-        if len(y) == 0:
-            return 0.0
-        p = y.mean()
-        return 2 * p * (1 - p)
-
-    def _best_split(self, X, y):
-        best_gain = -1
-        best_feat = None
-        parent_gini = self._gini(y)
-        n = len(y)
-
-        for j in range(X.shape[1]):
-            left_mask = X[:, j] == 1
-            right_mask = ~left_mask
-
-            if left_mask.sum() < self.min_samples_leaf or right_mask.sum() < self.min_samples_leaf:
-                continue
-
-            gain = parent_gini - (
-                left_mask.sum() / n * self._gini(y[left_mask])
-                + right_mask.sum() / n * self._gini(y[right_mask])
-            )
-            if gain > best_gain:
-                best_gain = gain
-                best_feat = j
-
-        return best_feat, best_gain
-
-    def _build(self, X, y, depth):
-        if depth >= self.max_depth or len(y) < 2 * self.min_samples_leaf:
-            return {"leaf": True, "prob": y.mean() if len(y) > 0 else 0.5}
-
-        feat, gain = self._best_split(X, y)
-        if feat is None or gain <= 0:
-            return {"leaf": True, "prob": y.mean() if len(y) > 0 else 0.5}
-
-        left_mask = X[:, feat] == 1
-        return {
-            "leaf": False,
-            "feature": feat,
-            "left": self._build(X[left_mask], y[left_mask], depth + 1),
-            "right": self._build(X[~left_mask], y[~left_mask], depth + 1),
-        }
-
-    def fit(self, X, y):
-        self.tree = self._build(X, y, 0)
-        return self
-
-    def _predict_one(self, x, node):
-        if node["leaf"]:
-            return node["prob"]
-        if x[node["feature"]] == 1:
-            return self._predict_one(x, node["left"])
-        return self._predict_one(x, node["right"])
-
-    def predict_proba(self, X):
-        return np.array([self._predict_one(x, self.tree) for x in X])
-
-
-# ============================================================================
-# ML MODEL: Random Forest (from scratch)
-# ============================================================================
-
-class RandomForestFromScratch:
-    """
-    Ensemble of shallow decision trees with feature bagging.
-    """
-
-    def __init__(
-        self, n_estimators: int = 80, max_depth: int = 3,
-        min_samples_leaf: int = 3, max_features: float = 0.7,
-        random_state: int = 42,
-    ):
-        self.n_estimators = n_estimators
-        self.max_depth = max_depth
-        self.min_samples_leaf = min_samples_leaf
-        self.max_features = max_features
-        self.random_state = random_state
-        self.trees = []
-        self.feature_subsets = []
-
-    def fit(self, X, y):
-        rng = np.random.RandomState(self.random_state)
-        n, d = X.shape
-        n_features = max(1, int(d * self.max_features))
-
-        self.trees = []
-        self.feature_subsets = []
-
-        for _ in range(self.n_estimators):
-            # Bootstrap sample
-            indices = rng.choice(n, size=n, replace=True)
-            feat_idx = rng.choice(d, size=n_features, replace=False)
-
-            tree = DecisionTreeFromScratch(
-                max_depth=self.max_depth,
-                min_samples_leaf=self.min_samples_leaf,
-            )
-            tree.fit(X[np.ix_(indices, feat_idx)], y[indices])
-            self.trees.append(tree)
-            self.feature_subsets.append(feat_idx)
-
-        return self
-
-    def predict_proba(self, X):
-        preds = np.zeros(X.shape[0])
-        for tree, feat_idx in zip(self.trees, self.feature_subsets):
-            preds += tree.predict_proba(X[:, feat_idx])
-        return preds / len(self.trees)
-
-
-# ============================================================================
-# ML MODEL: Gradient Boosting (from scratch, boosted stumps)
-# ============================================================================
-
-class GradientBoostingFromScratch:
-    """
-    Gradient boosted decision stumps (depth=1 or 2) for binary classification.
-    Uses log-loss gradient. Heavy regularisation via learning rate and depth.
-    """
-
-    def __init__(
-        self, n_estimators: int = 50, max_depth: int = 2,
-        learning_rate: float = 0.1, min_samples_leaf: int = 5,
-        random_state: int = 42,
-    ):
-        self.n_estimators = n_estimators
-        self.max_depth = max_depth
-        self.learning_rate = learning_rate
-        self.min_samples_leaf = min_samples_leaf
-        self.random_state = random_state
-        self.trees = []
-        self.init_pred = 0.0
-
-    def _sigmoid(self, z):
-        z = np.clip(z, -500, 500)
-        return 1.0 / (1.0 + np.exp(-z))
-
-    def fit(self, X, y):
-        # Initialise with log-odds
-        p = y.mean()
-        p = np.clip(p, 0.01, 0.99)
-        self.init_pred = np.log(p / (1 - p))
-
-        F = np.full(len(y), self.init_pred)
-        self.trees = []
-
-        for _ in range(self.n_estimators):
-            # Negative gradient (pseudo-residuals)
-            p = self._sigmoid(F)
-            residuals = y - p
-
-            # Fit a shallow tree to residuals
-            tree = DecisionTreeFromScratch(
-                max_depth=self.max_depth,
-                min_samples_leaf=self.min_samples_leaf,
-            )
-            tree.fit(X, residuals)  # Note: tree predicts mean of residuals in leaf
-
-            # Update
-            update = tree.predict_proba(X)  # actually predicts residual means
-            F += self.learning_rate * update
-            self.trees.append(tree)
-
-        return self
-
-    def predict_proba(self, X):
-        F = np.full(X.shape[0], self.init_pred)
-        for tree in self.trees:
-            F += self.learning_rate * tree.predict_proba(X)
-        return self._sigmoid(F)
+        proba = self.estimator.predict_proba(X)
+        return proba[:, 1] if proba.ndim == 2 else proba
 
 
 # ============================================================================
@@ -852,11 +641,18 @@ def _ml_model_predict(
     return predictions
 
 
+def _make_sklearn_model(estimator):
+    """Factory: returns a callable that creates a fresh _SklearnAdapter each time."""
+    def _factory(**_ignored):
+        return _SklearnAdapter(clone(estimator))
+    return _factory
+
+
 def model_logistic_regression(df, category_mapping, accuracy, **kw):
     return _ml_model_predict(
         df, category_mapping, accuracy,
-        model_class=LogisticRegressionFromScratch,
-        model_kwargs={"C": 0.5, "lr": 0.05, "max_iter": 1000},
+        model_class=_make_sklearn_model(LogisticRegression(C=2.0, max_iter=1000, random_state=42)),
+        model_kwargs={},
         model_name="Logistic Regression",
         **kw,
     )
@@ -865,8 +661,10 @@ def model_logistic_regression(df, category_mapping, accuracy, **kw):
 def model_random_forest(df, category_mapping, accuracy, **kw):
     return _ml_model_predict(
         df, category_mapping, accuracy,
-        model_class=RandomForestFromScratch,
-        model_kwargs={"n_estimators": 80, "max_depth": 3, "min_samples_leaf": 3},
+        model_class=_make_sklearn_model(RandomForestClassifier(
+            n_estimators=80, max_depth=3, min_samples_leaf=3, random_state=42,
+        )),
+        model_kwargs={},
         model_name="Random Forest",
         **kw,
     )
@@ -875,11 +673,11 @@ def model_random_forest(df, category_mapping, accuracy, **kw):
 def model_gradient_boosting(df, category_mapping, accuracy, **kw):
     return _ml_model_predict(
         df, category_mapping, accuracy,
-        model_class=GradientBoostingFromScratch,
-        model_kwargs={
-            "n_estimators": 50, "max_depth": 2,
-            "learning_rate": 0.1, "min_samples_leaf": 5,
-        },
+        model_class=_make_sklearn_model(GradientBoostingClassifier(
+            n_estimators=50, max_depth=2, learning_rate=0.1,
+            min_samples_leaf=5, random_state=42,
+        )),
+        model_kwargs={},
         model_name="Gradient Boosting",
         **kw,
     )
@@ -1090,9 +888,23 @@ def run_full_backtest(df, category_mapping, accuracy) -> pd.DataFrame:
 
     # ML models
     ml_models = {
-        "LogReg": (LogisticRegressionFromScratch, {"C": 0.5, "lr": 0.05, "max_iter": 1000}),
-        "RandomForest": (RandomForestFromScratch, {"n_estimators": 80, "max_depth": 3, "min_samples_leaf": 3}),
-        "GBM": (GradientBoostingFromScratch, {"n_estimators": 50, "max_depth": 2, "learning_rate": 0.1, "min_samples_leaf": 5}),
+        "LogReg": (
+            _make_sklearn_model(LogisticRegression(C=2.0, max_iter=1000, random_state=42)),
+            {},
+        ),
+        "RandomForest": (
+            _make_sklearn_model(RandomForestClassifier(
+                n_estimators=80, max_depth=3, min_samples_leaf=3, random_state=42,
+            )),
+            {},
+        ),
+        "GBM": (
+            _make_sklearn_model(GradientBoostingClassifier(
+                n_estimators=50, max_depth=2, learning_rate=0.1,
+                min_samples_leaf=5, random_state=42,
+            )),
+            {},
+        ),
     }
 
     for key, (cls, kwargs) in ml_models.items():
