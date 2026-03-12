@@ -70,7 +70,7 @@ class Prediction:
     oscar_category: str
     predicted_winner: str
     confidence: float                          # 0.0 to 1.0 (normalised score)
-    all_candidates: list[tuple[str, float]]    # [(name, confidence%), ...] top 5
+    all_candidates: list[tuple[str, float]]    # [(name, confidence%), ...] all candidates
     model_name: str = ""
     runner_up: str = ""
     runner_up_confidence: float = 0.0
@@ -162,7 +162,7 @@ def _score_to_predictions(
         oscar_category=oscar_cat,
         predicted_winner=top_name,
         confidence=top_conf,
-        all_candidates=[(n, round(c * 100, 1)) for n, c, _ in scored[:5]],
+        all_candidates=[(n, round(c * 100, 1)) for n, c, _ in scored],
         model_name=model_name,
         runner_up=runner_up_name,
         runner_up_confidence=runner_up_conf,
@@ -619,7 +619,7 @@ def _ml_model_predict(
 
         all_candidates = [
             (name, round(prob / total * 100, 1))
-            for (year, name), prob in scored[:5]
+            for (year, name), prob in scored
         ]
 
         top_name = scored[0][0][1]
@@ -689,10 +689,6 @@ def model_gradient_boosting(df, category_mapping, accuracy, **kw):
 
 ALL_MODELS = {
     "weighted":  model_weighted_precursor,
-    "majority":  model_simple_majority,
-    "recency":   model_recency_weighted,
-    "top3":      lambda df, cm, acc, **kw: model_top_n_precursors(df, cm, acc, n=3, **kw),
-    "top5":      lambda df, cm, acc, **kw: model_top_n_precursors(df, cm, acc, n=5, **kw),
     "momentum":  model_consensus_momentum,
     "logreg":    model_logistic_regression,
     "rf":        model_random_forest,
@@ -889,10 +885,6 @@ def run_full_backtest(df, category_mapping, accuracy) -> pd.DataFrame:
     # Precursor models
     precursor_models = {
         "Weighted": model_weighted_precursor,
-        "Majority": model_simple_majority,
-        "Recency": model_recency_weighted,
-        "Top-3": lambda df, cm, acc, **kw: model_top_n_precursors(df, cm, acc, n=3, **kw),
-        "Top-5": lambda df, cm, acc, **kw: model_top_n_precursors(df, cm, acc, n=5, **kw),
         "Momentum": model_consensus_momentum,
     }
 
