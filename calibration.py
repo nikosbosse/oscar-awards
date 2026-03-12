@@ -31,7 +31,7 @@ PLOT_DIR.mkdir(exist_ok=True)
 sns.set_theme(style="whitegrid", font_scale=1.1)
 
 # Confidence bins: [0, 0.3), [0.3, 0.5), [0.5, 0.7), [0.7, 0.9), [0.9, 1.0]
-BIN_EDGES = [0, 0.3, 0.5, 0.7, 0.9, 1.0]
+BIN_EDGES = [0, 0.3, 0.5, 0.7, 0.9, 1.01]  # 1.01 so right=False includes 1.0
 BIN_LABELS = ["0–30%", "30–50%", "50–70%", "70–90%", "90–100%"]
 
 
