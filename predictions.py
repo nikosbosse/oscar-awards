@@ -35,7 +35,7 @@ from dataclasses import dataclass, field
 from collections import defaultdict
 from typing import Any
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.base import clone
 
 from helpers import (
@@ -455,87 +455,187 @@ def model_consensus_momentum(
 
 
 # ============================================================================
-# ML INFRASTRUCTURE: Feature construction
+# FRONTRUNNER FEATURE EXTRACTION
 # ============================================================================
 
-def build_candidate_features(
+def _score_candidates_weighted_raw(
+    precursor_lookup: dict[tuple[str, str], str],
+    precursors: list[tuple[str, str]],
+    acc_lookup: dict[tuple[str, str], float],
+    min_weight: float = MIN_PRECURSOR_WEIGHT,
+) -> tuple[list[tuple[str, float, int, list[tuple[str, str, float]]]], float, int]:
+    """
+    Score candidates for one category/year using weighted precursor logic.
+
+    Returns:
+        scored: [(name, score, n_wins, [(award, cat, weight), ...]), ...] desc
+        total_weight: sum of all weights
+        available: number of available precursors
+    """
+    raw_votes: list[tuple[str, float, list[tuple[str, str, float]]]] = []
+    total_weight = 0.0
+    available = 0
+
+    for award_name, prec_cat in precursors:
+        winner = precursor_lookup.get((award_name, prec_cat))
+        if not winner:
+            continue
+        weight = max(acc_lookup.get((award_name, prec_cat), 0.0), min_weight)
+        raw_votes.append((winner, weight, [(award_name, prec_cat, weight)]))
+        total_weight += weight
+        available += 1
+
+    clustered = cluster_nominees(raw_votes)
+    scored = [
+        (name, score, len(details), details)
+        for name, score, details in clustered
+    ]
+    scored.sort(key=lambda x: -x[1])
+    return scored, total_weight, available
+
+
+def _get_top_precursor(
+    accuracy: dict[str, list[PrecursorAccuracy]], oscar_cat: str,
+) -> tuple[str, str] | None:
+    """Return (award, category) of the most accurate precursor."""
+    pa_list = accuracy.get(oscar_cat, [])
+    if not pa_list:
+        return None
+    best = max(pa_list, key=lambda pa: pa.accuracy)
+    return (best.award, best.precursor_category)
+
+
+def _compute_momentum_frontrunners(
     df: pd.DataFrame,
     category_mapping: dict[str, list[tuple[str, str]]],
+    accuracy: dict[str, list[PrecursorAccuracy]],
+    years: list[int] | None = None,
+) -> dict[tuple[int, str], str]:
+    """Precompute momentum model's frontrunner for each (year, category)."""
+    if years is None:
+        years = list(range(HISTORICAL_START, HISTORICAL_END + 1))
+    result: dict[tuple[int, str], str] = {}
+    for year in years:
+        preds = model_consensus_momentum(
+            df, category_mapping, accuracy, prediction_year=year,
+        )
+        for p in preds:
+            if p.confidence > 0:
+                result[(year, p.oscar_category)] = p.predicted_winner
+    return result
+
+
+FRONTRUNNER_FEATURE_NAMES = [
+    "n_precursors_won",
+    "frac_precursors_won",
+    "weighted_score",
+    "gap_to_runner_up",
+    "won_top_precursor",
+    "n_candidates",
+    "frontrunners_agree",
+]
+
+
+def build_frontrunner_features(
+    df: pd.DataFrame,
+    category_mapping: dict[str, list[tuple[str, str]]],
+    accuracy: dict[str, list[PrecursorAccuracy]],
     oscar_cat: str,
     years: list[int],
+    momentum_frontrunners: dict[tuple[int, str], str] | None = None,
     require_target: bool = True,
 ) -> tuple[np.ndarray, np.ndarray, list[str], list[tuple[int, str]]]:
     """
-    Build candidate-level feature matrix for one Oscar category.
+    Build frontrunner-level feature matrix for one Oscar category.
 
-    For each year, every person/film that won at least one mapped precursor
-    becomes a candidate row. Features are binary: did this candidate win
-    precursor_i? Target: did they win the Oscar?
+    For each year, identifies the frontrunner via weighted precursor scoring
+    and extracts features describing the strength of their case.
 
-    Args:
-      require_target: If True (default), skip years without an Oscar winner.
-                      Set to False for prediction years where no winner exists yet.
+    Features:
+      n_precursors_won     — how many precursor awards the frontrunner won
+      frac_precursors_won  — fraction of available precursors won
+      weighted_score       — frontrunner's share of total weighted vote (0–1)
+      gap_to_runner_up     — weighted_score difference to runner-up
+      won_top_precursor    — did frontrunner win the most accurate precursor?
+      n_candidates         — number of distinct candidates
+      frontrunners_agree   — weighted & momentum models pick the same person
+
+    Target: 1 if the frontrunner won the Oscar, 0 otherwise.
 
     Returns:
-      X: (n_candidates, n_precursors) binary feature matrix
-      y: (n_candidates,) binary target (1 = won Oscar; all zeros if no winner)
-      feature_names: list of precursor short names
-      meta: list of (year, candidate_name) for each row
+        X: (n_years, 7) feature matrix
+        y: (n_years,) binary target
+        feature_names: list of feature names
+        meta: list of (year, frontrunner_name) per row
     """
     precursors = category_mapping.get(oscar_cat, [])
     oscar_lookup = build_winner_lookup(df, award_filter="Oscars")
-    prec_lookup = build_winner_lookup(df, exclude_award="Oscars")
+    top_precursor = _get_top_precursor(accuracy, oscar_cat)
 
-    feature_names = [
-        AWARD_SHORT.get(a, a) + ": " + c[:20] for a, c in precursors
-    ]
+    acc_lookup = {
+        (pa.award, pa.precursor_category): pa.accuracy
+        for pa in accuracy.get(oscar_cat, [])
+    }
 
-    rows_X = []
-    rows_y = []
-    meta = []
+    rows_X: list[list[float]] = []
+    rows_y: list[float] = []
+    meta: list[tuple[int, str]] = []
 
     for year in years:
+        precursor_lookup = _build_precursor_lookup(df, year)
+        scored, total_weight, available = _score_candidates_weighted_raw(
+            precursor_lookup, precursors, acc_lookup,
+        )
+
+        if not scored or available == 0:
+            continue
+
         oscar_winner = oscar_lookup.get(("Oscars", oscar_cat, year))
         if require_target and not oscar_winner:
             continue
 
-        # Collect all precursor winners this year → build candidate set
-        candidates: dict[str, np.ndarray] = {}  # canonical_name -> feature vector
-        candidate_names: dict[str, str] = {}     # canonical_name -> original name
+        name, score, n_wins, details = scored[0]
 
-        for pi, (award_name, prec_cat) in enumerate(precursors):
-            pw = prec_lookup.get((award_name, prec_cat, year))
-            if not pw:
-                continue
+        weighted_score = score / total_weight if total_weight > 0 else 0
+        runner_up_score = (
+            scored[1][1] / total_weight
+            if len(scored) > 1 and total_weight > 0 else 0
+        )
 
-            # Find or create candidate
-            matched_key = None
-            for existing_key in candidates:
-                if names_match(pw, existing_key):
-                    matched_key = existing_key
+        won_top = 0.0
+        if top_precursor:
+            for award, cat, _ in details:
+                if (award, cat) == top_precursor:
+                    won_top = 1.0
                     break
 
-            if matched_key is None:
-                matched_key = pw
-                candidates[matched_key] = np.zeros(len(precursors))
-                candidate_names[matched_key] = pw
+        agree = 0.0
+        if momentum_frontrunners:
+            momentum_pick = momentum_frontrunners.get((year, oscar_cat))
+            if momentum_pick and names_match(name, momentum_pick):
+                agree = 1.0
 
-            candidates[matched_key][pi] = 1.0
+        rows_X.append([
+            n_wins,
+            n_wins / available if available > 0 else 0,
+            weighted_score,
+            weighted_score - runner_up_score,
+            won_top,
+            len(scored),
+            agree,
+        ])
 
-        # Build rows
-        for cand_key, feat_vec in candidates.items():
-            rows_X.append(feat_vec)
-            if oscar_winner:
-                is_winner = 1.0 if names_match(cand_key, oscar_winner) else 0.0
-            else:
-                is_winner = 0.0  # unknown — prediction year
-            rows_y.append(is_winner)
-            meta.append((year, candidate_names[cand_key]))
+        target = 0.0
+        if oscar_winner and names_match(name, oscar_winner):
+            target = 1.0
+        rows_y.append(target)
+        meta.append((year, name))
 
     if not rows_X:
-        return np.empty((0, len(precursors))), np.empty(0), feature_names, []
+        n_feat = len(FRONTRUNNER_FEATURE_NAMES)
+        return np.empty((0, n_feat)), np.empty(0), FRONTRUNNER_FEATURE_NAMES, []
 
-    return np.array(rows_X), np.array(rows_y), feature_names, meta
+    return np.array(rows_X), np.array(rows_y), FRONTRUNNER_FEATURE_NAMES, meta
 
 
 # ============================================================================
@@ -557,11 +657,18 @@ class _SklearnAdapter:
         return proba[:, 1] if proba.ndim == 2 else proba
 
 
+def _make_sklearn_model(estimator):
+    """Factory: returns a callable that creates a fresh _SklearnAdapter each time."""
+    def _factory(**_ignored):
+        return _SklearnAdapter(clone(estimator))
+    return _factory
+
+
 # ============================================================================
-# ML model wrappers (same interface as precursor models)
+# ML MODELS: P(frontrunner wins)
 # ============================================================================
 
-def _ml_model_predict(
+def _frontrunner_ml_predict(
     df: pd.DataFrame,
     category_mapping: dict[str, list[tuple[str, str]]],
     accuracy: dict[str, list[PrecursorAccuracy]],
@@ -571,22 +678,26 @@ def _ml_model_predict(
     prediction_year: int = PREDICTION_YEAR,
 ) -> list[Prediction]:
     """
-    Generic wrapper: train an ML model on historical data, predict the
-    given year. For each Oscar category independently.
+    Train a binary classifier to predict P(frontrunner wins the Oscar).
+    The frontrunner is identified by the weighted precursor model.
     """
-    predictions = []
+    momentum_frontrunners = _compute_momentum_frontrunners(
+        df, category_mapping, accuracy,
+        years=list(range(HISTORICAL_START, prediction_year + 1)),
+    )
 
+    predictions = []
     for oscar_cat in OSCAR_CATEGORIES:
-        precursors = category_mapping.get(oscar_cat, [])
         train_years = list(range(HISTORICAL_START, prediction_year))
 
-        X_train, y_train, feat_names, meta_train = build_candidate_features(
-            df, category_mapping, oscar_cat, train_years,
+        X_train, y_train, feat_names, _ = build_frontrunner_features(
+            df, category_mapping, accuracy, oscar_cat, train_years,
+            momentum_frontrunners=momentum_frontrunners,
         )
 
-        # Build prediction-year features (no Oscar winner exists yet)
-        X_pred, _, _, meta_pred = build_candidate_features(
-            df, category_mapping, oscar_cat, [prediction_year],
+        X_pred, _, _, meta_pred = build_frontrunner_features(
+            df, category_mapping, accuracy, oscar_cat, [prediction_year],
+            momentum_frontrunners=momentum_frontrunners,
             require_target=False,
         )
 
@@ -600,56 +711,26 @@ def _ml_model_predict(
             ))
             continue
 
-        # Train
         model = model_class(**model_kwargs)
         model.fit(X_train, y_train)
+        p_win = float(model.predict_proba(X_pred)[0])
 
-        # Predict
-        probs = model.predict_proba(X_pred)
-
-        # Build prediction
-        scored = sorted(
-            zip(meta_pred, probs),
-            key=lambda x: -x[1],
-        )
-
-        total = sum(p for _, p in scored)
-        if total == 0:
-            total = 1.0
-
-        all_candidates = [
-            (name, round(prob / total * 100, 1))
-            for (year, name), prob in scored
-        ]
-
-        top_name = scored[0][0][1]
-        top_conf = scored[0][1] / total
-        runner_up = scored[1][0][1] if len(scored) > 1 else ""
-        runner_up_conf = scored[1][1] / total if len(scored) > 1 else 0.0
+        frontrunner_name = meta_pred[0][1]
 
         predictions.append(Prediction(
             oscar_category=oscar_cat,
-            predicted_winner=top_name,
-            confidence=top_conf,
-            all_candidates=all_candidates,
+            predicted_winner=frontrunner_name,
+            confidence=p_win,
+            all_candidates=[(frontrunner_name, round(p_win * 100, 1))],
             model_name=model_name,
-            runner_up=runner_up,
-            runner_up_confidence=runner_up_conf,
             details={"n_train": len(X_train), "n_features": X_train.shape[1]},
         ))
 
     return predictions
 
 
-def _make_sklearn_model(estimator):
-    """Factory: returns a callable that creates a fresh _SklearnAdapter each time."""
-    def _factory(**_ignored):
-        return _SklearnAdapter(clone(estimator))
-    return _factory
-
-
 def model_logistic_regression(df, category_mapping, accuracy, **kw):
-    return _ml_model_predict(
+    return _frontrunner_ml_predict(
         df, category_mapping, accuracy,
         model_class=_make_sklearn_model(LogisticRegression(C=2.0, max_iter=1000, random_state=42)),
         model_kwargs={},
@@ -658,20 +739,8 @@ def model_logistic_regression(df, category_mapping, accuracy, **kw):
     )
 
 
-def model_random_forest(df, category_mapping, accuracy, **kw):
-    return _ml_model_predict(
-        df, category_mapping, accuracy,
-        model_class=_make_sklearn_model(RandomForestClassifier(
-            n_estimators=80, max_depth=3, min_samples_leaf=3, random_state=42,
-        )),
-        model_kwargs={},
-        model_name="Random Forest",
-        **kw,
-    )
-
-
 def model_gradient_boosting(df, category_mapping, accuracy, **kw):
-    return _ml_model_predict(
+    return _frontrunner_ml_predict(
         df, category_mapping, accuracy,
         model_class=_make_sklearn_model(GradientBoostingClassifier(
             n_estimators=50, max_depth=2, learning_rate=0.1,
@@ -691,19 +760,14 @@ ALL_MODELS = {
     "weighted":  model_weighted_precursor,
     "momentum":  model_consensus_momentum,
     "logreg":    model_logistic_regression,
-    "rf":        model_random_forest,
     "gbm":       model_gradient_boosting,
-    "enh_logreg": lambda df, cm, acc, **kw: __import__("enhanced_features").model_enhanced_logistic_regression(df, cm, acc, **kw),
-    "enh_rf":     lambda df, cm, acc, **kw: __import__("enhanced_features").model_enhanced_random_forest(df, cm, acc, **kw),
-    "enh_gbm":    lambda df, cm, acc, **kw: __import__("enhanced_features").model_enhanced_gradient_boosting(df, cm, acc, **kw),
 }
 
 # Lazy-load ensemble models to avoid circular imports
 def _load_ensemble_models():
-    from ensemble import model_weighted_ensemble, model_rank_ensemble, model_equal_ensemble
-    ALL_MODELS["ensemble"] = model_weighted_ensemble
-    ALL_MODELS["rank_ensemble"] = model_rank_ensemble
-    ALL_MODELS["equal_ensemble"] = model_equal_ensemble
+    from ensemble import model_mean_ensemble, model_logodds_ensemble
+    ALL_MODELS["mean_ensemble"] = model_mean_ensemble
+    ALL_MODELS["logodds_ensemble"] = model_logodds_ensemble
 
 try:
     _load_ensemble_models()
@@ -745,6 +809,13 @@ def backtest_precursor_model(
       3. Check if prediction matches the actual Oscar winner
 
     Returns a DataFrame with per-year, per-category results.
+
+    NOTE on accuracy weights: We use leave-one-out on the full 2000-2025
+    range rather than an expanding window (i.e. for predicting 2005 we use
+    2000-2004 + 2006-2025, not just 2000-2004). This is a mild form of
+    lookahead — precursor weights benefit from future data. We accept this
+    because precursor predictiveness is stable over time and an expanding
+    window would make early years nearly useless due to small samples.
     """
     import copy
 
@@ -807,7 +878,7 @@ def backtest_precursor_model(
     return pd.DataFrame(results)
 
 
-def backtest_ml_model(
+def backtest_frontrunner_ml(
     df: pd.DataFrame,
     category_mapping: dict[str, list[tuple[str, str]]],
     model_class,
@@ -817,13 +888,20 @@ def backtest_ml_model(
     years: list[int] | None = None,
 ) -> pd.DataFrame:
     """
-    Leave-one-year-out backtesting for ML models.
+    Leave-one-year-out backtesting for frontrunner ML models.
 
     For each held-out year:
-      1. Train on all OTHER years
-      2. Predict the held-out year's candidates
-      3. Check if the top-predicted candidate is the actual Oscar winner
+      1. Recompute accuracy excluding held-out year (leave-one-out)
+      2. Build frontrunner features, train model
+      3. Predict P(frontrunner wins) for held-out year
+      4. Check if frontrunner actually won
+
+    NOTE: All ML models predict the same frontrunner (from weighted precursor
+    model), so binary accuracy is identical across ML models and ensembles.
+    The models differ in their confidence estimates (calibration).
     """
+    import copy
+
     if categories is None:
         categories = [
             "Best Picture", "Best Director", "Best Actor", "Best Actress",
@@ -831,24 +909,46 @@ def backtest_ml_model(
         ]
     if years is None:
         years = list(range(max(HISTORICAL_START + 5, 2005), HISTORICAL_END + 1))
-        # Start from 2005+ to have enough training data
 
+    all_years = list(range(HISTORICAL_START, HISTORICAL_END + 1))
     oscar_lookup = build_winner_lookup(df, award_filter="Oscars")
+    prec_lookup = build_winner_lookup(df, exclude_award="Oscars")
+    full_accuracy = compute_historical_accuracy(df, category_mapping)
+
+    # Precompute momentum frontrunners once (full accuracy — mild leakage)
+    momentum_frontrunners = _compute_momentum_frontrunners(
+        df, category_mapping, full_accuracy,
+    )
+
     results = []
 
     for year in years:
-        train_years = [y for y in range(HISTORICAL_START, HISTORICAL_END + 1) if y != year]
+        # Leave-one-out accuracy
+        train_accuracy = copy.deepcopy(full_accuracy)
+        for cat, pa_list in train_accuracy.items():
+            for pa in pa_list:
+                if year in pa.match_years:
+                    pa.matches -= 1
+                    pa.match_years.remove(year)
+                oscar_key = ("Oscars", cat, year)
+                prec_key = (pa.award, pa.precursor_category, year)
+                if oscar_lookup.get(oscar_key) and prec_lookup.get(prec_key):
+                    pa.total -= 1
+
+        train_years = [y for y in all_years if y != year]
 
         for oscar_cat in categories:
             actual = oscar_lookup.get(("Oscars", oscar_cat, year), "")
             if not actual:
                 continue
 
-            X_train, y_train, _, _ = build_candidate_features(
-                df, category_mapping, oscar_cat, train_years,
+            X_train, y_train, _, _ = build_frontrunner_features(
+                df, category_mapping, train_accuracy, oscar_cat, train_years,
+                momentum_frontrunners=momentum_frontrunners,
             )
-            X_test, _, _, meta_test = build_candidate_features(
-                df, category_mapping, oscar_cat, [year],
+            X_test, _, _, meta_test = build_frontrunner_features(
+                df, category_mapping, train_accuracy, oscar_cat, [year],
+                momentum_frontrunners=momentum_frontrunners,
             )
 
             if len(X_train) < 10 or len(X_test) == 0:
@@ -856,21 +956,18 @@ def backtest_ml_model(
 
             model = model_class(**model_kwargs)
             model.fit(X_train, y_train)
-            probs = model.predict_proba(X_test)
+            p_win = float(model.predict_proba(X_test)[0])
 
-            # Pick candidate with highest predicted probability
-            best_idx = np.argmax(probs)
-            predicted = meta_test[best_idx][1]
-            confidence = probs[best_idx] / probs.sum() if probs.sum() > 0 else 0
-
+            predicted = meta_test[0][1]  # frontrunner name
             correct = names_match(predicted, actual)
+
             results.append({
                 "Year": year,
                 "Category": oscar_cat,
                 "Predicted": predicted[:50],
                 "Actual": actual[:50],
                 "Correct": correct,
-                "Confidence": confidence,
+                "Confidence": p_win,
                 "Model": model_key,
             })
 
@@ -893,16 +990,10 @@ def run_full_backtest(df, category_mapping, accuracy) -> pd.DataFrame:
         res = backtest_precursor_model(df, category_mapping, fn, key)
         all_results.append(res)
 
-    # ML models
+    # Frontrunner ML models
     ml_models = {
         "LogReg": (
             _make_sklearn_model(LogisticRegression(C=2.0, max_iter=1000, random_state=42)),
-            {},
-        ),
-        "RandomForest": (
-            _make_sklearn_model(RandomForestClassifier(
-                n_estimators=80, max_depth=3, min_samples_leaf=3, random_state=42,
-            )),
             {},
         ),
         "GBM": (
@@ -916,34 +1007,7 @@ def run_full_backtest(df, category_mapping, accuracy) -> pd.DataFrame:
 
     for key, (cls, kwargs) in ml_models.items():
         print(f"  Backtesting: {key}...")
-        res = backtest_ml_model(df, category_mapping, cls, kwargs, key)
-        all_results.append(res)
-
-    # Enhanced ML models
-    from enhanced_features import backtest_enhanced_ml_model as _bt_enh
-    enhanced_ml_models = {
-        "Enh_LogReg": (
-            _make_sklearn_model(LogisticRegression(C=2.0, max_iter=1000, random_state=42)),
-            {},
-        ),
-        "Enh_RF": (
-            _make_sklearn_model(RandomForestClassifier(
-                n_estimators=80, max_depth=3, min_samples_leaf=3, random_state=42,
-            )),
-            {},
-        ),
-        "Enh_GBM": (
-            _make_sklearn_model(GradientBoostingClassifier(
-                n_estimators=50, max_depth=2, learning_rate=0.1,
-                min_samples_leaf=5, random_state=42,
-            )),
-            {},
-        ),
-    }
-
-    for key, (cls, kwargs) in enhanced_ml_models.items():
-        print(f"  Backtesting: {key}...")
-        res = _bt_enh(df, category_mapping, cls, kwargs, key)
+        res = backtest_frontrunner_ml(df, category_mapping, cls, kwargs, key)
         all_results.append(res)
 
     combined = pd.concat(all_results, ignore_index=True)
