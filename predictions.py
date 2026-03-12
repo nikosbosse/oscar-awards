@@ -665,6 +665,82 @@ def _make_sklearn_model(estimator):
 
 
 # ============================================================================
+# BASELINE MODEL: Historical frontrunner win rate
+# ============================================================================
+
+def model_baseline(
+    df: pd.DataFrame,
+    category_mapping: dict[str, list[tuple[str, str]]],
+    accuracy: dict[str, list[PrecursorAccuracy]],
+    prediction_year: int = PREDICTION_YEAR,
+) -> list[Prediction]:
+    """
+    Baseline probabilistic model: identify the frontrunner via weighted
+    precursor scoring, then assign P(win) = historical rate at which the
+    frontrunner actually won the Oscar for this category.
+
+    Works for all categories regardless of precursor count.
+    """
+    MODEL_NAME = "Baseline"
+    oscar_lookup = build_winner_lookup(df, award_filter="Oscars")
+
+    predictions = []
+    for oscar_cat in OSCAR_CATEGORIES:
+        precursors = category_mapping.get(oscar_cat, [])
+        acc_lookup = {
+            (pa.award, pa.precursor_category): pa.accuracy
+            for pa in accuracy.get(oscar_cat, [])
+        }
+
+        # Compute historical frontrunner win rate for this category
+        hist_years = list(range(HISTORICAL_START, prediction_year))
+        wins, total = 0, 0
+        for year in hist_years:
+            pl = _build_precursor_lookup(df, year)
+            scored, tw, avail = _score_candidates_weighted_raw(
+                pl, precursors, acc_lookup,
+            )
+            if not scored or avail == 0:
+                continue
+            oscar_winner = oscar_lookup.get(("Oscars", oscar_cat, year))
+            if not oscar_winner:
+                continue
+            total += 1
+            if names_match(scored[0][0], oscar_winner):
+                wins += 1
+
+        base_rate = wins / total if total > 0 else 0.0
+
+        # Identify this year's frontrunner
+        pred_lookup = _build_precursor_lookup(df, prediction_year)
+        scored, tw, avail = _score_candidates_weighted_raw(
+            pred_lookup, precursors, acc_lookup,
+        )
+
+        if not scored:
+            predictions.append(Prediction(
+                oscar_category=oscar_cat,
+                predicted_winner="N/A — No precursor data",
+                confidence=0.0,
+                all_candidates=[],
+                model_name=MODEL_NAME,
+            ))
+            continue
+
+        frontrunner = scored[0][0]
+        predictions.append(Prediction(
+            oscar_category=oscar_cat,
+            predicted_winner=frontrunner,
+            confidence=base_rate,
+            all_candidates=[(frontrunner, round(base_rate * 100, 1))],
+            model_name=MODEL_NAME,
+            details={"historical_wins": wins, "historical_total": total},
+        ))
+
+    return predictions
+
+
+# ============================================================================
 # ML MODELS: P(frontrunner wins)
 # ============================================================================
 
@@ -680,6 +756,7 @@ def _frontrunner_ml_predict(
     """
     Train a binary classifier to predict P(frontrunner wins the Oscar).
     The frontrunner is identified by the weighted precursor model.
+    Falls back to base rate if insufficient training data or single class.
     """
     momentum_frontrunners = _compute_momentum_frontrunners(
         df, category_mapping, accuracy,
@@ -711,9 +788,13 @@ def _frontrunner_ml_predict(
             ))
             continue
 
-        model = model_class(**model_kwargs)
-        model.fit(X_train, y_train)
-        p_win = float(model.predict_proba(X_pred)[0])
+        # If only one class in training data, use base rate directly
+        if len(np.unique(y_train)) < 2:
+            p_win = float(y_train.mean())
+        else:
+            model = model_class(**model_kwargs)
+            model.fit(X_train, y_train)
+            p_win = float(model.predict_proba(X_pred)[0])
 
         frontrunner_name = meta_pred[0][1]
 
@@ -759,6 +840,7 @@ def model_gradient_boosting(df, category_mapping, accuracy, **kw):
 ALL_MODELS = {
     "weighted":  model_weighted_precursor,
     "momentum":  model_consensus_momentum,
+    "baseline":  model_baseline,
     "logreg":    model_logistic_regression,
     "gbm":       model_gradient_boosting,
 }
@@ -820,10 +902,7 @@ def backtest_precursor_model(
     import copy
 
     if categories is None:
-        categories = [
-            "Best Picture", "Best Director", "Best Actor", "Best Actress",
-            "Best Supporting Actor", "Best Supporting Actress",
-        ]
+        categories = OSCAR_CATEGORIES
     if years is None:
         years = list(range(HISTORICAL_START, HISTORICAL_END + 1))
 
@@ -903,10 +982,7 @@ def backtest_frontrunner_ml(
     import copy
 
     if categories is None:
-        categories = [
-            "Best Picture", "Best Director", "Best Actor", "Best Actress",
-            "Best Supporting Actor", "Best Supporting Actress",
-        ]
+        categories = OSCAR_CATEGORIES
     if years is None:
         years = list(range(max(HISTORICAL_START + 5, 2005), HISTORICAL_END + 1))
 
@@ -954,9 +1030,13 @@ def backtest_frontrunner_ml(
             if len(X_train) < 10 or len(X_test) == 0:
                 continue
 
-            model = model_class(**model_kwargs)
-            model.fit(X_train, y_train)
-            p_win = float(model.predict_proba(X_test)[0])
+            # If only one class in training data, use base rate directly
+            if len(np.unique(y_train)) < 2:
+                p_win = float(y_train.mean())
+            else:
+                model = model_class(**model_kwargs)
+                model.fit(X_train, y_train)
+                p_win = float(model.predict_proba(X_test)[0])
 
             predicted = meta_test[0][1]  # frontrunner name
             correct = names_match(predicted, actual)
@@ -974,12 +1054,106 @@ def backtest_frontrunner_ml(
     return pd.DataFrame(results)
 
 
+def backtest_baseline(
+    df: pd.DataFrame,
+    category_mapping: dict[str, list[tuple[str, str]]],
+    categories: list[str] | None = None,
+    years: list[int] | None = None,
+) -> pd.DataFrame:
+    """
+    Leave-one-year-out backtesting for the baseline model.
+
+    For each held-out year, the baseline P(win) is the frontrunner win rate
+    computed from all OTHER years. The frontrunner is identified using
+    leave-one-out accuracy (same as precursor model backtest).
+    """
+    import copy
+
+    if categories is None:
+        categories = OSCAR_CATEGORIES
+    if years is None:
+        years = list(range(HISTORICAL_START, HISTORICAL_END + 1))
+
+    oscar_lookup = build_winner_lookup(df, award_filter="Oscars")
+    prec_lookup = build_winner_lookup(df, exclude_award="Oscars")
+    full_accuracy = compute_historical_accuracy(df, category_mapping)
+
+    results = []
+
+    for held_out_year in years:
+        # Leave-one-out accuracy
+        train_accuracy = copy.deepcopy(full_accuracy)
+        for cat, pa_list in train_accuracy.items():
+            for pa in pa_list:
+                if held_out_year in pa.match_years:
+                    pa.matches -= 1
+                    pa.match_years.remove(held_out_year)
+                oscar_key = ("Oscars", cat, held_out_year)
+                prec_key = (pa.award, pa.precursor_category, held_out_year)
+                if oscar_lookup.get(oscar_key) and prec_lookup.get(prec_key):
+                    pa.total -= 1
+
+        for oscar_cat in categories:
+            actual = oscar_lookup.get(("Oscars", oscar_cat, held_out_year), "")
+            if not actual:
+                continue
+
+            precursors = category_mapping.get(oscar_cat, [])
+            acc_lookup = {
+                (pa.award, pa.precursor_category): pa.accuracy
+                for pa in train_accuracy.get(oscar_cat, [])
+            }
+
+            # Compute frontrunner win rate on training years
+            train_years = [y for y in range(HISTORICAL_START, HISTORICAL_END + 1)
+                           if y != held_out_year]
+            wins, total = 0, 0
+            for year in train_years:
+                pl = _build_precursor_lookup(df, year)
+                scored, tw, avail = _score_candidates_weighted_raw(
+                    pl, precursors, acc_lookup,
+                )
+                if not scored or avail == 0:
+                    continue
+                ow = oscar_lookup.get(("Oscars", oscar_cat, year))
+                if not ow:
+                    continue
+                total += 1
+                if names_match(scored[0][0], ow):
+                    wins += 1
+
+            base_rate = wins / total if total > 0 else 0.0
+
+            # Identify held-out year's frontrunner
+            pl = _build_precursor_lookup(df, held_out_year)
+            scored, tw, avail = _score_candidates_weighted_raw(
+                pl, precursors, acc_lookup,
+            )
+            if not scored:
+                continue
+
+            predicted = scored[0][0]
+            correct = names_match(predicted, actual)
+
+            results.append({
+                "Year": held_out_year,
+                "Category": oscar_cat,
+                "Predicted": predicted[:50],
+                "Actual": actual[:50],
+                "Correct": correct,
+                "Confidence": base_rate,
+                "Model": "Baseline",
+            })
+
+    return pd.DataFrame(results)
+
+
 def run_full_backtest(df, category_mapping, accuracy) -> pd.DataFrame:
     """Run backtesting for all models and return combined results."""
 
     all_results = []
 
-    # Precursor models
+    # Precursor models (all categories)
     precursor_models = {
         "Weighted": model_weighted_precursor,
         "Momentum": model_consensus_momentum,
@@ -990,7 +1164,11 @@ def run_full_backtest(df, category_mapping, accuracy) -> pd.DataFrame:
         res = backtest_precursor_model(df, category_mapping, fn, key)
         all_results.append(res)
 
-    # Frontrunner ML models
+    # Baseline model (all categories)
+    print("  Backtesting: Baseline...")
+    all_results.append(backtest_baseline(df, category_mapping))
+
+    # Frontrunner ML models (categories with 6+ precursors only)
     ml_models = {
         "LogReg": (
             _make_sklearn_model(LogisticRegression(C=2.0, max_iter=1000, random_state=42)),
@@ -1091,10 +1269,7 @@ def print_model_comparison(
 ) -> None:
     """Print a side-by-side comparison of all models for selected categories."""
     if categories is None:
-        categories = [
-            "Best Picture", "Best Director", "Best Actor", "Best Actress",
-            "Best Supporting Actor", "Best Supporting Actress",
-        ]
+        categories = OSCAR_CATEGORIES
 
     model_keys = list(all_results.keys())
 
