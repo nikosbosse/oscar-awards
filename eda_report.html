@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oscar Precursor Awards — Exploratory Data Analysis</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Georgia', serif;
+        line-height: 1.7;
+        color: #2c3e50;
+        background: #fafafa;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    h1 {
+        font-size: 2.2rem;
+        margin-bottom: 0.5rem;
+        color: #1a1a2e;
+    }
+    .subtitle {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #e0c068;
+        padding-bottom: 1rem;
+    }
+    h2 {
+        font-size: 1.4rem;
+        margin: 2rem 0 0.8rem 0;
+        color: #1a1a2e;
+        border-left: 4px solid #e0c068;
+        padding-left: 0.8rem;
+    }
+    p {
+        margin-bottom: 1rem;
+        font-size: 1.05rem;
+    }
+    img {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        margin: 1rem 0 2rem 0;
+    }
+    .section {
+        margin-bottom: 3rem;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0 2rem 0;
+        font-size: 0.9rem;
+    }
+    th {
+        background: #1a1a2e;
+        color: white;
+        padding: 0.6rem 0.8rem;
+        text-align: left;
+    }
+    td {
+        padding: 0.5rem 0.8rem;
+        border-bottom: 1px solid #eee;
+    }
+    tr:nth-child(even) td {
+        background: #f5f5f5;
+    }
+    .key-stat {
+        background: #fff8e1;
+        border-left: 4px solid #e0c068;
+        padding: 1rem 1.5rem;
+        margin: 1rem 0;
+        border-radius: 0 8px 8px 0;
+        font-size: 1.1rem;
+    }
+    strong { color: #1a1a2e; }
+    em { color: #555; }
+</style>
+</head>
+<body>
+    <h1>Can You Predict the Oscars?</h1>
+    <p class="subtitle">
+        An exploration of 26 years of precursor awards data — and what it tells us about
+        Hollywood's biggest night.
+    </p>
+
+    <div class="key-stat">
+        <strong>The big question:</strong> How predictable are the Oscars? With 16 precursor award shows,
+        26 years of data, and 5,346 records, we can finally put numbers on what awards pundits have
+        long known intuitively — and discover some surprises along the way.
+    </div>
+
+    
+        <div class="section">
+            <h2>The Dataset</h2>
+            <p>Our dataset spans <strong>16 award shows</strong> across <strong>26 years</strong> (2000–2025), with a total of 5,346 records. This includes major industry awards (DGA, PGA, SAG, WGA), big-tent shows (BAFTA, Golden Globes, Critics Choice), critics' circles (NYFCC, LAFCA, NSFC, NBR), and festival awards (Cannes, Venice, Toronto).</p>
+            <img src="plots/00_dataset_overview.png" alt="The Dataset">
+        </div>
+        
+        <div class="section">
+            <h2>Which Award Shows Best Predict the Oscars?</h2>
+            <p>Not all precursor awards are created equal. The <strong>DGA Awards</strong> stand out as the single most predictive precursor, followed by the <strong>PGA</strong>, <strong>SAG</strong>, and <strong>Critics Choice</strong>. Festival awards (Cannes, Venice) almost never directly predict Oscar winners — they operate on a different aesthetic axis entirely.</p>
+            <img src="plots/01_overall_accuracy.png" alt="Which Award Shows Best Predict the Oscars?">
+        </div>
+        
+        <div class="section">
+            <h2>The Full Picture: Accuracy by Category</h2>
+            <p>This heatmap reveals the nuance. The DGA's extraordinary accuracy is specific to <strong>Best Director</strong>. For <strong>Best Picture</strong>, the PGA is king. For acting categories, SAG and BAFTA are the most reliable signals. Some categories (editing, song) have surprisingly low predictability from any precursor.</p>
+            <img src="plots/02_accuracy_heatmap.png" alt="The Full Picture: Accuracy by Category">
+        </div>
+        
+        <div class="section">
+            <h2>Has Predictiveness Changed Over Time?</h2>
+            <p>Looking at 5-year rolling accuracy for Best Picture precursors, we can see interesting shifts. The PGA has become <em>more</em> predictive in recent years, while the Golden Globes' predictive power has been declining. This likely reflects the PGA's growing alignment with Academy voters.</p>
+            <img src="plots/03_accuracy_over_time.png" alt="Has Predictiveness Changed Over Time?">
+        </div>
+        
+        <div class="section">
+            <h2>How Often Do Precursor Awards Agree?</h2>
+            <p>When the PGA and BAFTA agree on Best Picture, pay attention. But interestingly, the major shows don't always agree — the Golden Globes often picks differently from the pack due to its Drama/Musical-Comedy split. Agreement rates between certain pairs of awards are remarkably high, suggesting shared voter sensibilities.</p>
+            <img src="plots/04_award_agreement_best_picture.png" alt="How Often Do Precursor Awards Agree?">
+        </div>
+        
+        <div class="section">
+            <h2>The Sweep Effect: How Many Precursors Did Oscar Winners Typically Win?</h2>
+            <p>The median Best Picture winner won about <strong>18%</strong> of available precursor awards. But the distribution is bimodal — there are "coronation" years where one film sweeps everything, and "contested" years where the winner emerged from a split field. Acting categories show a similar pattern.</p>
+            <img src="plots/05_sweep_distribution.png" alt="The Sweep Effect: How Many Precursors Did Oscar Winners Typically Win?">
+        </div>
+        
+        <div class="section">
+            <h2>Which Categories Are Most (and Least) Predictable?</h2>
+            <p>Best Director and Best Animated Feature are the most predictable Oscar categories — if you know the DGA and Golden Globe Animation winners, you're right ~80% of the time. At the other end, categories like Best Film Editing, Best Song, and Best Production Design are much harder to forecast from precursors alone.</p>
+            <img src="plots/06_category_predictability.png" alt="Which Categories Are Most (and Least) Predictable?">
+        </div>
+        
+        <div class="section">
+            <h2>Industry Guilds vs. Critics vs. Festivals</h2>
+            <p>The pattern is clear: <strong>industry guild awards</strong> (DGA, PGA, SAG, WGA) are the best Oscar predictors because they share the most voter overlap with the Academy. Major shows (BAFTA, Golden Globes, Critics Choice) are next. Critics' circles have more idiosyncratic tastes. And festival awards operate on an almost entirely different wavelength.</p>
+            <img src="plots/07_award_types_comparison.png" alt="Industry Guilds vs. Critics vs. Festivals">
+        </div>
+        
+        <div class="section">
+            <h2>The DGA–Oscar Connection: 85% Accuracy</h2>
+            <p>The DGA has matched the Oscar Best Director winner in <strong>85%</strong> of years since 2000 — the most reliable single predictor in all of awards season. The rare misses are fascinating: they tend to happen in years with strong narrative momentum behind a different director.</p>
+            <img src="plots/08_dga_oscar_director.png" alt="The DGA–Oscar Connection: 85% Accuracy">
+        </div>
+        
+        <div class="section">
+            <h2>Does Consensus Guarantee the Oscar?</h2>
+            <p>When 90%+ of precursor awards agree on a frontrunner, that person/film wins the Oscar nearly every time. But when consensus drops below 50%, it becomes a coin flip. This has direct implications for our 2026 predictions — the <strong>Best Actor</strong> race, with four different precursors picking four different people, is genuinely unpredictable.</p>
+            <img src="plots/09_consensus_vs_outcome.png" alt="Does Consensus Guarantee the Oscar?">
+        </div>
+        
+
+    
+        <div class="section">
+            <h2>The Upsets: When No Major Precursor Called It</h2>
+            <p>These are the years where the Oscar winner wasn't picked by <em>any</em> of the top 4–5
+            precursor awards for that category. These are the true surprises — the times the Academy
+            zagged when everyone expected them to zig. There have been <strong>7 such upsets</strong>
+            since 2000.</p>
+            <table>
+                <tr><th>Year</th><th>Category</th><th>Oscar Winner</th><th>What Precursors Picked Instead</th></tr>
+                
+            <tr>
+                <td>2005</td>
+                <td>Best Picture</td>
+                <td><strong>Million Dollar Baby</strong></td>
+                <td style="font-size: 0.85em">PGA: The Aviator (Michael Mann and Graham King); Critics Choice: Sideways; BAFTA: The Aviator; Golden Globes: The Aviator; Golden Globes: Sideways</td>
+            </tr>
+            <tr>
+                <td>2006</td>
+                <td>Best Picture</td>
+                <td><strong>Crash</strong></td>
+                <td style="font-size: 0.85em">PGA: Brokeback Mountain (Diana Ossana and James Schamus); Critics Choice: Brokeback Mountain; BAFTA: Brokeback Mountain; Golden Globes: Brokeback Mountain; Golden Globes: Walk the Line</td>
+            </tr>
+            <tr>
+                <td>2020</td>
+                <td>Best Picture</td>
+                <td><strong>Parasite</strong></td>
+                <td style="font-size: 0.85em">PGA: 1917; Critics Choice: Once Upon a Time in Hollywood; BAFTA: 1917; Golden Globes: 1917; Golden Globes: Once Upon a Time in Hollywood</td>
+            </tr>
+            <tr>
+                <td>2013</td>
+                <td>Best Director</td>
+                <td><strong>Ang Lee</strong></td>
+                <td style="font-size: 0.85em">DGA: Ben Affleck (Argo); Critics Choice: Ben Affleck (Argo); BAFTA: Ben Affleck; Golden Globes: Ben Affleck</td>
+            </tr>
+            <tr>
+                <td>2002</td>
+                <td>Best Actor</td>
+                <td><strong>Denzel Washington</strong></td>
+                <td style="font-size: 0.85em">SAG: Russell Crowe; BAFTA: Russell Crowe; Critics Choice: Russell Crowe; Golden Globes: Russell Crowe</td>
+            </tr>
+            <tr>
+                <td>2003</td>
+                <td>Best Actor</td>
+                <td><strong>Adrien Brody</strong></td>
+                <td style="font-size: 0.85em">SAG: Daniel Day-Lewis; BAFTA: Daniel Day-Lewis; Critics Choice: Daniel Day-Lewis and Jack Nicholson (Tie); Golden Globes: Jack Nicholson</td>
+            </tr>
+            <tr>
+                <td>2025</td>
+                <td>Best Actress</td>
+                <td><strong>Mikey Madison</strong></td>
+                <td style="font-size: 0.85em">SAG: Demi Moore; BAFTA: Marisa Abela; Critics Choice: Demi Moore; Golden Globes: Fernanda Torres</td>
+            </tr>
+            </table>
+        </div>
+        
+
+    <div class="section">
+        <h2>What This Means for 2026</h2>
+        <p>
+            Armed with these historical patterns, we built a <strong>weighted precursor model</strong> to
+            forecast the 2026 Oscars. The model weights each precursor award by its category-specific
+            historical accuracy, then aggregates the 2026 precursor winners into predictions.
+        </p>
+        <p>
+            The high-confidence picks (Best Director, Best Actress, Best Adapted Screenplay) have strong
+            precursor consensus — the kind that historically leads to an Oscar win nearly every time.
+            But the Best Actor race, with four different precursors picking four different people, is the
+            kind of split that makes awards season genuinely exciting.
+        </p>
+    </div>
+
+</body>
+</html>
