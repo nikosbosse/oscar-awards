@@ -831,6 +831,14 @@ def generate_html_report(upset_df, sweep_df, consensus_df, dga_df, acc_matrix):
                "every time. But when consensus drops below 50%, it becomes a coin flip. "
                "This has direct implications for our 2026 predictions — the <strong>Best Actor</strong> race, "
                "with four different precursors picking four different people, is genuinely unpredictable."),
+        "10": ("Model Calibration: Are Confidence Scores Meaningful?",
+               "A well-calibrated model should win 70% of the time when it says it's 70% confident. "
+               "This reliability diagram shows how each model's confidence maps to actual accuracy. "
+               "Points above the diagonal indicate under-confidence; points below indicate over-confidence."),
+        "11": ("Calibration by Model: Who's Most Honest About Uncertainty?",
+               "Expected Calibration Error (ECE) measures how far each model's confidence is from reality. "
+               "Lower ECE means the model's confidence scores are more trustworthy — important when using "
+               "these predictions to make actual forecasts."),
     }
 
     for pf in plot_files:

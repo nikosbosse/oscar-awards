@@ -1304,3 +1304,378 @@ Year,Category,Predicted,Actual,Correct,Confidence,Model
 2025,Best Actress,Demi Moore,Mikey Madison,False,0.7356048589411872,GBM
 2025,Best Supporting Actor,Kieran Culkin,Kieran Culkin,True,0.9649670024429201,GBM
 2025,Best Supporting Actress,Zoe Saldaña,Zoe Saldaña,True,0.9622986374577663,GBM
+2005,Best Picture,The Aviator,Million Dollar Baby,False,0.6287166344678646,Enh_LogReg
+2005,Best Director,Clint Eastwood,Clint Eastwood,True,0.688855071419557,Enh_LogReg
+2005,Best Actor,Jamie Foxx,Jamie Foxx,True,0.8864957372692174,Enh_LogReg
+2005,Best Actress,Hilary Swank,Hilary Swank,True,0.5479310755733205,Enh_LogReg
+2005,Best Supporting Actor,Clive Owen,Morgan Freeman,False,0.7289005960503909,Enh_LogReg
+2005,Best Supporting Actress,Cate Blanchett,Cate Blanchett,True,0.8875927082984589,Enh_LogReg
+2006,Best Picture,Brokeback Mountain,Crash,False,0.8616275561441058,Enh_LogReg
+2006,Best Director,Ang Lee,Ang Lee,True,0.9347088846382661,Enh_LogReg
+2006,Best Actor,Philip Seymour Hoffman,Philip Seymour Hoffman,True,0.9430050730178282,Enh_LogReg
+2006,Best Actress,Reese Witherspoon,Reese Witherspoon,True,0.930533251841808,Enh_LogReg
+2006,Best Supporting Actor,Paul Giamatti,George Clooney,False,0.6283612090162725,Enh_LogReg
+2006,Best Supporting Actress,Rachel Weisz,Rachel Weisz,True,0.41628271681032997,Enh_LogReg
+2007,Best Picture,Little Miss Sunshine,The Departed,False,0.598909638450509,Enh_LogReg
+2007,Best Director,Martin Scorsese,Martin Scorsese,True,0.8352169826011816,Enh_LogReg
+2007,Best Actor,Forest Whitaker,Forest Whitaker,True,0.8983956791024741,Enh_LogReg
+2007,Best Actress,Helen Mirren,Helen Mirren,True,0.9292545718036571,Enh_LogReg
+2007,Best Supporting Actor,Eddie Murphy,Alan Arkin,False,0.8474972212110385,Enh_LogReg
+2007,Best Supporting Actress,Jennifer Hudson,Jennifer Hudson,True,0.9769055513850662,Enh_LogReg
+2008,Best Picture,No Country for Old Men,No Country for Old Men,True,0.8193280281084221,Enh_LogReg
+2008,Best Director,Joel Coen and Ethan Coen,Joel Coen and Ethan Coen,True,0.892350990672482,Enh_LogReg
+2008,Best Actor,Daniel Day-Lewis,Daniel Day-Lewis,True,0.9378769697847958,Enh_LogReg
+2008,Best Actress,Julie Christie,Marion Cotillard,False,0.6384029592101779,Enh_LogReg
+2008,Best Supporting Actor,Javier Bardem,Javier Bardem,True,0.927587736706528,Enh_LogReg
+2008,Best Supporting Actress,Ruby Dee,Tilda Swinton,False,0.6306825886594833,Enh_LogReg
+2009,Best Picture,Slumdog Millionaire,Slumdog Millionaire,True,0.8858078945861111,Enh_LogReg
+2009,Best Director,Danny Boyle,Danny Boyle,True,0.9019937200381274,Enh_LogReg
+2009,Best Actor,Sean Penn,Sean Penn,True,0.47754788895146705,Enh_LogReg
+2009,Best Actress,Kate Winslet,Kate Winslet,True,0.5231586511919287,Enh_LogReg
+2009,Best Supporting Actor,Heath Ledger,Heath Ledger,True,0.927587736706528,Enh_LogReg
+2009,Best Supporting Actress,Kate Winslet,Penélope Cruz,False,0.8862305224938954,Enh_LogReg
+2010,Best Picture,The Hurt Locker,The Hurt Locker,True,0.84500139896145,Enh_LogReg
+2010,Best Director,Kathryn Bigelow,Kathryn Bigelow,True,0.9515140325338248,Enh_LogReg
+2010,Best Actor,Jeff Bridges,Jeff Bridges,True,0.7398037429173429,Enh_LogReg
+2010,Best Actress,Meryl Streep and Sandra Bullock (Tie),Sandra Bullock,True,0.7652437231002477,Enh_LogReg
+2010,Best Supporting Actor,Christoph Waltz,Christoph Waltz,True,0.8948222446359996,Enh_LogReg
+2010,Best Supporting Actress,Mo'Nique,Mo'Nique,True,0.9739047989795747,Enh_LogReg
+2011,Best Picture,The Social Network,The King's Speech,False,0.7124441875061336,Enh_LogReg
+2011,Best Director,Tom Hooper,Tom Hooper,True,0.7465299595428617,Enh_LogReg
+2011,Best Actor,Colin Firth,Colin Firth,True,0.9242468434540626,Enh_LogReg
+2011,Best Actress,Natalie Portman,Natalie Portman,True,0.9101097978115037,Enh_LogReg
+2011,Best Supporting Actor,Christian Bale,Christian Bale,True,0.7418794277112793,Enh_LogReg
+2011,Best Supporting Actress,Melissa Leo,Melissa Leo,True,0.8256908501925103,Enh_LogReg
+2012,Best Picture,The Artist,The Artist,True,0.7401519352531363,Enh_LogReg
+2012,Best Director,Michel Hazanavicius,Michel Hazanavicius,True,0.9037672459794768,Enh_LogReg
+2012,Best Actor,George Clooney,Jean Dujardin,False,0.4331907080330422,Enh_LogReg
+2012,Best Actress,Meryl Streep,Meryl Streep,True,0.5700192479503214,Enh_LogReg
+2012,Best Supporting Actor,Christopher Plummer,Christopher Plummer,True,0.8948222446359996,Enh_LogReg
+2012,Best Supporting Actress,Octavia Spencer,Octavia Spencer,True,0.9692537653751607,Enh_LogReg
+2013,Best Picture,Argo,Argo,True,0.8404609112512251,Enh_LogReg
+2013,Best Director,Ben Affleck,Ang Lee,False,0.9137892377615607,Enh_LogReg
+2013,Best Actress,Jennifer Lawrence,Jennifer Lawrence,True,0.36168959164926734,Enh_LogReg
+2013,Best Supporting Actor,Christoph Waltz,Christoph Waltz,True,0.5112309934106677,Enh_LogReg
+2013,Best Supporting Actress,Anne Hathaway,Anne Hathaway,True,0.9733647605311054,Enh_LogReg
+2014,Best Picture,12 Years a Slave,12 Years a Slave,True,0.836336794216033,Enh_LogReg
+2014,Best Director,Alfonso Cuarón,Alfonso Cuarón,True,0.9086056162230814,Enh_LogReg
+2014,Best Actor,Matthew McConaughey,Matthew McConaughey,True,0.7004588317597668,Enh_LogReg
+2014,Best Actress,Cate Blanchett,Cate Blanchett,True,0.9312761342701552,Enh_LogReg
+2014,Best Supporting Actor,Jared Leto,Jared Leto,True,0.7584423160168582,Enh_LogReg
+2014,Best Supporting Actress,Lupita Nyong'o,Lupita Nyong'o,True,0.5819467347446754,Enh_LogReg
+2015,Best Picture,Birdman,Birdman or (The Unexpected Virtue of Ignorance),True,0.47788991547221554,Enh_LogReg
+2015,Best Director,Alejandro G. Iñárritu,Alejandro G. Iñárritu,True,0.7263034868445154,Enh_LogReg
+2015,Best Actor,Eddie Redmayne,Eddie Redmayne,True,0.8385734496739508,Enh_LogReg
+2015,Best Actress,Julianne Moore,Julianne Moore,True,0.9212214319555448,Enh_LogReg
+2015,Best Supporting Actor,J.K. Simmons,J. K. Simmons,False,0.9246302723141558,Enh_LogReg
+2015,Best Supporting Actress,Patricia Arquette,Patricia Arquette,True,0.9769524099198119,Enh_LogReg
+2016,Best Picture,Spotlight (January ceremony); La La Land (December,Spotlight,True,0.5035715934055113,Enh_LogReg
+2016,Best Director,Alejandro G. Iñárritu,Alejandro G. Iñárritu,True,0.7777501616619393,Enh_LogReg
+2016,Best Actor,Leonardo DiCaprio,Leonardo DiCaprio,True,0.9012945189175051,Enh_LogReg
+2016,Best Actress,Brie Larson,Brie Larson,True,0.9212214319555448,Enh_LogReg
+2016,Best Supporting Actor,Sylvester Stallone (January); Mahershala Ali (Dece,Mark Rylance,False,0.6967042734667126,Enh_LogReg
+2016,Best Supporting Actress,Alicia Vikander,Alicia Vikander,True,0.6518229696396776,Enh_LogReg
+2017,Best Picture,La La Land,Moonlight,False,0.5147467811455785,Enh_LogReg
+2017,Best Director,Damien Chazelle,Damien Chazelle,True,0.8863650761230789,Enh_LogReg
+2017,Best Actor,Casey Affleck,Casey Affleck,True,0.7922277182531433,Enh_LogReg
+2017,Best Actress,Emma Stone,Emma Stone,True,0.9254716071189608,Enh_LogReg
+2017,Best Supporting Actor,Aaron Taylor-Johnson,Mahershala Ali,False,0.49788240825656216,Enh_LogReg
+2017,Best Supporting Actress,Viola Davis,Viola Davis,True,0.9692537653751607,Enh_LogReg
+2018,Best Picture,The Shape of Water,The Shape of Water,True,0.8865609683476353,Enh_LogReg
+2018,Best Director,Guillermo del Toro,Guillermo del Toro,True,0.9132776794880072,Enh_LogReg
+2018,Best Actor,Gary Oldman,Gary Oldman,True,0.8850436178985988,Enh_LogReg
+2018,Best Actress,Frances McDormand,Frances McDormand,True,0.9175033113455703,Enh_LogReg
+2018,Best Supporting Actor,Sam Rockwell,Sam Rockwell,True,0.8948222446359994,Enh_LogReg
+2018,Best Supporting Actress,Allison Janney,Allison Janney,True,0.9690281600005239,Enh_LogReg
+2019,Best Picture,Roma,Green Book,False,0.6864335927508203,Enh_LogReg
+2019,Best Director,Alfonso Cuarón,Alfonso Cuarón,True,0.9651885526611474,Enh_LogReg
+2019,Best Actor,Rami Malek,Rami Malek,True,0.7070657944202803,Enh_LogReg
+2019,Best Actress,Glenn Close and Lady Gaga (Tie),Olivia Colman,False,0.7168581070515492,Enh_LogReg
+2019,Best Supporting Actor,Mahershala Ali,Mahershala Ali,True,0.8948222446359994,Enh_LogReg
+2019,Best Supporting Actress,Emily Blunt,Regina King,False,0.5193306600248158,Enh_LogReg
+2020,Best Picture,1917,Parasite,False,0.5363772241101868,Enh_LogReg
+2020,Best Director,Sam Mendes,Bong Joon Ho,False,0.9297262358724336,Enh_LogReg
+2020,Best Actor,Joaquin Phoenix,Joaquin Phoenix,True,0.8947666302553342,Enh_LogReg
+2020,Best Actress,Renée Zellweger,Renée Zellweger,True,0.9285168389967857,Enh_LogReg
+2020,Best Supporting Actor,Brad Pitt,Brad Pitt,True,0.9357108949991647,Enh_LogReg
+2020,Best Supporting Actress,Laura Dern,Laura Dern,True,0.9739047989795745,Enh_LogReg
+2021,Best Picture,Nomadland,Nomadland,True,0.9188005304038037,Enh_LogReg
+2021,Best Director,Chloé Zhao,Chloé Zhao,True,0.9189248306476272,Enh_LogReg
+2021,Best Actor,Chadwick Boseman,Anthony Hopkins,False,0.8835149429750032,Enh_LogReg
+2021,Best Actress,Viola Davis,Frances McDormand,False,0.25167944963132305,Enh_LogReg
+2021,Best Supporting Actor,Daniel Kaluuya,Daniel Kaluuya,True,0.8948222446359994,Enh_LogReg
+2021,Best Supporting Actress,Youn Yuh-jung,Yuh-Jung Youn,True,0.8722329393201416,Enh_LogReg
+2022,Best Picture,The Power of the Dog,CODA,False,0.43270157832950773,Enh_LogReg
+2022,Best Director,Jane Campion,Jane Campion,True,0.9081252589533753,Enh_LogReg
+2022,Best Actor,"Will Smith (Film), Sean Bean (Television)",Will Smith,True,0.8800471889915364,Enh_LogReg
+2022,Best Actress,Joanna Scanlan,Jessica Chastain,False,0.4714634255067365,Enh_LogReg
+2022,Best Supporting Actor,Troy Kotsur,Troy Kotsur,True,0.6622141993673396,Enh_LogReg
+2022,Best Supporting Actress,Ariana DeBose,Ariana DeBose,True,0.9692537653751607,Enh_LogReg
+2023,Best Picture,Everything Everywhere All at Once,Everything Everywhere All at Once,True,0.8496202963445244,Enh_LogReg
+2023,Best Director,Daniel Kwan and Daniel Scheinert,Daniel Kwan and Daniel Scheinert,True,0.878101093753049,Enh_LogReg
+2023,Best Actor,Austin Butler,Brendan Fraser,False,0.5270074814274502,Enh_LogReg
+2023,Best Actress,Cate Blanchett,Michelle Yeoh,False,0.8374723504438487,Enh_LogReg
+2023,Best Supporting Actor,Ke Huy Quan,Ke Huy Quan,True,0.7960207076653852,Enh_LogReg
+2023,Best Supporting Actress,Kerry Condon,Jamie Lee Curtis,False,0.3626244160061637,Enh_LogReg
+2024,Best Picture,Oppenheimer,Oppenheimer,True,0.8528199281226522,Enh_LogReg
+2024,Best Director,Christopher Nolan,Christopher Nolan,True,0.8961100124918383,Enh_LogReg
+2024,Best Actor,Cillian Murphy,Cillian Murphy,True,0.8059293375811298,Enh_LogReg
+2024,Best Actress,Lily Gladstone,Emma Stone,False,0.5926979797500016,Enh_LogReg
+2024,Best Supporting Actor,Robert Downey Jr.,Robert Downey Jr.,True,0.9281852905810913,Enh_LogReg
+2024,Best Supporting Actress,Da'Vine Joy Randolph,Da'Vine Joy Randolph,True,1.0,Enh_LogReg
+2025,Best Picture,Anora,Anora,True,0.8192980828173627,Enh_LogReg
+2025,Best Director,Sean Baker,Sean Baker,True,0.7565678162083617,Enh_LogReg
+2025,Best Actor,Adrien Brody,Adrien Brody,True,0.6761813333584217,Enh_LogReg
+2025,Best Actress,Demi Moore,Mikey Madison,False,0.7143709395499751,Enh_LogReg
+2025,Best Supporting Actor,Kieran Culkin,Kieran Culkin,True,0.9643590227988122,Enh_LogReg
+2025,Best Supporting Actress,Zoe Saldaña,Zoe Saldaña,True,0.9692537653751605,Enh_LogReg
+2005,Best Picture,The Aviator,Million Dollar Baby,False,0.5664844221470895,Enh_RF
+2005,Best Director,Clint Eastwood,Clint Eastwood,True,0.7329781440017683,Enh_RF
+2005,Best Actor,Jamie Foxx,Jamie Foxx,True,0.8591485049182324,Enh_RF
+2005,Best Actress,Imelda Staunton,Hilary Swank,False,0.5723500681848338,Enh_RF
+2005,Best Supporting Actor,Clive Owen,Morgan Freeman,False,0.5146414909621457,Enh_RF
+2005,Best Supporting Actress,Cate Blanchett,Cate Blanchett,True,0.7346214725051693,Enh_RF
+2006,Best Picture,Brokeback Mountain,Crash,False,0.8971315060101858,Enh_RF
+2006,Best Director,Ang Lee,Ang Lee,True,0.952494174078776,Enh_RF
+2006,Best Actor,Philip Seymour Hoffman,Philip Seymour Hoffman,True,0.9604880699502407,Enh_RF
+2006,Best Actress,Reese Witherspoon,Reese Witherspoon,True,0.8640794541854582,Enh_RF
+2006,Best Supporting Actor,Paul Giamatti,George Clooney,False,0.530255373378072,Enh_RF
+2006,Best Supporting Actress,Rachel Weisz,Rachel Weisz,True,0.5072976428094085,Enh_RF
+2007,Best Picture,Little Miss Sunshine,The Departed,False,0.5338960992298182,Enh_RF
+2007,Best Director,Martin Scorsese,Martin Scorsese,True,0.7326566351386319,Enh_RF
+2007,Best Actor,Forest Whitaker,Forest Whitaker,True,0.9147172331497424,Enh_RF
+2007,Best Actress,Helen Mirren,Helen Mirren,True,0.95058503249946,Enh_RF
+2007,Best Supporting Actor,Eddie Murphy,Alan Arkin,False,0.9129524407546393,Enh_RF
+2007,Best Supporting Actress,Jennifer Hudson,Jennifer Hudson,True,0.9556956659439593,Enh_RF
+2008,Best Picture,No Country for Old Men,No Country for Old Men,True,0.7290727127927475,Enh_RF
+2008,Best Director,Joel Coen and Ethan Coen,Joel Coen and Ethan Coen,True,0.9376021136651045,Enh_RF
+2008,Best Actor,Daniel Day-Lewis,Daniel Day-Lewis,True,0.9476361435780161,Enh_RF
+2008,Best Actress,Julie Christie,Marion Cotillard,False,0.6276601884005174,Enh_RF
+2008,Best Supporting Actor,Javier Bardem,Javier Bardem,True,0.9220696794103523,Enh_RF
+2008,Best Supporting Actress,Ruby Dee,Tilda Swinton,False,0.6808402575687389,Enh_RF
+2009,Best Picture,Slumdog Millionaire,Slumdog Millionaire,True,0.8857945142272181,Enh_RF
+2009,Best Director,Danny Boyle,Danny Boyle,True,0.9359161123901413,Enh_RF
+2009,Best Actor,Mickey Rourke,Sean Penn,False,0.5224565450634726,Enh_RF
+2009,Best Actress,Kate Winslet,Kate Winslet,True,0.4967002799325176,Enh_RF
+2009,Best Supporting Actor,Heath Ledger,Heath Ledger,True,0.9220696794103523,Enh_RF
+2009,Best Supporting Actress,Kate Winslet,Penélope Cruz,False,0.9056914899176298,Enh_RF
+2010,Best Picture,The Hurt Locker,The Hurt Locker,True,0.829764202528945,Enh_RF
+2010,Best Director,Kathryn Bigelow,Kathryn Bigelow,True,0.9521296583201596,Enh_RF
+2010,Best Actor,Jeff Bridges,Jeff Bridges,True,0.7092168386606351,Enh_RF
+2010,Best Actress,Meryl Streep and Sandra Bullock (Tie),Sandra Bullock,True,0.7680981730273782,Enh_RF
+2010,Best Supporting Actor,Christoph Waltz,Christoph Waltz,True,0.9401665166657094,Enh_RF
+2010,Best Supporting Actress,Mo'Nique,Mo'Nique,True,0.9832314328382529,Enh_RF
+2011,Best Picture,The Social Network,The King's Speech,False,0.565054624005261,Enh_RF
+2011,Best Director,Tom Hooper,Tom Hooper,True,0.5839354836301633,Enh_RF
+2011,Best Actor,Colin Firth,Colin Firth,True,0.9236339386166051,Enh_RF
+2011,Best Actress,Natalie Portman,Natalie Portman,True,0.9748433642418534,Enh_RF
+2011,Best Supporting Actor,Christian Bale,Christian Bale,True,0.8077206771938538,Enh_RF
+2011,Best Supporting Actress,Melissa Leo,Melissa Leo,True,0.8485881524748652,Enh_RF
+2012,Best Picture,The Artist,The Artist,True,0.8224746919714043,Enh_RF
+2012,Best Director,Michel Hazanavicius,Michel Hazanavicius,True,0.8909476368705253,Enh_RF
+2012,Best Actor,George Clooney,Jean Dujardin,False,0.5570643693394683,Enh_RF
+2012,Best Actress,Viola Davis,Meryl Streep,False,0.49535154903255824,Enh_RF
+2012,Best Supporting Actor,Christopher Plummer,Christopher Plummer,True,0.9403659455534127,Enh_RF
+2012,Best Supporting Actress,Octavia Spencer,Octavia Spencer,True,0.9817590378963239,Enh_RF
+2013,Best Picture,Argo,Argo,True,0.8864872699538567,Enh_RF
+2013,Best Director,Ben Affleck,Ang Lee,False,0.9624804878714565,Enh_RF
+2013,Best Actress,Jessica Chastain,Jennifer Lawrence,False,0.33920502246417694,Enh_RF
+2013,Best Supporting Actor,Christoph Waltz,Christoph Waltz,True,0.44025928299433503,Enh_RF
+2013,Best Supporting Actress,Anne Hathaway,Anne Hathaway,True,0.9503280894093863,Enh_RF
+2014,Best Picture,12 Years a Slave,12 Years a Slave,True,0.8851538133685384,Enh_RF
+2014,Best Director,Alfonso Cuarón,Alfonso Cuarón,True,0.9628003097692406,Enh_RF
+2014,Best Actor,Matthew McConaughey,Matthew McConaughey,True,0.6620978018189477,Enh_RF
+2014,Best Actress,Cate Blanchett,Cate Blanchett,True,0.9495684658307013,Enh_RF
+2014,Best Supporting Actor,Jared Leto,Jared Leto,True,0.8320841711821544,Enh_RF
+2014,Best Supporting Actress,Lupita Nyong'o,Lupita Nyong'o,True,0.5648813011321492,Enh_RF
+2015,Best Picture,Boyhood,Birdman or (The Unexpected Virtue of Ignorance),False,0.6000002283108972,Enh_RF
+2015,Best Director,Alejandro G. Iñárritu,Alejandro G. Iñárritu,True,0.5581779791434173,Enh_RF
+2015,Best Actor,Eddie Redmayne,Eddie Redmayne,True,0.6870137272791628,Enh_RF
+2015,Best Actress,Julianne Moore,Julianne Moore,True,0.9732120173664057,Enh_RF
+2015,Best Supporting Actor,J.K. Simmons,J. K. Simmons,False,0.8823836908035931,Enh_RF
+2015,Best Supporting Actress,Patricia Arquette,Patricia Arquette,True,0.9872351414631181,Enh_RF
+2016,Best Picture,"The Big Short (Producers: Brad Pitt, Dede Gardner,",Spotlight,False,0.49899922899991256,Enh_RF
+2016,Best Director,Alejandro G. Iñárritu,Alejandro G. Iñárritu,True,0.8027432653194989,Enh_RF
+2016,Best Actor,Leonardo DiCaprio,Leonardo DiCaprio,True,0.9100653178667387,Enh_RF
+2016,Best Actress,Brie Larson,Brie Larson,True,0.9732120173664057,Enh_RF
+2016,Best Supporting Actor,Sylvester Stallone (January); Mahershala Ali (Dece,Mark Rylance,False,0.6299765545345211,Enh_RF
+2016,Best Supporting Actress,Alicia Vikander,Alicia Vikander,True,0.6968491270576433,Enh_RF
+2017,Best Picture,La La Land,Moonlight,False,0.5761929043731562,Enh_RF
+2017,Best Director,Damien Chazelle,Damien Chazelle,True,0.9443512910843305,Enh_RF
+2017,Best Actor,Casey Affleck,Casey Affleck,True,0.7198646182325171,Enh_RF
+2017,Best Actress,Emma Stone,Emma Stone,True,0.7626845629994206,Enh_RF
+2017,Best Supporting Actor,Aaron Taylor-Johnson,Mahershala Ali,False,0.5244037696628222,Enh_RF
+2017,Best Supporting Actress,Viola Davis,Viola Davis,True,0.9808963812266887,Enh_RF
+2018,Best Picture,The Shape of Water,The Shape of Water,True,0.7480337011890689,Enh_RF
+2018,Best Director,Guillermo del Toro,Guillermo del Toro,True,0.944315479728358,Enh_RF
+2018,Best Actor,Gary Oldman,Gary Oldman,True,0.9057104646980917,Enh_RF
+2018,Best Actress,Frances McDormand,Frances McDormand,True,0.9508598715599037,Enh_RF
+2018,Best Supporting Actor,Sam Rockwell,Sam Rockwell,True,0.9457790440681699,Enh_RF
+2018,Best Supporting Actress,Allison Janney,Allison Janney,True,0.9476061530074412,Enh_RF
+2019,Best Picture,Roma,Green Book,False,0.6142872460606539,Enh_RF
+2019,Best Director,Alfonso Cuarón,Alfonso Cuarón,True,0.9829562310479367,Enh_RF
+2019,Best Actor,Rami Malek,Rami Malek,True,0.7033680782599078,Enh_RF
+2019,Best Actress,Glenn Close and Lady Gaga (Tie),Olivia Colman,False,0.5649402445403573,Enh_RF
+2019,Best Supporting Actor,Mahershala Ali,Mahershala Ali,True,0.9457790440681699,Enh_RF
+2019,Best Supporting Actress,Emily Blunt,Regina King,False,0.41324337297602964,Enh_RF
+2020,Best Picture,1917,Parasite,False,0.5720587941639135,Enh_RF
+2020,Best Director,Sam Mendes,Bong Joon Ho,False,0.9717594741935617,Enh_RF
+2020,Best Actor,Joaquin Phoenix,Joaquin Phoenix,True,0.9145474173020065,Enh_RF
+2020,Best Actress,Renée Zellweger,Renée Zellweger,True,0.9773338790981547,Enh_RF
+2020,Best Supporting Actor,Brad Pitt,Brad Pitt,True,0.9689285766976589,Enh_RF
+2020,Best Supporting Actress,Laura Dern,Laura Dern,True,0.9829605760740536,Enh_RF
+2021,Best Picture,Nomadland,Nomadland,True,0.9000473070578128,Enh_RF
+2021,Best Director,Chloé Zhao,Chloé Zhao,True,0.9670699342647247,Enh_RF
+2021,Best Actor,Chadwick Boseman,Anthony Hopkins,False,0.8499196979457045,Enh_RF
+2021,Best Actress,Viola Davis,Frances McDormand,False,0.4443155613237452,Enh_RF
+2021,Best Supporting Actor,Daniel Kaluuya,Daniel Kaluuya,True,0.9450421943534135,Enh_RF
+2021,Best Supporting Actress,Youn Yuh-jung,Yuh-Jung Youn,True,0.82107840051326,Enh_RF
+2022,Best Picture,The Power of the Dog,CODA,False,0.5478008291022285,Enh_RF
+2022,Best Director,Jane Campion,Jane Campion,True,0.9687673994433962,Enh_RF
+2022,Best Actor,"Will Smith (Film), Sean Bean (Television)",Will Smith,True,0.9226732725431915,Enh_RF
+2022,Best Actress,Jessica Chastain,Jessica Chastain,True,0.6331876211852961,Enh_RF
+2022,Best Supporting Actor,Kodi Smit-McPhee,Troy Kotsur,False,0.47237299733080285,Enh_RF
+2022,Best Supporting Actress,Ariana DeBose,Ariana DeBose,True,0.982832667345539,Enh_RF
+2023,Best Picture,Everything Everywhere All at Once,Everything Everywhere All at Once,True,0.7846126825730806,Enh_RF
+2023,Best Director,Daniel Kwan and Daniel Scheinert,Daniel Kwan and Daniel Scheinert,True,0.8833463057879085,Enh_RF
+2023,Best Actor,Austin Butler,Brendan Fraser,False,0.5354999837870345,Enh_RF
+2023,Best Actress,Cate Blanchett,Michelle Yeoh,False,0.6503727607064007,Enh_RF
+2023,Best Supporting Actor,Ke Huy Quan,Ke Huy Quan,True,0.8810261008879285,Enh_RF
+2023,Best Supporting Actress,Angela Bassett,Jamie Lee Curtis,False,0.47431475319930383,Enh_RF
+2024,Best Picture,Oppenheimer,Oppenheimer,True,0.8676038151918118,Enh_RF
+2024,Best Director,Christopher Nolan,Christopher Nolan,True,0.961041530518376,Enh_RF
+2024,Best Actor,Cillian Murphy,Cillian Murphy,True,0.7200917841559741,Enh_RF
+2024,Best Actress,Lily Gladstone,Emma Stone,False,0.5249749765666645,Enh_RF
+2024,Best Supporting Actor,Robert Downey Jr.,Robert Downey Jr.,True,0.9394342434919736,Enh_RF
+2024,Best Supporting Actress,Da'Vine Joy Randolph,Da'Vine Joy Randolph,True,1.0,Enh_RF
+2025,Best Picture,Anora,Anora,True,0.7063266326579986,Enh_RF
+2025,Best Director,Sean Baker,Sean Baker,True,0.5968441761061303,Enh_RF
+2025,Best Actor,Adrien Brody,Adrien Brody,True,0.7412532059388887,Enh_RF
+2025,Best Actress,Demi Moore,Mikey Madison,False,0.7130294140486512,Enh_RF
+2025,Best Supporting Actor,Kieran Culkin,Kieran Culkin,True,0.9788037285540676,Enh_RF
+2025,Best Supporting Actress,Zoe Saldaña,Zoe Saldaña,True,0.9768033727427413,Enh_RF
+2005,Best Picture,Sideways,Million Dollar Baby,False,0.48955674314202813,Enh_GBM
+2005,Best Director,Clint Eastwood,Clint Eastwood,True,0.9137406022799067,Enh_GBM
+2005,Best Actor,Jamie Foxx,Jamie Foxx,True,0.9098748912498809,Enh_GBM
+2005,Best Actress,Imelda Staunton,Hilary Swank,False,0.6691800727577757,Enh_GBM
+2005,Best Supporting Actor,Thomas Haden Church,Morgan Freeman,False,0.46202503433623376,Enh_GBM
+2005,Best Supporting Actress,Cate Blanchett,Cate Blanchett,True,0.9375367482864534,Enh_GBM
+2006,Best Picture,Brokeback Mountain,Crash,False,0.8693811081533899,Enh_GBM
+2006,Best Director,Ang Lee,Ang Lee,True,0.9734534543574122,Enh_GBM
+2006,Best Actor,Philip Seymour Hoffman,Philip Seymour Hoffman,True,0.9572358950558816,Enh_GBM
+2006,Best Actress,Reese Witherspoon,Reese Witherspoon,True,0.9759233382243704,Enh_GBM
+2006,Best Supporting Actor,Paul Giamatti,George Clooney,False,0.6765322949223144,Enh_GBM
+2006,Best Supporting Actress,Thandiwe Newton,Rachel Weisz,False,0.5557050122544297,Enh_GBM
+2007,Best Picture,Little Miss Sunshine,The Departed,False,0.6569645545892823,Enh_GBM
+2007,Best Director,Martin Scorsese,Martin Scorsese,True,0.5436019867983607,Enh_GBM
+2007,Best Actor,Forest Whitaker,Forest Whitaker,True,0.901535388567674,Enh_GBM
+2007,Best Actress,Helen Mirren,Helen Mirren,True,0.9663094834862411,Enh_GBM
+2007,Best Supporting Actor,Eddie Murphy,Alan Arkin,False,0.9398140727352912,Enh_GBM
+2007,Best Supporting Actress,Jennifer Hudson,Jennifer Hudson,True,0.9822343232235312,Enh_GBM
+2008,Best Picture,No Country for Old Men,No Country for Old Men,True,0.8242249726218109,Enh_GBM
+2008,Best Director,Joel Coen and Ethan Coen,Joel Coen and Ethan Coen,True,0.9792017462646347,Enh_GBM
+2008,Best Actor,Daniel Day-Lewis,Daniel Day-Lewis,True,0.9504582082547822,Enh_GBM
+2008,Best Actress,Julie Christie,Marion Cotillard,False,0.6710484243143567,Enh_GBM
+2008,Best Supporting Actor,Javier Bardem,Javier Bardem,True,0.9727578079781036,Enh_GBM
+2008,Best Supporting Actress,Ruby Dee,Tilda Swinton,False,0.8308675720660478,Enh_GBM
+2009,Best Picture,Slumdog Millionaire,Slumdog Millionaire,True,0.8861002668129226,Enh_GBM
+2009,Best Director,Danny Boyle,Danny Boyle,True,0.9732700755570447,Enh_GBM
+2009,Best Actor,Sean Penn,Sean Penn,True,0.543905061260071,Enh_GBM
+2009,Best Actress,Kate Winslet,Kate Winslet,True,0.7299424994612271,Enh_GBM
+2009,Best Supporting Actor,Heath Ledger,Heath Ledger,True,0.9727578079781036,Enh_GBM
+2009,Best Supporting Actress,Kate Winslet,Penélope Cruz,False,0.9045270253850842,Enh_GBM
+2010,Best Picture,The Hurt Locker,The Hurt Locker,True,0.8878134740126673,Enh_GBM
+2010,Best Director,Kathryn Bigelow,Kathryn Bigelow,True,0.9887360640523759,Enh_GBM
+2010,Best Actor,Jeff Bridges,Jeff Bridges,True,0.7915518451668884,Enh_GBM
+2010,Best Actress,Meryl Streep and Sandra Bullock (Tie),Sandra Bullock,True,0.9165662135542645,Enh_GBM
+2010,Best Supporting Actor,Christoph Waltz,Christoph Waltz,True,0.9544303471048777,Enh_GBM
+2010,Best Supporting Actress,Mo'Nique,Mo'Nique,True,0.981725633131693,Enh_GBM
+2011,Best Picture,The Social Network,The King's Speech,False,0.6977032493851394,Enh_GBM
+2011,Best Director,Tom Hooper,Tom Hooper,True,0.8757907889805838,Enh_GBM
+2011,Best Actor,Colin Firth,Colin Firth,True,0.9119248466595486,Enh_GBM
+2011,Best Actress,Natalie Portman,Natalie Portman,True,0.9509582503740592,Enh_GBM
+2011,Best Supporting Actor,Christian Bale,Christian Bale,True,0.7649112298858859,Enh_GBM
+2011,Best Supporting Actress,Melissa Leo,Melissa Leo,True,0.794694719172783,Enh_GBM
+2012,Best Picture,The Artist,The Artist,True,0.853522104321599,Enh_GBM
+2012,Best Director,Michel Hazanavicius,Michel Hazanavicius,True,0.9805035855804286,Enh_GBM
+2012,Best Actor,Jean Dujardin,Jean Dujardin,True,0.47672506215132715,Enh_GBM
+2012,Best Actress,Meryl Streep,Meryl Streep,True,0.5301581965046381,Enh_GBM
+2012,Best Supporting Actor,Christopher Plummer,Christopher Plummer,True,0.9544303471048777,Enh_GBM
+2012,Best Supporting Actress,Octavia Spencer,Octavia Spencer,True,0.9734024667720711,Enh_GBM
+2013,Best Picture,Argo,Argo,True,0.861541864491717,Enh_GBM
+2013,Best Director,Ben Affleck,Ang Lee,False,0.9772134724293119,Enh_GBM
+2013,Best Actress,Emmanuelle Riva,Jennifer Lawrence,False,0.3831741868007079,Enh_GBM
+2013,Best Supporting Actor,Christoph Waltz,Christoph Waltz,True,0.4716374367578125,Enh_GBM
+2013,Best Supporting Actress,Anne Hathaway,Anne Hathaway,True,0.9820633083906759,Enh_GBM
+2014,Best Picture,12 Years a Slave,12 Years a Slave,True,0.861541864491717,Enh_GBM
+2014,Best Director,Alfonso Cuarón,Alfonso Cuarón,True,0.9755070344815968,Enh_GBM
+2014,Best Actor,Matthew McConaughey,Matthew McConaughey,True,0.705432863010763,Enh_GBM
+2014,Best Actress,Cate Blanchett,Cate Blanchett,True,0.9755117172925014,Enh_GBM
+2014,Best Supporting Actor,Jared Leto,Jared Leto,True,0.7708695954201513,Enh_GBM
+2014,Best Supporting Actress,Jennifer Lawrence,Lupita Nyong'o,False,0.526471774976947,Enh_GBM
+2015,Best Picture,Birdman,Birdman or (The Unexpected Virtue of Ignorance),True,0.5937830306134457,Enh_GBM
+2015,Best Director,Alejandro G. Iñárritu,Alejandro G. Iñárritu,True,0.8757907889805838,Enh_GBM
+2015,Best Actor,Eddie Redmayne,Eddie Redmayne,True,0.8224857578576176,Enh_GBM
+2015,Best Actress,Julianne Moore,Julianne Moore,True,0.9577264029289804,Enh_GBM
+2015,Best Supporting Actor,J.K. Simmons,J. K. Simmons,False,0.9513555669264285,Enh_GBM
+2015,Best Supporting Actress,Patricia Arquette,Patricia Arquette,True,0.9894444201889976,Enh_GBM
+2016,Best Picture,"The Big Short (Producers: Brad Pitt, Dede Gardner,",Spotlight,False,0.5271792418722442,Enh_GBM
+2016,Best Director,Alejandro G. Iñárritu,Alejandro G. Iñárritu,True,0.881228877839679,Enh_GBM
+2016,Best Actor,Leonardo DiCaprio,Leonardo DiCaprio,True,0.8898089893950514,Enh_GBM
+2016,Best Actress,Brie Larson,Brie Larson,True,0.9577264029289804,Enh_GBM
+2016,Best Supporting Actor,Sylvester Stallone (January); Mahershala Ali (Dece,Mark Rylance,False,0.594759493589735,Enh_GBM
+2016,Best Supporting Actress,Alicia Vikander,Alicia Vikander,True,0.6670821783758695,Enh_GBM
+2017,Best Picture,La La Land,Moonlight,False,0.49835031413612035,Enh_GBM
+2017,Best Director,Damien Chazelle,Damien Chazelle,True,0.9592106845878395,Enh_GBM
+2017,Best Actor,Casey Affleck,Casey Affleck,True,0.8544288514553703,Enh_GBM
+2017,Best Actress,Emma Stone,Emma Stone,True,0.7484255984714142,Enh_GBM
+2017,Best Supporting Actor,Aaron Taylor-Johnson,Mahershala Ali,False,0.4938613440787178,Enh_GBM
+2017,Best Supporting Actress,Viola Davis,Viola Davis,True,0.9734024667720711,Enh_GBM
+2018,Best Picture,The Shape of Water,The Shape of Water,True,0.8629032640675878,Enh_GBM
+2018,Best Director,Guillermo del Toro,Guillermo del Toro,True,0.9732700755570447,Enh_GBM
+2018,Best Actor,Gary Oldman,Gary Oldman,True,0.8794813067281968,Enh_GBM
+2018,Best Actress,Frances McDormand,Frances McDormand,True,0.9589571681558628,Enh_GBM
+2018,Best Supporting Actor,Sam Rockwell,Sam Rockwell,True,0.9544303471048777,Enh_GBM
+2018,Best Supporting Actress,Allison Janney,Allison Janney,True,0.9743943463242069,Enh_GBM
+2019,Best Picture,Roma,Green Book,False,0.7380096051546814,Enh_GBM
+2019,Best Director,Alfonso Cuarón,Alfonso Cuarón,True,0.9892517038051354,Enh_GBM
+2019,Best Actor,Rami Malek,Rami Malek,True,0.7343755234255925,Enh_GBM
+2019,Best Actress,Glenn Close and Lady Gaga (Tie),Olivia Colman,False,0.507925271080899,Enh_GBM
+2019,Best Supporting Actor,Mahershala Ali,Mahershala Ali,True,0.9544303471048777,Enh_GBM
+2019,Best Supporting Actress,Emily Blunt,Regina King,False,0.5015371311004395,Enh_GBM
+2020,Best Picture,Once Upon a Time in Hollywood,Parasite,False,0.5277887161097683,Enh_GBM
+2020,Best Director,Sam Mendes,Bong Joon Ho,False,0.982141175139804,Enh_GBM
+2020,Best Actor,Joaquin Phoenix,Joaquin Phoenix,True,0.8898089893950514,Enh_GBM
+2020,Best Actress,Renée Zellweger,Renée Zellweger,True,0.9667087403128217,Enh_GBM
+2020,Best Supporting Actor,Brad Pitt,Brad Pitt,True,0.9705209532652559,Enh_GBM
+2020,Best Supporting Actress,Laura Dern,Laura Dern,True,0.981725633131693,Enh_GBM
+2021,Best Picture,Nomadland,Nomadland,True,0.9193583415313731,Enh_GBM
+2021,Best Director,Chloé Zhao,Chloé Zhao,True,0.9799034882551535,Enh_GBM
+2021,Best Actor,Chadwick Boseman,Anthony Hopkins,False,0.8820115222670243,Enh_GBM
+2021,Best Actress,Frances McDormand,Frances McDormand,True,0.13601838107303785,Enh_GBM
+2021,Best Supporting Actor,Daniel Kaluuya,Daniel Kaluuya,True,0.9544303471048777,Enh_GBM
+2021,Best Supporting Actress,Youn Yuh-jung,Yuh-Jung Youn,True,0.9372052250901604,Enh_GBM
+2022,Best Picture,"CODA (Producers: Philippe Rousselet, Fabrice Gianf",CODA,True,0.6030395058662819,Enh_GBM
+2022,Best Director,Jane Campion,Jane Campion,True,0.9758745433740263,Enh_GBM
+2022,Best Actor,"Will Smith (Film), Sean Bean (Television)",Will Smith,True,0.8918183797192606,Enh_GBM
+2022,Best Actress,Jessica Chastain,Jessica Chastain,True,0.8635546922388763,Enh_GBM
+2022,Best Supporting Actor,Kodi Smit-McPhee,Troy Kotsur,False,0.6987074943840743,Enh_GBM
+2022,Best Supporting Actress,Ariana DeBose,Ariana DeBose,True,0.9734024667720711,Enh_GBM
+2023,Best Picture,Everything Everywhere All at Once,Everything Everywhere All at Once,True,0.8709080119568945,Enh_GBM
+2023,Best Director,Daniel Kwan and Daniel Scheinert,Daniel Kwan and Daniel Scheinert,True,0.9768837778686178,Enh_GBM
+2023,Best Actor,Brendan Fraser,Brendan Fraser,True,0.5591723518780567,Enh_GBM
+2023,Best Actress,Cate Blanchett,Michelle Yeoh,False,0.6227730076803585,Enh_GBM
+2023,Best Supporting Actor,Ke Huy Quan,Ke Huy Quan,True,0.8067376933392499,Enh_GBM
+2023,Best Supporting Actress,Angela Bassett,Jamie Lee Curtis,False,0.6679380253851335,Enh_GBM
+2024,Best Picture,Oppenheimer,Oppenheimer,True,0.8726095754532084,Enh_GBM
+2024,Best Director,Christopher Nolan,Christopher Nolan,True,0.9705772892675009,Enh_GBM
+2024,Best Actor,Cillian Murphy,Cillian Murphy,True,0.8769927998456101,Enh_GBM
+2024,Best Actress,Emma Stone,Emma Stone,True,0.48718382212556965,Enh_GBM
+2024,Best Supporting Actor,Robert Downey Jr.,Robert Downey Jr.,True,0.9733238608025861,Enh_GBM
+2024,Best Supporting Actress,Da'Vine Joy Randolph,Da'Vine Joy Randolph,True,1.0,Enh_GBM
+2025,Best Picture,Anora,Anora,True,0.7892827893678942,Enh_GBM
+2025,Best Director,Sean Baker,Sean Baker,True,0.8389580022256953,Enh_GBM
+2025,Best Actor,Adrien Brody,Adrien Brody,True,0.8039409235432637,Enh_GBM
+2025,Best Actress,Demi Moore,Mikey Madison,False,0.9229017352139678,Enh_GBM
+2025,Best Supporting Actor,Kieran Culkin,Kieran Culkin,True,0.9812046081241752,Enh_GBM
+2025,Best Supporting Actress,Zoe Saldaña,Zoe Saldaña,True,0.9734024667720709,Enh_GBM

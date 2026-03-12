@@ -697,7 +697,22 @@ ALL_MODELS = {
     "logreg":    model_logistic_regression,
     "rf":        model_random_forest,
     "gbm":       model_gradient_boosting,
+    "enh_logreg": lambda df, cm, acc, **kw: __import__("enhanced_features").model_enhanced_logistic_regression(df, cm, acc, **kw),
+    "enh_rf":     lambda df, cm, acc, **kw: __import__("enhanced_features").model_enhanced_random_forest(df, cm, acc, **kw),
+    "enh_gbm":    lambda df, cm, acc, **kw: __import__("enhanced_features").model_enhanced_gradient_boosting(df, cm, acc, **kw),
 }
+
+# Lazy-load ensemble models to avoid circular imports
+def _load_ensemble_models():
+    from ensemble import model_weighted_ensemble, model_rank_ensemble, model_equal_ensemble
+    ALL_MODELS["ensemble"] = model_weighted_ensemble
+    ALL_MODELS["rank_ensemble"] = model_rank_ensemble
+    ALL_MODELS["equal_ensemble"] = model_equal_ensemble
+
+try:
+    _load_ensemble_models()
+except ImportError:
+    pass  # ensemble.py not yet available
 
 
 def run_all_models(
@@ -910,6 +925,33 @@ def run_full_backtest(df, category_mapping, accuracy) -> pd.DataFrame:
     for key, (cls, kwargs) in ml_models.items():
         print(f"  Backtesting: {key}...")
         res = backtest_ml_model(df, category_mapping, cls, kwargs, key)
+        all_results.append(res)
+
+    # Enhanced ML models
+    from enhanced_features import backtest_enhanced_ml_model as _bt_enh
+    enhanced_ml_models = {
+        "Enh_LogReg": (
+            _make_sklearn_model(LogisticRegression(C=2.0, max_iter=1000, random_state=42)),
+            {},
+        ),
+        "Enh_RF": (
+            _make_sklearn_model(RandomForestClassifier(
+                n_estimators=80, max_depth=3, min_samples_leaf=3, random_state=42,
+            )),
+            {},
+        ),
+        "Enh_GBM": (
+            _make_sklearn_model(GradientBoostingClassifier(
+                n_estimators=50, max_depth=2, learning_rate=0.1,
+                min_samples_leaf=5, random_state=42,
+            )),
+            {},
+        ),
+    }
+
+    for key, (cls, kwargs) in enhanced_ml_models.items():
+        print(f"  Backtesting: {key}...")
+        res = _bt_enh(df, category_mapping, cls, kwargs, key)
         all_results.append(res)
 
     combined = pd.concat(all_results, ignore_index=True)
