@@ -65,7 +65,6 @@ main {
   font-size: 0.95rem;
   line-height: 1.7;
   margin-bottom: 16px;
-  max-width: 900px;
 }
 
 #intro-section p strong {
@@ -97,7 +96,28 @@ main {
   color: #aaa;
   font-size: 0.85rem;
   line-height: 1.6;
-  margin-bottom: 0;
+  margin-bottom: 8px;
+}
+
+.intro-group ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.intro-group ul li {
+  color: #ccc;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  padding-left: 14px;
+  position: relative;
+}
+
+.intro-group ul li::before {
+  content: "\2022";
+  color: #d4a843;
+  position: absolute;
+  left: 0;
 }
 
 /* === Navigation Controls === */

@@ -22,19 +22,42 @@
       <div class="intro-grid">
         <div class="intro-group">
           <h3>Industry Guilds</h3>
-          <p>DGA (Directors Guild), PGA (Producers Guild), SAG (Screen Actors Guild), WGA (Writers Guild), ACE Eddie Awards. Voted on by professionals in the relevant craft &mdash; the strongest predictors for their corresponding Oscar categories.</p>
+          <p>Voted on by professionals in the relevant craft &mdash; the strongest predictors for their corresponding Oscar categories.</p>
+          <ul>
+            <li>DGA (Directors Guild)</li>
+            <li>PGA (Producers Guild)</li>
+            <li>SAG (Screen Actors Guild)</li>
+            <li>WGA (Writers Guild)</li>
+            <li>ACE Eddie Awards</li>
+          </ul>
         </div>
         <div class="intro-group">
           <h3>Major Award Shows</h3>
-          <p>BAFTA, Golden Globes, Critics Choice Awards. High-profile ceremonies with broad category coverage.</p>
+          <p>High-profile ceremonies with broad category coverage.</p>
+          <ul>
+            <li>BAFTA</li>
+            <li>Golden Globes</li>
+            <li>Critics Choice Awards</li>
+          </ul>
         </div>
         <div class="intro-group">
           <h3>Critics Circles</h3>
-          <p>NYFCC, LAFCA, NSFC, National Board of Review. Smaller bodies of film critics whose picks sometimes diverge significantly from Oscar outcomes.</p>
+          <p>Smaller bodies of film critics whose picks sometimes diverge significantly from Oscar outcomes.</p>
+          <ul>
+            <li>NYFCC (New York Film Critics Circle)</li>
+            <li>LAFCA (Los Angeles Film Critics Association)</li>
+            <li>NSFC (National Society of Film Critics)</li>
+            <li>NBR (National Board of Review)</li>
+          </ul>
         </div>
         <div class="intro-group">
           <h3>Festivals</h3>
-          <p>Venice (Golden Lion), Cannes (Palme d&rsquo;Or), Toronto (People&rsquo;s Choice). Early signals from months before the Oscars, though with weaker predictive power overall.</p>
+          <p>Early signals from months before the Oscars, though with weaker predictive power overall.</p>
+          <ul>
+            <li>Venice (Golden Lion)</li>
+            <li>Cannes (Palme d&rsquo;Or)</li>
+            <li>Toronto (People&rsquo;s Choice)</li>
+          </ul>
         </div>
       </div>
 
@@ -57,20 +80,6 @@
       <div class="heatmap-container">
         <div id="accuracy-heatmap" class="heatmap-grid"></div>
         <div id="yearly-grid" class="heatmap-grid" style="display:none"></div>
-      </div>
-    </section>
-
-    <!-- Section 3: Agreement Matrix -->
-    <section class="card" id="agreement-section">
-      <h2>How Often Do Precursor Awards Agree?</h2>
-      <p class="subtitle">Percentage of years where two precursor awards picked the same winner in a given category</p>
-      <div class="nav-controls">
-        <button id="cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
-        <span id="cat-display" class="nav-label"></span>
-        <button id="cat-next" class="nav-btn" aria-label="Next category">&rarr;</button>
-      </div>
-      <div class="heatmap-container">
-        <div id="agreement-matrix" class="heatmap-grid"></div>
       </div>
     </section>
 
@@ -114,6 +123,20 @@
         <span id="combos-threshold-display">2</span>
       </div>
       <div id="combos-table" class="combos-container"></div>
+    </section>
+
+    <!-- Agreement Matrix -->
+    <section class="card" id="agreement-section">
+      <h2>How Often Do Precursor Awards Agree?</h2>
+      <p class="subtitle">Percentage of years where two precursor awards picked the same winner in a given category</p>
+      <div class="nav-controls">
+        <button id="cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
+        <span id="cat-display" class="nav-label"></span>
+        <button id="cat-next" class="nav-btn" aria-label="Next category">&rarr;</button>
+      </div>
+      <div class="heatmap-container">
+        <div id="agreement-matrix" class="heatmap-grid"></div>
+      </div>
     </section>
   </main>
 
