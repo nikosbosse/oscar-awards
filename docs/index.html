@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Predicting the Oscars Based On Precursor Awards</title>
+  <title>How Predictable Are the Oscars?</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>Predicting the Oscars Based On Precursor Awards</h1>
+    <h1>How Predictable Are the Oscars?</h1>
+    <p class="header-subtitle">Analysing 26 years of precursor awards to find out which Oscar races are decided weeks before the ceremony &mdash; and which are anyone&rsquo;s guess.</p>
   </header>
 
   <main>
-    <!-- Introduction + 2026 Predictions -->
+    <!-- 1. Introduction -->
     <section class="card" id="intro-section">
-      <h2>About This Project</h2>
-      <p>Every year, before the Oscars, a constellation of other film industry awards &mdash; guild prizes, critics&rsquo; circles, major ceremonies, and festivals &mdash; announce their own winners. These <strong>precursor awards</strong> have historically shown predictive power for Oscar outcomes. By tracking who wins these earlier awards, we can estimate who is likely to take home the Oscar.</p>
+      <h2>The Precursor Awards</h2>
+      <p>Every year, before the Oscars, a constellation of other film industry awards &mdash; guild prizes, critics&rsquo; circles, major ceremonies, and festivals &mdash; announce their own winners. These <strong>precursor awards</strong> have historically shown predictive power for Oscar outcomes.</p>
 
-      <p>Using <a href="https://futuresearch.ai" target="_blank" rel="noopener" class="futuresearch-link"><img src="futuresearch-logo.webp" alt="Futuresearch" class="inline-logo">futuresearch</a>, I researched <strong>5,298 award winners</strong> spanning <strong>26 years</strong> of ceremony data (2000&ndash;2025), covering all <strong>24 Oscar categories</strong> and <strong>15 precursor award shows</strong>.</p>
+      <p>Using <a href="https://futuresearch.ai" target="_blank" rel="noopener" class="futuresearch-link"><img src="futuresearch-logo.webp" alt="Futuresearch" class="inline-logo">futuresearch</a>, I researched <strong>5,298 award winners</strong> spanning <strong>26 years</strong> of ceremony data (2000&ndash;2025), covering all <strong>24 Oscar categories</strong> and <strong>15 precursor award shows</strong>. But how reliable are they, really? The answer varies wildly depending on which award you&rsquo;re looking at &mdash; and which Oscar category you care about.</p>
 
       <div class="intro-grid">
         <div class="intro-group">
@@ -60,32 +61,19 @@
           </ul>
         </div>
       </div>
-
-      <p>Predictive accuracy varies widely &mdash; guild awards like the DGA (85% for Best Director) and SAG tend to be the strongest predictors, while critics circles and festivals are less reliable but still informative as part of the broader consensus picture.</p>
     </section>
 
-    <!-- 2026 Oscar Predictions -->
-    <section class="card" id="forecast-section">
-      <h2>2026 Oscar Predictions &mdash; A Simple Base Rate Model</h2>
-      <p>For each category, we look at which precursor awards each nominee won, then weight those wins by historical accuracy. A nominee who won the DGA (85% accurate for Best Director) gets a much stronger signal than one who won the NBR (4%). Nominees who won no precursors share a &ldquo;dark horse&rdquo; probability derived from how often Oscar winners in that category historically had zero precursor wins &mdash; about 4% for Best Picture, near zero for categories like Best Supporting Actor where precursors almost always predict the winner. Scores are normalised across all nominees in each category to produce win probabilities.</p>
-      <p class="subtitle">This is a simple base-rate model, not a sophisticated forecast &mdash; it doesn&rsquo;t account for narrative momentum, campaign spending, or voter psychology. Categories where one nominee swept the precursors show high confidence; split races produce more uncertain estimates. Hover over a nominee to see which precursors contributed to their score.</p>
-      <div id="forecast-cat-selector" class="award-selector"></div>
-      <div id="forecast-grid"></div>
+    <!-- 2. Predictability overview (new bar chart) -->
+    <section class="card" id="predictability-section">
+      <h2>Which Oscar Categories Are Most Predictable?</h2>
+      <p class="subtitle">For each category, the single most accurate precursor over 26 years. Categories at the top are near-locks; those at the bottom are genuinely hard to call.</p>
+      <div id="predictability-chart" class="predictability-container"></div>
+      <p class="section-transition">So some categories have a standout predictor while others are a toss-up. But which specific precursors are best &mdash; and how do they perform across the board?</p>
     </section>
 
-    <!-- 2026 Precursor Winners -->
-    <section class="card" id="predictions-section">
-      <h2>2026 Awards Season at a Glance</h2>
-      <p class="subtitle">Who is winning what this awards season? Each color represents a precursor award. Click the chips above to show/hide columns.</p>
-      <div id="pred-award-selector" class="award-selector"></div>
-      <div class="heatmap-container">
-        <div id="predictions-grid" class="heatmap-grid"></div>
-      </div>
-    </section>
-
-    <!-- Section 1: Accuracy Heatmap + Yearly Scorecard (combined) -->
+    <!-- 3. Accuracy heatmap + yearly scorecard -->
     <section class="card" id="accuracy-section">
-      <h2 id="heatmap-title">Precursor Accuracy by Oscar Category</h2>
+      <h2 id="heatmap-title">Which Precursors Actually Matter?</h2>
       <p class="subtitle" id="heatmap-subtitle">For each precursor, the percentage of years where its winner went on to win the Oscar in the same category (2000&ndash;2025, minimum 5 years of data)</p>
       <div class="toggle-row">
         <button id="heatmap-mode-accuracy" class="toggle-btn active">Overall Accuracy</button>
@@ -100,11 +88,12 @@
         <div id="accuracy-heatmap" class="heatmap-grid"></div>
         <div id="yearly-grid" class="heatmap-grid" style="display:none"></div>
       </div>
+      <p class="section-transition">Accuracy alone doesn&rsquo;t tell the full story. Does winning <em>more</em> precursor awards actually improve a nominee&rsquo;s chances &mdash; or is one strong signal enough?</p>
     </section>
 
-    <!-- Section 4: Precursor Count vs Oscar Win Probability -->
+    <!-- 4. Precursor count vs Oscar win probability -->
     <section class="card" id="count-section">
-      <h2>Precursor Count vs Oscar Win Probability</h2>
+      <h2>Does Sweeping the Precursors Guarantee an Oscar?</h2>
       <p class="subtitle">If a nominee wins N precursor awards, how likely are they to win the Oscar?</p>
       <div class="nav-controls">
         <button id="count-cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
@@ -121,11 +110,12 @@
         <span id="count-threshold-display">2</span>
       </div>
       <div id="count-chart" class="chart-container"></div>
+      <p class="section-transition">Individual precursor accuracy is useful, but the real signal comes from <em>specific combinations</em>. Some are nearly bulletproof.</p>
     </section>
 
-    <!-- Section 5: Winning Precursor Combinations -->
+    <!-- 5. Winning precursor combinations -->
     <section class="card" id="combos-section">
-      <h2>Winning Precursor Combinations</h2>
+      <h2>The Combinations That (Almost) Never Lose</h2>
       <p class="subtitle">Which specific sets of precursor wins have historically led to Oscar victories?</p>
       <div class="nav-controls">
         <button id="combos-cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
@@ -144,9 +134,9 @@
       <div id="combos-table" class="combos-container"></div>
     </section>
 
-    <!-- Agreement Matrix -->
+    <!-- 6. Agreement matrix -->
     <section class="card" id="agreement-section">
-      <h2>How Often Do Precursor Awards Agree?</h2>
+      <h2>When the Awards Agree &mdash; and When They Don&rsquo;t</h2>
       <p class="subtitle">Percentage of years where two precursor awards picked the same winner in a given category</p>
       <div class="nav-controls">
         <button id="cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
@@ -156,6 +146,26 @@
       <div class="heatmap-container">
         <div id="agreement-matrix" class="heatmap-grid"></div>
       </div>
+      <p class="section-transition">Now let&rsquo;s apply everything we&rsquo;ve learned to this year&rsquo;s races.</p>
+    </section>
+
+    <!-- 7. 2026 Awards season at a glance -->
+    <section class="card" id="predictions-section">
+      <h2>2026 Awards Season at a Glance</h2>
+      <p class="subtitle">Who is winning what this awards season? Each colour represents a precursor award. Click the chips to show or hide columns.</p>
+      <div id="pred-award-selector" class="award-selector"></div>
+      <div class="heatmap-container">
+        <div id="predictions-grid" class="heatmap-grid"></div>
+      </div>
+    </section>
+
+    <!-- 8. 2026 Oscar predictions (conclusion) -->
+    <section class="card" id="forecast-section">
+      <h2>What the Data Suggests for 2026</h2>
+      <p>This is not a forecast &mdash; it&rsquo;s a question: <em>if historical patterns hold, what do they suggest?</em> For each category, we look at which precursor awards each nominee won, then weight those wins by historical accuracy. A nominee who won the DGA (85% accurate for Best Director) gets a much stronger signal than one who won the NBR (4%). Nominees who won no precursors share a &ldquo;dark horse&rdquo; probability derived from how often Oscar winners in that category historically had zero precursor wins. Scores are normalised across all nominees in each category to produce win probabilities.</p>
+      <p class="subtitle">This is a simple base-rate model &mdash; it doesn&rsquo;t account for narrative momentum, campaign spending, or voter psychology. Categories where one nominee swept the precursors show high confidence; split races produce more uncertain estimates. Hover over a nominee to see which precursors contributed to their score.</p>
+      <div id="forecast-cat-selector" class="award-selector"></div>
+      <div id="forecast-grid"></div>
     </section>
   </main>
 

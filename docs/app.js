@@ -74,6 +74,98 @@
     tooltip.style.top = y + "px";
   }
 
+  // ── Predictability Bar Chart ────────────────────────────
+
+  function renderPredictabilityChart() {
+    const container = document.getElementById("predictability-chart");
+    const categories = DATA.oscar_categories;
+    const heatmap = DATA.accuracy_heatmap;
+
+    // Compute best accuracy per category
+    const rows = [];
+    for (const cat of categories) {
+      const catData = heatmap[cat] || {};
+      const values = Object.entries(catData).filter(([, v]) => v !== null && v !== undefined);
+      if (values.length === 0) continue;
+
+      let bestVal = 0;
+      let bestName = "";
+      for (const [precursor, val] of values) {
+        if (val > bestVal) {
+          bestVal = val;
+          bestName = precursor;
+        }
+      }
+      rows.push({ cat, bestVal, bestName });
+    }
+
+    // Sort by best accuracy descending
+    rows.sort((a, b) => b.bestVal - a.bestVal);
+
+    // Define tiers
+    const tiers = [
+      { label: "Highly predictable", min: 70 },
+      { label: "Moderately predictable", min: 50 },
+      { label: "Hard to predict", min: 0 },
+    ];
+
+    container.innerHTML = "";
+
+    const maxVal = 100;
+
+    let currentTier = -1;
+    for (const row of rows) {
+      // Determine tier
+      const tierIdx = tiers.findIndex(t => row.bestVal >= t.min);
+      if (tierIdx !== currentTier) {
+        currentTier = tierIdx;
+        const tierLabel = document.createElement("div");
+        tierLabel.className = "predictability-tier-label";
+        tierLabel.textContent = tiers[tierIdx].label;
+        container.appendChild(tierLabel);
+      }
+
+      const rowEl = document.createElement("div");
+      rowEl.className = "predictability-row";
+
+      const label = document.createElement("div");
+      label.className = "predictability-label";
+      label.textContent = row.cat.replace("Best ", "");
+      rowEl.appendChild(label);
+
+      const bars = document.createElement("div");
+      bars.className = "predictability-bars";
+
+      // Best precursor bar, colored by award
+      const bestBar = document.createElement("div");
+      bestBar.className = "predictability-bar-best";
+      bestBar.style.width = (row.bestVal / maxVal * 100) + "%";
+      bestBar.style.background = AWARD_COLORS[row.bestName] || "#4CAF50";
+      bars.appendChild(bestBar);
+
+      // Annotation
+      const annotation = document.createElement("span");
+      annotation.className = "predictability-annotation";
+      annotation.style.left = (row.bestVal / maxVal * 100) + "%";
+      annotation.textContent = `${row.bestName} (${row.bestVal}%)`;
+      bars.appendChild(annotation);
+
+      rowEl.appendChild(bars);
+
+      // Tooltip
+      rowEl.addEventListener("mouseenter", (e) => {
+        showTooltip(e,
+          `<strong>${row.cat}</strong><br>` +
+          `Best predictor: ${row.bestName} (${row.bestVal}%)`
+        );
+      });
+      rowEl.addEventListener("mousemove", positionTooltip);
+      rowEl.addEventListener("mouseleave", hideTooltip);
+
+      container.appendChild(rowEl);
+    }
+  }
+
   // ── 2026 Oscar Forecast ────────────────────────────────
 
   // Default 8 forecast categories
@@ -325,7 +417,7 @@
       yearNav.style.display = "none";
       accGrid.style.display = "";
       yearGrid.style.display = "none";
-      title.textContent = "Precursor Accuracy by Oscar Category";
+      title.textContent = "Which Precursors Actually Matter?";
       subtitle.textContent = "For each precursor, the percentage of years where its winner went on to win the Oscar in the same category (2000\u20132025, minimum 5 years of data)";
     } else {
       yearBtn.classList.add("active");
@@ -1091,15 +1183,16 @@
     currentYearIndex = DATA.years.length - 1;
     currentCatIndex = 0;
 
-    initForecastCatSelector();
-    renderForecast();
-    initPredAwardSelector();
-    renderPredictionsGrid();
+    renderPredictabilityChart();
     renderAccuracyHeatmap();
     renderYearlyGrid();
-    renderAgreementMatrix();
     renderCountChart();
     renderCombosTable();
+    renderAgreementMatrix();
+    initPredAwardSelector();
+    renderPredictionsGrid();
+    initForecastCatSelector();
+    renderForecast();
     setupNavigation();
   }
 

@@ -865,6 +865,94 @@ main {
   color: #666;
 }
 
+/* === Header subtitle === */
+.header-subtitle {
+  color: #999;
+  font-size: 1rem;
+  max-width: 700px;
+  margin: 12px auto 0;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* === Section Transitions === */
+.section-transition {
+  color: #999;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 24px;
+  margin-bottom: 0;
+  padding-top: 16px;
+  border-top: 1px solid #2a2a4a;
+  line-height: 1.6;
+}
+
+/* === Predictability Bar Chart === */
+.predictability-container {
+  padding: 10px 0;
+}
+
+.predictability-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  height: 28px;
+}
+
+.predictability-label {
+  width: 200px;
+  min-width: 200px;
+  text-align: right;
+  padding-right: 14px;
+  font-size: 0.8rem;
+  color: #ccc;
+  white-space: nowrap;
+}
+
+.predictability-bars {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.predictability-bar-best {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: calc(100% - 4px);
+  border-radius: 3px;
+  opacity: 0.8;
+  transition: opacity 0.15s ease;
+}
+
+.predictability-row:hover .predictability-bar-best {
+  opacity: 1;
+}
+
+.predictability-annotation {
+  position: absolute;
+  font-size: 0.72rem;
+  color: #bbb;
+  white-space: nowrap;
+  padding-left: 8px;
+}
+
+.predictability-tier-label {
+  font-size: 0.75rem;
+  color: #d4a843;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 16px 0 8px;
+  padding-left: 4px;
+}
+
+.predictability-tier-label:first-child {
+  margin-top: 4px;
+}
+
 /* === Responsive === */
 @media (max-width: 768px) {
   header h1 {
@@ -888,5 +976,15 @@ main {
 
   .heatmap-grid .col-header {
     min-height: 60px;
+  }
+
+  .predictability-label {
+    width: 140px;
+    min-width: 140px;
+    font-size: 0.7rem;
+  }
+
+  .predictability-annotation {
+    font-size: 0.6rem;
   }
 }
