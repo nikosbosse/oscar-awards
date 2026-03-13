@@ -436,10 +436,14 @@
           for (const inst of instances) {
             const color = inst.won_oscar ? "#4CAF50" : "#f44336";
             const label = inst.won_oscar ? "Won Oscar" : "Did not win";
+            const tags = (inst.precursors || [])
+              .map(p => `<span class="combo-tag">${p}</span>`)
+              .join(" ");
             html += `<tr>
               <td style="color:#d4a843;font-weight:600;width:60px">${inst.year}</td>
               <td>${inst.name}</td>
-              <td style="text-align:right;font-weight:600;color:${color}">${label}</td>
+              <td><div class="combo-tags">${tags}</div></td>
+              <td style="text-align:right;font-weight:600;color:${color};white-space:nowrap">${label}</td>
             </tr>`;
           }
           html += `</tbody></table>`;

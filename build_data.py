@@ -627,6 +627,7 @@ def build_datasets(df: pd.DataFrame) -> dict:
                     "year": year,
                     "name": cluster["name"],
                     "won_oscar": cluster["is_oscar_winner"],
+                    "precursors": sorted(cluster["precursors"]),
                 })
 
         # Convert to serializable format
