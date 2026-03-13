@@ -577,7 +577,9 @@ def build_datasets(df: pd.DataFrame) -> dict:
     for oscar_cat, precursor_entries in CATEGORY_MAPPING.items():
         precursor_full_names = sorted(set(aw for aw, _ in precursor_entries))
         # Collect observations: list of (count, won_oscar) across all years
-        observations_by_count: dict[int, dict] = defaultdict(lambda: {"wins": 0, "total": 0})
+        observations_by_count: dict[int, dict] = defaultdict(
+            lambda: {"wins": 0, "total": 0, "instances": []}
+        )
 
         for year in years:
             oscar_winner = oscar_winners.get((oscar_cat, year))
@@ -621,15 +623,22 @@ def build_datasets(df: pd.DataFrame) -> dict:
                 observations_by_count[count]["total"] += 1
                 if cluster["is_oscar_winner"]:
                     observations_by_count[count]["wins"] += 1
+                observations_by_count[count]["instances"].append({
+                    "year": year,
+                    "name": cluster["name"],
+                    "won_oscar": cluster["is_oscar_winner"],
+                })
 
         # Convert to serializable format
         cat_count_data = {}
         for count, stats in sorted(observations_by_count.items()):
             if stats["total"] >= 2:  # Need at least 2 observations
+                instances = sorted(stats["instances"], key=lambda x: x["year"])
                 cat_count_data[str(count)] = {
                     "win_pct": round(100 * stats["wins"] / stats["total"]),
                     "wins": stats["wins"],
                     "total": stats["total"],
+                    "instances": instances,
                 }
         if cat_count_data:
             precursor_count_data[oscar_cat] = cat_count_data

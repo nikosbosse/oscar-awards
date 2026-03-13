@@ -384,6 +384,10 @@
       const chart = document.createElement("div");
       chart.className = "bar-chart";
 
+      const detailPanel = document.createElement("div");
+      detailPanel.className = "count-detail-panel";
+      let activeBar = null;
+
       for (const count of counts) {
         const d = catData[String(count)];
         const group = document.createElement("div");
@@ -401,17 +405,47 @@
         const heightPct = Math.max((d.win_pct / maxPct) * 100, 1);
         bar.style.height = heightPct + "%";
         bar.style.background = accuracyColor(d.win_pct);
-        bar.style.cursor = "default";
+        bar.style.cursor = "pointer";
 
         bar.addEventListener("mouseenter", (e) => {
           showTooltip(e,
             `<strong>${count} precursor${count > 1 ? "s" : ""} won</strong><br>` +
             `Oscar win rate: ${d.win_pct}%<br>` +
-            `${d.wins} wins out of ${d.total} cases`
+            `${d.wins} wins out of ${d.total} cases<br>` +
+            `<em>Click to see details</em>`
           );
         });
         bar.addEventListener("mousemove", positionTooltip);
         bar.addEventListener("mouseleave", hideTooltip);
+
+        bar.addEventListener("click", () => {
+          // Toggle
+          if (activeBar === bar) {
+            activeBar.classList.remove("bar-active");
+            activeBar = null;
+            detailPanel.classList.remove("open");
+            return;
+          }
+          if (activeBar) activeBar.classList.remove("bar-active");
+          activeBar = bar;
+          bar.classList.add("bar-active");
+
+          // Build detail table
+          const instances = d.instances || [];
+          let html = `<table class="combo-detail-table"><tbody>`;
+          for (const inst of instances) {
+            const color = inst.won_oscar ? "#4CAF50" : "#f44336";
+            const label = inst.won_oscar ? "Won Oscar" : "Did not win";
+            html += `<tr>
+              <td style="color:#d4a843;font-weight:600;width:60px">${inst.year}</td>
+              <td>${inst.name}</td>
+              <td style="text-align:right;font-weight:600;color:${color}">${label}</td>
+            </tr>`;
+          }
+          html += `</tbody></table>`;
+          detailPanel.innerHTML = html;
+          detailPanel.classList.add("open");
+        });
 
         const labelN = document.createElement("div");
         labelN.className = "bar-label-n";
@@ -436,6 +470,13 @@
       xTitle.className = "chart-x-title";
       xTitle.textContent = "Number of precursor awards won";
       container.appendChild(xTitle);
+
+      const hint = document.createElement("div");
+      hint.className = "click-hint";
+      hint.textContent = "Click a bar to see individual instances";
+      container.appendChild(hint);
+
+      container.appendChild(detailPanel);
 
       container.classList.remove("fading");
     }, 150);
@@ -564,6 +605,12 @@
       }
 
       table.appendChild(tbody);
+
+      const hint = document.createElement("div");
+      hint.className = "click-hint";
+      hint.textContent = "Click a row to see individual instances";
+
+      container.appendChild(hint);
       container.appendChild(table);
       container.classList.remove("fading");
     }, 150);
