@@ -7,6 +7,7 @@
   let currentCatIndex = 0;
   let currentCountCatIndex = 0;
   let currentCombosCatIndex = 0;
+  let predActiveAwards = new Set();
   let countModeAll = false;
   let combosModeAll = false;
   let countThreshold = 2;
@@ -73,6 +74,122 @@
     tooltip.style.top = y + "px";
   }
 
+  // ── 2026 Predictions Heatmap ────────────────────────────
+
+  // Fixed color per precursor award
+  const AWARD_COLORS = {
+    "ACE Eddie":      "hsl(15, 60%, 38%)",
+    "BAFTA":          "hsl(210, 55%, 40%)",
+    "Cannes":         "hsl(50, 65%, 38%)",
+    "Critics Choice": "hsl(140, 50%, 35%)",
+    "DGA":            "hsl(270, 45%, 42%)",
+    "Golden Globes":  "hsl(35, 70%, 40%)",
+    "LAFCA":          "hsl(180, 50%, 35%)",
+    "NBR":            "hsl(330, 50%, 38%)",
+    "NSFC":           "hsl(100, 45%, 35%)",
+    "NYFCC":          "hsl(0, 50%, 40%)",
+    "PGA":            "hsl(200, 60%, 38%)",
+    "SAG":            "hsl(160, 55%, 35%)",
+    "TIFF":           "hsl(285, 40%, 40%)",
+    "Venice":         "hsl(60, 50%, 35%)",
+    "WGA":            "hsl(22, 65%, 42%)",
+  };
+
+  function initPredAwardSelector() {
+    // Find all precursors that have any 2026 data
+    const allPrecursors = new Set();
+    for (const catData of Object.values(DATA.predictions_2026 || {})) {
+      for (const p of Object.keys(catData)) {
+        allPrecursors.add(p);
+      }
+    }
+    // Default: top 8 most predictive precursors
+    const defaultOn = new Set(["BAFTA", "Critics Choice", "DGA", "Golden Globes", "PGA", "SAG", "WGA", "ACE Eddie"]);
+    predActiveAwards = new Set(DATA.precursor_awards.filter(p => allPrecursors.has(p) && defaultOn.has(p)));
+
+    const selector = document.getElementById("pred-award-selector");
+    selector.innerHTML = "";
+
+    for (const p of DATA.precursor_awards) {
+      if (!allPrecursors.has(p)) continue;
+      const chip = document.createElement("span");
+      chip.className = "award-chip" + (predActiveAwards.has(p) ? "" : " inactive");
+      chip.textContent = p;
+      chip.dataset.award = p;
+
+      chip.addEventListener("click", () => {
+        if (predActiveAwards.has(p)) {
+          predActiveAwards.delete(p);
+          chip.classList.add("inactive");
+        } else {
+          predActiveAwards.add(p);
+          chip.classList.remove("inactive");
+        }
+        renderPredictionsGrid();
+      });
+
+      selector.appendChild(chip);
+    }
+  }
+
+  function renderPredictionsGrid() {
+    const container = document.getElementById("predictions-grid");
+    const predictions = DATA.predictions_2026 || {};
+    const categories = DATA.oscar_categories;
+    const precursors = DATA.precursor_awards.filter(p => predActiveAwards.has(p));
+
+    container.style.gridTemplateColumns = `180px repeat(${precursors.length}, minmax(0, 1fr))`;
+    container.innerHTML = "";
+
+    // Corner
+    const corner = document.createElement("div");
+    corner.className = "corner";
+    container.appendChild(corner);
+
+    // Column headers
+    for (const p of precursors) {
+      const hdr = document.createElement("div");
+      hdr.className = "col-header";
+      const span = document.createElement("span");
+      span.textContent = p;
+      hdr.appendChild(span);
+      container.appendChild(hdr);
+    }
+
+    // Rows
+    for (const cat of categories) {
+      const catData = predictions[cat] || {};
+
+      // Row label
+      const label = document.createElement("div");
+      label.className = "row-label";
+      label.textContent = cat;
+      container.appendChild(label);
+
+      for (const p of precursors) {
+        const cell = document.createElement("div");
+        cell.className = "pred-cell";
+
+        const winner = catData[p];
+        if (!winner) {
+          cell.classList.add("no-data");
+        } else {
+          cell.style.background = AWARD_COLORS[p] || "hsl(0, 0%, 35%)";
+          cell.textContent = winner;
+
+          cell.addEventListener("mouseenter", (e) => {
+            showTooltip(e, `<strong>${p}</strong><br>${winner}`);
+          });
+          cell.addEventListener("mousemove", positionTooltip);
+          cell.addEventListener("mouseleave", hideTooltip);
+        }
+
+        container.appendChild(cell);
+      }
+    }
+  }
+
+  // Simple JS-side name matching for clustering nominees in the predictions grid
   // ── Heatmap mode switching ─────────────────────────────
 
   function setHeatmapMode(mode) {
@@ -857,6 +974,8 @@
     currentYearIndex = DATA.years.length - 1;
     currentCatIndex = 0;
 
+    initPredAwardSelector();
+    renderPredictionsGrid();
     renderAccuracyHeatmap();
     renderYearlyGrid();
     renderAgreementMatrix();

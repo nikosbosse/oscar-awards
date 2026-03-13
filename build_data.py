@@ -25,7 +25,8 @@ CSV_FILES = [
 ]
 OUTPUT_FILE = SCRIPT_DIR / "data.json"
 
-YEAR_RANGE = range(2000, 2026)  # 2000-2025 inclusive
+YEAR_RANGE = range(2000, 2026)  # 2000-2025 inclusive (historical)
+YEAR_RANGE_LOAD = range(2000, 2027)  # Include 2026 for predictions
 
 AWARD_SHORT = {
     "ACE Eddie Awards": "ACE Eddie",
@@ -378,7 +379,7 @@ def load_data() -> pd.DataFrame:
                "Year of award ceremony"] += 1
 
     # Filter to year range (after adjustments, some may fall outside)
-    df = df[df["Year of award ceremony"].isin(YEAR_RANGE)]
+    df = df[df["Year of award ceremony"].isin(YEAR_RANGE_LOAD)]
 
     return df
 
@@ -770,6 +771,28 @@ def build_datasets(df: pd.DataFrame) -> dict:
         if combos_all:
             combination_all_data[oscar_cat] = combos_all
 
+    # -----------------------------------------------------------------------
+    # 6. 2026 precursor winners table
+    # -----------------------------------------------------------------------
+    prediction_year = 2026
+    predictions_2026 = {}
+
+    for oscar_cat, precursor_entries in CATEGORY_MAPPING.items():
+        precursor_full_names = sorted(set(aw for aw, _ in precursor_entries))
+        cat_picks = {}
+
+        for precursor_full in precursor_full_names:
+            pick, _ = get_precursor_pick(
+                lookup, oscar_cat, precursor_full, prediction_year,
+                None, precursor_entries,
+            )
+            if pick:
+                short = AWARD_SHORT[precursor_full]
+                cat_picks[short] = pick
+
+        if cat_picks:
+            predictions_2026[oscar_cat] = cat_picks
+
     return {
         "oscar_categories": oscar_categories,
         "precursor_awards": precursor_awards_sorted,
@@ -781,6 +804,7 @@ def build_datasets(df: pd.DataFrame) -> dict:
         "precursor_count_all": precursor_count_all_data,
         "combinations": combination_data,
         "combinations_all": combination_all_data,
+        "predictions_2026": predictions_2026,
     }
 
 

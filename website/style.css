@@ -356,6 +356,106 @@ main {
   background: #4a4a6a;
 }
 
+/* === Predictions Table === */
+.predictions-container {
+  transition: opacity 0.25s ease;
+}
+
+.predictions-container.fading {
+  opacity: 0;
+}
+
+.predictions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.predictions-table th {
+  text-align: left;
+  color: #d4a843;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 1px solid #333;
+}
+
+.predictions-table td {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: #ccc;
+  border-bottom: 1px solid #1e1e3a;
+}
+
+.predictions-table td:first-child {
+  color: #d4a843;
+  font-weight: 600;
+  white-space: nowrap;
+  width: 140px;
+}
+
+.predictions-table tr:hover td {
+  background: #1e1e3a;
+}
+
+.predictions-no-data {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+/* === Award Selector === */
+.award-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.award-selector .award-chip {
+  background: rgba(212, 168, 67, 0.15);
+  color: #d4a843;
+  border: 1px solid #d4a843;
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.award-selector .award-chip.inactive {
+  background: #12122a;
+  color: #555;
+  border-color: #333;
+}
+
+.award-selector .award-chip:hover {
+  background: rgba(212, 168, 67, 0.25);
+  color: #d4a843;
+  border-color: #d4a843;
+}
+
+/* Prediction grid cells */
+.heatmap-grid .pred-cell {
+  line-height: 30px;
+  font-size: 0.75rem;
+  border-radius: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 8px;
+  text-align: center;
+  cursor: default;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  color: #fff;
+}
+
+.heatmap-grid .pred-cell.no-data {
+  background: #12122a;
+  color: transparent;
+}
+
 /* === Toggle Row === */
 .toggle-row {
   display: flex;

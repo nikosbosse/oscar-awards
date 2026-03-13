@@ -92751,5 +92751,181 @@
         ]
       }
     ]
+  },
+  "predictions_2026": {
+    "Best Picture": {
+      "BAFTA": "One Battle After Another",
+      "Cannes": "Un simple accident (directed by Jafar Panahi)",
+      "Critics Choice": "One Battle After Another",
+      "Golden Globes": "Hamnet",
+      "LAFCA": "One Battle After Another",
+      "NBR": "One Battle After Another",
+      "NSFC": "One Battle After Another",
+      "NYFCC": "One Battle After Another",
+      "PGA": "One Battle After Another (Producers: Adam Somner, Sara Murphy, and Paul Thomas Anderson)",
+      "TIFF": "Hamnet",
+      "Venice": "Father Mother Sister Brother"
+    },
+    "Best Director": {
+      "BAFTA": "Paul Thomas Anderson",
+      "Cannes": "Kleber Mendonça Filho (for O Agente Secreto)",
+      "Critics Choice": "Paul Thomas Anderson (One Battle After Another)",
+      "DGA": "Paul Thomas Anderson",
+      "Golden Globes": "Paul Thomas Anderson",
+      "LAFCA": "Paul Thomas Anderson (for One Battle After Another)",
+      "NBR": "Paul Thomas Anderson",
+      "NSFC": "Paul Thomas Anderson",
+      "NYFCC": "Jafar Panahi (It Was Just an Accident)",
+      "Venice": "Benny Safdie"
+    },
+    "Best Actor": {
+      "BAFTA": "Robert Aramayo",
+      "Cannes": "Wagner Moura",
+      "Critics Choice": "Timothée Chalamet",
+      "Golden Globes": "Wagner Moura",
+      "NBR": "Leonardo DiCaprio",
+      "NSFC": "Ethan Hawke (Blue Moon)",
+      "NYFCC": "Wagner Moura",
+      "SAG": "Michael B. Jordan - Sinners",
+      "Venice": "Toni Servillo"
+    },
+    "Best Actress": {
+      "BAFTA": "Jessie Buckley",
+      "Cannes": "Nadia Melliti",
+      "Critics Choice": "Jessie Buckley",
+      "Golden Globes": "Jessie Buckley",
+      "NBR": "Rose Byrne",
+      "NSFC": "Kathleen Chalfant",
+      "NYFCC": "Rose Byrne",
+      "SAG": "Jessie Buckley",
+      "Venice": "Xin Zhilei"
+    },
+    "Best Supporting Actor": {
+      "BAFTA": "Sean Penn",
+      "Critics Choice": "Jacob Elordi",
+      "Golden Globes": "Stellan Skarsgård (Sentimental Value)",
+      "NBR": "Benicio Del Toro",
+      "NSFC": "Benicio del Toro",
+      "NYFCC": "Benicio del Toro",
+      "SAG": "Sean Penn"
+    },
+    "Best Supporting Actress": {
+      "BAFTA": "Wunmi Mosaku",
+      "Critics Choice": "Amy Madigan",
+      "Golden Globes": "Teyana Taylor",
+      "NBR": "Inga Ibsdotter Lilleaas",
+      "NSFC": "Teyana Taylor",
+      "NYFCC": "Amy Madigan",
+      "SAG": "Amy Madigan"
+    },
+    "Best Cinematography": {
+      "BAFTA": "One Battle After Another",
+      "Critics Choice": "Adolpho Veloso (Train Dreams)",
+      "LAFCA": "Adolpho Veloso (Train Dreams)",
+      "NBR": "Autumn Durald Arkapaw (Sinners)",
+      "NSFC": "Autumn Durald Arkapaw",
+      "NYFCC": "Autumn Durald Arkapaw"
+    },
+    "Best Film Editing": {
+      "ACE Eddie": "Sinners (Michael P. Shawver)",
+      "BAFTA": "One Battle After Another (Andy Jurgensen)",
+      "Critics Choice": "Stephen Mirrione (F1)",
+      "LAFCA": "Ronald Bronstein and Josh Safdie (Marty Supreme)"
+    },
+    "Best Adapted Screenplay": {
+      "BAFTA": "Paul Thomas Anderson (One Battle After Another)",
+      "Cannes": "Jean-Pierre Dardenne and Luc Dardenne for Jeunes Mères",
+      "Critics Choice": "Paul Thomas Anderson (One Battle After Another)",
+      "LAFCA": "Jafar Panahi, \"It Was Just an Accident\"",
+      "NBR": "Clint Bentley and Greg Kwedar (Train Dreams)",
+      "NSFC": "Jafar Panahi, It Was Just an Accident",
+      "NYFCC": "Josh Safdie and Ronald Bronstein (for Marty Supreme)",
+      "Venice": "Valérie Donzelli and Gilles Marchand for 'At Work' (À pied d'œuvre)",
+      "WGA": "One Battle After Another (Paul Thomas Anderson)"
+    },
+    "Best Original Screenplay": {
+      "BAFTA": "Sinners (Ryan Coogler)",
+      "Cannes": "Jean-Pierre Dardenne and Luc Dardenne for Jeunes Mères",
+      "Critics Choice": "Ryan Coogler (Sinners)",
+      "LAFCA": "Jafar Panahi, \"It Was Just an Accident\"",
+      "NBR": "Ryan Coogler (Sinners)",
+      "NSFC": "Jafar Panahi, It Was Just an Accident",
+      "NYFCC": "Josh Safdie and Ronald Bronstein (for Marty Supreme)",
+      "Venice": "Valérie Donzelli and Gilles Marchand for 'At Work' (À pied d'œuvre)",
+      "WGA": "Sinners"
+    },
+    "Best Original Song": {
+      "Critics Choice": "\"Golden\" from KPop Demon Hunters",
+      "Golden Globes": "\"Golden\" from KPop Demon Hunters"
+    },
+    "Best Original Score": {
+      "BAFTA": "Sinners - Ludwig Göransson",
+      "Critics Choice": "Ludwig Göransson (Sinners)",
+      "Golden Globes": "Ludwig Göransson (for Sinners)",
+      "LAFCA": "Kangding Ray, 'Sirāt'"
+    },
+    "Best Costume Design": {
+      "BAFTA": "Kate Hawley (Frankenstein)",
+      "Critics Choice": "Kate Hawley – Frankenstein"
+    },
+    "Best Makeup and Hairstyling": {
+      "BAFTA": "Frankenstein (Jordan Samuel, Cliona Furey, Mike Hill, Megan Many)",
+      "Critics Choice": "Mike Hill, Jordan Samuel, and Cliona Furey (Frankenstein)"
+    },
+    "Best Production Design": {
+      "BAFTA": "Frankenstein (Tamara Deverell, Shane Vieau)",
+      "Critics Choice": "Tamara Deverell and Shane Vieau (Frankenstein)",
+      "LAFCA": "Judy Becker (The Brutalist)"
+    },
+    "Best Sound": {
+      "BAFTA": "F1",
+      "Critics Choice": "F1"
+    },
+    "Best Animated Feature Film": {
+      "BAFTA": "Zootropolis 2",
+      "Critics Choice": "KPop Demon Hunters",
+      "Golden Globes": "KPop Demon Hunters",
+      "LAFCA": "Flow",
+      "NBR": "Arco",
+      "NYFCC": "KPop Demon Hunters",
+      "PGA": "KPop Demon Hunters (Producer: Michelle L.M. Wong, p.g.a.)"
+    },
+    "Best International Feature Film": {
+      "BAFTA": "Sentimental Value",
+      "Critics Choice": "The Secret Agent",
+      "Golden Globes": "The Secret Agent",
+      "LAFCA": "The Secret Agent (O Agente Secreto)",
+      "NBR": "It Was Just an Accident",
+      "NSFC": "The Secret Agent",
+      "NYFCC": "The Secret Agent"
+    },
+    "Best Documentary Feature Film": {
+      "BAFTA": "Mr. Nobody Against Putin",
+      "Critics Choice": "The Perfect Neighbor",
+      "DGA": "Mstyslav Chernov for 2000 Meters to Andriivka",
+      "LAFCA": "No Other Land",
+      "NBR": "Cover-Up",
+      "NSFC": "My Undesirable Friends: Part I — Last Air in Moscow",
+      "NYFCC": "My Undesirable Friends: Part I — Last Air in Moscow",
+      "PGA": "My Mom Jayne: A Film by Mariska Hargitay",
+      "TIFF": "The Road Between Us: The Ultimate Rescue"
+    },
+    "Best Animated Short Film": {
+      "BAFTA": "Two Black Boys in Paradise"
+    },
+    "Best Live Action Short Film": {
+      "BAFTA": "This Is Endometriosis"
+    },
+    "Best Visual Effects": {
+      "BAFTA": "Avatar: Fire and Ash (Joe Letteri, Richard Baneham, Daniel Barrett, Eric Saindon)",
+      "Critics Choice": "Avatar: Fire and Ash",
+      "NBR": "Avatar: Fire and Ash"
+    },
+    "Best Casting": {
+      "BAFTA": "I Swear (Lauren Evans)",
+      "Critics Choice": "Francine Maisler (Sinners)",
+      "NBR": "No winner recorded",
+      "SAG": "Sinners"
+    }
   }
 }
