@@ -74,6 +74,123 @@
     tooltip.style.top = y + "px";
   }
 
+  // ── 2026 Oscar Forecast ────────────────────────────────
+
+  // Default 8 forecast categories
+  const FORECAST_DEFAULT_CATS = new Set([
+    "Best Picture", "Best Director", "Best Actor", "Best Actress",
+    "Best Supporting Actor", "Best Supporting Actress",
+    "Best Adapted Screenplay", "Best Original Screenplay",
+  ]);
+  let forecastActiveCats = new Set(FORECAST_DEFAULT_CATS);
+
+  function initForecastCatSelector() {
+    const predictions = DATA.oscar_predictions_2026 || {};
+    const selector = document.getElementById("forecast-cat-selector");
+    selector.innerHTML = "";
+
+    // Ordered: defaults first, then the rest
+    const defaultList = [...FORECAST_DEFAULT_CATS].filter(c => predictions[c]);
+    const otherList = DATA.oscar_categories.filter(
+      c => !FORECAST_DEFAULT_CATS.has(c) && predictions[c]
+    );
+    const allCats = [...defaultList, ...otherList];
+
+    for (const cat of allCats) {
+      const chip = document.createElement("span");
+      const shortName = cat.replace("Best ", "").replace("Feature Film", "Feature");
+      chip.className = "award-chip" + (forecastActiveCats.has(cat) ? "" : " inactive");
+      chip.textContent = shortName;
+      chip.dataset.cat = cat;
+      chip.addEventListener("click", () => {
+        if (forecastActiveCats.has(cat)) {
+          forecastActiveCats.delete(cat);
+          chip.classList.add("inactive");
+        } else {
+          forecastActiveCats.add(cat);
+          chip.classList.remove("inactive");
+        }
+        renderForecast();
+      });
+      selector.appendChild(chip);
+    }
+  }
+
+  function renderForecast() {
+    const container = document.getElementById("forecast-grid");
+    const predictions = DATA.oscar_predictions_2026 || {};
+    container.innerHTML = "";
+
+    // Ordered: defaults first, then the rest
+    const defaultList = [...FORECAST_DEFAULT_CATS].filter(c => predictions[c] && forecastActiveCats.has(c));
+    const otherList = DATA.oscar_categories.filter(
+      c => !FORECAST_DEFAULT_CATS.has(c) && predictions[c] && forecastActiveCats.has(c)
+    );
+    const allCats = [...defaultList, ...otherList];
+
+    for (const cat of allCats) {
+      const nominees = predictions[cat];
+      if (!nominees || nominees.length === 0) continue;
+
+      const section = document.createElement("div");
+      section.className = "forecast-category";
+
+      const title = document.createElement("h3");
+      title.textContent = cat;
+      section.appendChild(title);
+
+      const maxProb = nominees[0].probability;
+
+      for (const nominee of nominees) {
+
+        const row = document.createElement("div");
+        row.className = "forecast-nominee";
+
+        const name = document.createElement("div");
+        name.className = "forecast-name";
+        name.textContent = nominee.name;
+        name.title = nominee.name;
+        row.appendChild(name);
+
+        const barWrap = document.createElement("div");
+        barWrap.className = "forecast-bar-wrap";
+
+        const bar = document.createElement("div");
+        bar.className = "forecast-bar " + (nominee === nominees[0] ? "frontrunner" : "other");
+        bar.style.width = (nominee.probability / maxProb * 100) + "%";
+        barWrap.appendChild(bar);
+
+        const pct = document.createElement("span");
+        pct.className = "forecast-pct";
+        pct.textContent = nominee.probability.toFixed(1) + "%";
+        barWrap.appendChild(pct);
+
+        const precursors = document.createElement("span");
+        precursors.className = "forecast-precursors";
+        precursors.textContent = nominee.precursors.join(", ");
+        barWrap.appendChild(precursors);
+
+        row.appendChild(barWrap);
+
+        // Tooltip with accuracy breakdown
+        const detailParts = nominee.details
+          .filter(d => d.accuracy > 0)
+          .map(d => `${d.precursor}: ${d.accuracy}%`);
+        if (detailParts.length > 0) {
+          row.addEventListener("mouseenter", (e) => {
+            showTooltip(e, `<strong>${nominee.name}</strong><br>Precursor accuracy: ${detailParts.join(", ")}`);
+          });
+          row.addEventListener("mousemove", positionTooltip);
+          row.addEventListener("mouseleave", hideTooltip);
+        }
+
+        section.appendChild(row);
+      }
+
+      container.appendChild(section);
+    }
+  }
+
   // ── 2026 Predictions Heatmap ────────────────────────────
 
   // Fixed color per precursor award
@@ -974,6 +1091,8 @@
     currentYearIndex = DATA.years.length - 1;
     currentCatIndex = 0;
 
+    initForecastCatSelector();
+    renderForecast();
     initPredAwardSelector();
     renderPredictionsGrid();
     renderAccuracyHeatmap();

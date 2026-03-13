@@ -12,7 +12,7 @@
   </header>
 
   <main>
-    <!-- Introduction -->
+    <!-- Introduction + 2026 Predictions -->
     <section class="card" id="intro-section">
       <h2>About This Project</h2>
       <p>Every year, before the Oscars, a constellation of other film industry awards &mdash; guild prizes, critics&rsquo; circles, major ceremonies, and festivals &mdash; announce their own winners. These <strong>precursor awards</strong> have historically shown predictive power for Oscar outcomes. By tracking who wins these earlier awards, we can estimate who is likely to take home the Oscar.</p>
@@ -62,6 +62,15 @@
       </div>
 
       <p>Predictive accuracy varies widely &mdash; guild awards like the DGA (85% for Best Director) and SAG tend to be the strongest predictors, while critics circles and festivals are less reliable but still informative as part of the broader consensus picture.</p>
+    </section>
+
+    <!-- 2026 Oscar Predictions -->
+    <section class="card" id="forecast-section">
+      <h2>2026 Oscar Predictions</h2>
+      <p>For each category, we look at which precursor awards each nominee won, then weight those wins by historical accuracy. A nominee who won the DGA (85% accurate for Best Director) gets a much stronger signal than one who won the NBR (4%). Scores are normalised across all nominees in each category to produce win probabilities.</p>
+      <p class="subtitle">This is a simple base-rate model, not a sophisticated forecast &mdash; it doesn&rsquo;t account for narrative momentum, campaign spending, or voter psychology. Categories where one nominee swept the precursors show high confidence; split races produce more uncertain estimates. Hover over a nominee to see which precursors contributed to their score.</p>
+      <div id="forecast-cat-selector" class="award-selector"></div>
+      <div id="forecast-grid"></div>
     </section>
 
     <!-- 2026 Precursor Winners -->

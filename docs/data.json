@@ -92927,5 +92927,1363 @@
       "NBR": "No winner recorded",
       "SAG": "Sinners"
     }
+  },
+  "oscar_predictions_2026": {
+    "Best Picture": [
+      {
+        "name": "One Battle After Another",
+        "probability": 75.5,
+        "precursors": [
+          "BAFTA",
+          "Critics Choice",
+          "LAFCA",
+          "NBR",
+          "NSFC",
+          "NYFCC",
+          "PGA"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 42
+          },
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 69
+          },
+          {
+            "precursor": "LAFCA",
+            "accuracy": 24
+          },
+          {
+            "precursor": "NBR",
+            "accuracy": 4
+          },
+          {
+            "precursor": "NSFC",
+            "accuracy": 15
+          },
+          {
+            "precursor": "NYFCC",
+            "accuracy": 12
+          },
+          {
+            "precursor": "PGA",
+            "accuracy": 73
+          }
+        ]
+      },
+      {
+        "name": "Hamnet",
+        "probability": 22.0,
+        "precursors": [
+          "Golden Globes",
+          "TIFF"
+        ],
+        "details": [
+          {
+            "precursor": "Golden Globes",
+            "accuracy": 50
+          },
+          {
+            "precursor": "TIFF",
+            "accuracy": 20
+          }
+        ]
+      },
+      {
+        "name": "Bugonia",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "F1",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Frankenstein",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Marty Supreme",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "The Secret Agent",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Sentimental Value",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Sinners",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Train Dreams",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Director": [
+      {
+        "name": "Paul Thomas Anderson",
+        "probability": 98.7,
+        "precursors": [
+          "BAFTA",
+          "Critics Choice",
+          "DGA",
+          "Golden Globes",
+          "LAFCA",
+          "NBR",
+          "NSFC"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 54
+          },
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 68
+          },
+          {
+            "precursor": "DGA",
+            "accuracy": 85
+          },
+          {
+            "precursor": "Golden Globes",
+            "accuracy": 54
+          },
+          {
+            "precursor": "LAFCA",
+            "accuracy": 32
+          },
+          {
+            "precursor": "NBR",
+            "accuracy": 4
+          },
+          {
+            "precursor": "NSFC",
+            "accuracy": 15
+          }
+        ]
+      },
+      {
+        "name": "Chloe Zhao",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Josh Safdie",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Joachim Trier",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Ryan Coogler",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Actor": [
+      {
+        "name": "Wagner Moura",
+        "probability": 34.1,
+        "precursors": [
+          "Cannes",
+          "Golden Globes",
+          "NYFCC"
+        ],
+        "details": [
+          {
+            "precursor": "Cannes",
+            "accuracy": 4
+          },
+          {
+            "precursor": "Golden Globes",
+            "accuracy": 72
+          },
+          {
+            "precursor": "NYFCC",
+            "accuracy": 12
+          }
+        ]
+      },
+      {
+        "name": "Michael B. Jordan",
+        "probability": 27.6,
+        "precursors": [
+          "SAG"
+        ],
+        "details": [
+          {
+            "precursor": "SAG",
+            "accuracy": 72
+          }
+        ]
+      },
+      {
+        "name": "Timothée Chalamet",
+        "probability": 26.1,
+        "precursors": [
+          "Critics Choice"
+        ],
+        "details": [
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 68
+          }
+        ]
+      },
+      {
+        "name": "Ethan Hawke",
+        "probability": 9.2,
+        "precursors": [
+          "NSFC"
+        ],
+        "details": [
+          {
+            "precursor": "NSFC",
+            "accuracy": 24
+          }
+        ]
+      },
+      {
+        "name": "Leonardo DiCaprio",
+        "probability": 3.1,
+        "precursors": [
+          "NBR"
+        ],
+        "details": [
+          {
+            "precursor": "NBR",
+            "accuracy": 8
+          }
+        ]
+      }
+    ],
+    "Best Actress": [
+      {
+        "name": "Jessie Buckley",
+        "probability": 87.3,
+        "precursors": [
+          "BAFTA",
+          "Critics Choice",
+          "Golden Globes",
+          "SAG"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 65
+          },
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 60
+          },
+          {
+            "precursor": "Golden Globes",
+            "accuracy": 85
+          },
+          {
+            "precursor": "SAG",
+            "accuracy": 65
+          }
+        ]
+      },
+      {
+        "name": "Rose Byrne",
+        "probability": 11.7,
+        "precursors": [
+          "NBR",
+          "NYFCC"
+        ],
+        "details": [
+          {
+            "precursor": "NBR",
+            "accuracy": 25
+          },
+          {
+            "precursor": "NYFCC",
+            "accuracy": 12
+          }
+        ]
+      },
+      {
+        "name": "Kate Hudson",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Renate Reinsve",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Emma Stone",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Supporting Actor": [
+      {
+        "name": "Sean Penn",
+        "probability": 40.3,
+        "precursors": [
+          "BAFTA",
+          "SAG"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 62
+          },
+          {
+            "precursor": "SAG",
+            "accuracy": 69
+          }
+        ]
+      },
+      {
+        "name": "Stellan Skarsgård",
+        "probability": 22.5,
+        "precursors": [
+          "Golden Globes"
+        ],
+        "details": [
+          {
+            "precursor": "Golden Globes",
+            "accuracy": 73
+          }
+        ]
+      },
+      {
+        "name": "Jacob Elordi",
+        "probability": 20.9,
+        "precursors": [
+          "Critics Choice"
+        ],
+        "details": [
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 68
+          }
+        ]
+      },
+      {
+        "name": "Benicio Del Toro",
+        "probability": 16.0,
+        "precursors": [
+          "NBR",
+          "NSFC",
+          "NYFCC"
+        ],
+        "details": [
+          {
+            "precursor": "NBR",
+            "accuracy": 12
+          },
+          {
+            "precursor": "NSFC",
+            "accuracy": 23
+          },
+          {
+            "precursor": "NYFCC",
+            "accuracy": 17
+          }
+        ]
+      },
+      {
+        "name": "Delroy Lindo",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Supporting Actress": [
+      {
+        "name": "Amy Madigan",
+        "probability": 50.8,
+        "precursors": [
+          "Critics Choice",
+          "NYFCC",
+          "SAG"
+        ],
+        "details": [
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 73
+          },
+          {
+            "precursor": "NYFCC",
+            "accuracy": 17
+          },
+          {
+            "precursor": "SAG",
+            "accuracy": 77
+          }
+        ]
+      },
+      {
+        "name": "Teyana Taylor",
+        "probability": 25.5,
+        "precursors": [
+          "Golden Globes",
+          "NSFC"
+        ],
+        "details": [
+          {
+            "precursor": "Golden Globes",
+            "accuracy": 65
+          },
+          {
+            "precursor": "NSFC",
+            "accuracy": 19
+          }
+        ]
+      },
+      {
+        "name": "Wunmi Mosaku",
+        "probability": 19.8,
+        "precursors": [
+          "BAFTA"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 65
+          }
+        ]
+      },
+      {
+        "name": "Inga Ibsdotter Lilleaas",
+        "probability": 3.6,
+        "precursors": [
+          "NBR"
+        ],
+        "details": [
+          {
+            "precursor": "NBR",
+            "accuracy": 12
+          }
+        ]
+      },
+      {
+        "name": "Elle Fanning",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Cinematography": [
+      {
+        "name": "One Battle After Another",
+        "probability": 55.9,
+        "precursors": [
+          "BAFTA"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 62
+          }
+        ]
+      },
+      {
+        "name": "Sinners",
+        "probability": 41.4,
+        "precursors": [
+          "NBR",
+          "NSFC",
+          "NYFCC"
+        ],
+        "details": [
+          {
+            "precursor": "NBR",
+            "accuracy": 11
+          },
+          {
+            "precursor": "NSFC",
+            "accuracy": 15
+          },
+          {
+            "precursor": "NYFCC",
+            "accuracy": 20
+          }
+        ]
+      },
+      {
+        "name": "Frankenstein",
+        "probability": 0.9,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Marty Supreme",
+        "probability": 0.9,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Sentimental Value",
+        "probability": 0.9,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Film Editing": [
+      {
+        "name": "Sinners",
+        "probability": 35.4,
+        "precursors": [
+          "ACE Eddie"
+        ],
+        "details": [
+          {
+            "precursor": "ACE Eddie",
+            "accuracy": 68
+          }
+        ]
+      },
+      {
+        "name": "F1",
+        "probability": 29.2,
+        "precursors": [
+          "Critics Choice"
+        ],
+        "details": [
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 56
+          }
+        ]
+      },
+      {
+        "name": "One Battle After Another",
+        "probability": 22.9,
+        "precursors": [
+          "BAFTA"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 44
+          }
+        ]
+      },
+      {
+        "name": "Marty Supreme",
+        "probability": 12.0,
+        "precursors": [
+          "LAFCA"
+        ],
+        "details": [
+          {
+            "precursor": "LAFCA",
+            "accuracy": 23
+          }
+        ]
+      },
+      {
+        "name": "Sentimental Value",
+        "probability": 0.5,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Adapted Screenplay": [
+      {
+        "name": "One Battle After Another",
+        "probability": 93.1,
+        "precursors": [
+          "BAFTA",
+          "Critics Choice",
+          "WGA"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 54
+          },
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 44
+          },
+          {
+            "precursor": "WGA",
+            "accuracy": 65
+          }
+        ]
+      },
+      {
+        "name": "Train Dreams",
+        "probability": 5.1,
+        "precursors": [
+          "NBR"
+        ],
+        "details": [
+          {
+            "precursor": "NBR",
+            "accuracy": 9
+          }
+        ]
+      },
+      {
+        "name": "Bugonia",
+        "probability": 0.6,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Frankenstein",
+        "probability": 0.6,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Hamnet",
+        "probability": 0.6,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Original Screenplay": [
+      {
+        "name": "Sinners",
+        "probability": 87.0,
+        "precursors": [
+          "BAFTA",
+          "Critics Choice",
+          "NBR",
+          "WGA"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 56
+          },
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 74
+          },
+          {
+            "precursor": "NBR",
+            "accuracy": 9
+          },
+          {
+            "precursor": "WGA",
+            "accuracy": 68
+          }
+        ]
+      },
+      {
+        "name": "It Was Just an Accident",
+        "probability": 10.1,
+        "precursors": [
+          "LAFCA",
+          "NSFC"
+        ],
+        "details": [
+          {
+            "precursor": "LAFCA",
+            "accuracy": 12
+          },
+          {
+            "precursor": "NSFC",
+            "accuracy": 12
+          }
+        ]
+      },
+      {
+        "name": "Marty Supreme",
+        "probability": 2.1,
+        "precursors": [
+          "NYFCC"
+        ],
+        "details": [
+          {
+            "precursor": "NYFCC",
+            "accuracy": 4
+          }
+        ]
+      },
+      {
+        "name": "Blue Moon",
+        "probability": 0.4,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Sentimental Value",
+        "probability": 0.4,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Original Song": [
+      {
+        "name": "Golden",
+        "probability": 96.5,
+        "precursors": [
+          "Critics Choice",
+          "Golden Globes"
+        ],
+        "details": [
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 56
+          },
+          {
+            "precursor": "Golden Globes",
+            "accuracy": 54
+          }
+        ]
+      },
+      {
+        "name": "Dear Me",
+        "probability": 0.9,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "I Lied to You",
+        "probability": 0.9,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Sweet Dreams of Joy",
+        "probability": 0.9,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Train Dreams",
+        "probability": 0.9,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Original Score": [
+      {
+        "name": "Sinners",
+        "probability": 97.8,
+        "precursors": [
+          "BAFTA",
+          "Critics Choice",
+          "Golden Globes"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 62
+          },
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 54
+          },
+          {
+            "precursor": "Golden Globes",
+            "accuracy": 58
+          }
+        ]
+      },
+      {
+        "name": "Bugonia",
+        "probability": 0.6,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Frankenstein",
+        "probability": 0.6,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Hamnet",
+        "probability": 0.6,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "One Battle After Another",
+        "probability": 0.6,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Costume Design": [
+      {
+        "name": "Frankenstein",
+        "probability": 97.3,
+        "precursors": [
+          "BAFTA",
+          "Critics Choice"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 58
+          },
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 87
+          }
+        ]
+      },
+      {
+        "name": "Avatar: Fire and Ash",
+        "probability": 0.7,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Hamnet",
+        "probability": 0.7,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Marty Supreme",
+        "probability": 0.7,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Sinners",
+        "probability": 0.7,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Makeup and Hairstyling": [
+      {
+        "name": "Frankenstein",
+        "probability": 96.6,
+        "precursors": [
+          "BAFTA",
+          "Critics Choice"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 69
+          },
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 44
+          }
+        ]
+      },
+      {
+        "name": "Kokuho",
+        "probability": 0.9,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Sinners",
+        "probability": 0.9,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "The Smashing Machine",
+        "probability": 0.9,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "The Ugly Stepsister",
+        "probability": 0.9,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Production Design": [
+      {
+        "name": "Frankenstein",
+        "probability": 96.7,
+        "precursors": [
+          "BAFTA",
+          "Critics Choice"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 50
+          },
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 69
+          }
+        ]
+      },
+      {
+        "name": "Hamnet",
+        "probability": 0.8,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Marty Supreme",
+        "probability": 0.8,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "One Battle After Another",
+        "probability": 0.8,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Sinners",
+        "probability": 0.8,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Sound": [
+      {
+        "name": "F1",
+        "probability": 94.8,
+        "precursors": [
+          "BAFTA",
+          "Critics Choice"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 68
+          },
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 0
+          }
+        ]
+      },
+      {
+        "name": "Frankenstein",
+        "probability": 1.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "One Battle After Another",
+        "probability": 1.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Sinners",
+        "probability": 1.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Sirat",
+        "probability": 1.3,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Animated Feature Film": [
+      {
+        "name": "KPop Demon Hunters",
+        "probability": 84.4,
+        "precursors": [
+          "Critics Choice",
+          "Golden Globes",
+          "NYFCC",
+          "PGA"
+        ],
+        "details": [
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 74
+          },
+          {
+            "precursor": "Golden Globes",
+            "accuracy": 79
+          },
+          {
+            "precursor": "NYFCC",
+            "accuracy": 29
+          },
+          {
+            "precursor": "PGA",
+            "accuracy": 67
+          }
+        ]
+      },
+      {
+        "name": "Arco",
+        "probability": 14.6,
+        "precursors": [
+          "NBR"
+        ],
+        "details": [
+          {
+            "precursor": "NBR",
+            "accuracy": 43
+          }
+        ]
+      },
+      {
+        "name": "Elio",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Little Amelie or the Character of Rain",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Zootopia 2",
+        "probability": 0.3,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best International Feature Film": [
+      {
+        "name": "The Secret Agent",
+        "probability": 60.5,
+        "precursors": [
+          "Critics Choice",
+          "Golden Globes",
+          "LAFCA",
+          "NSFC",
+          "NYFCC"
+        ],
+        "details": [
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 38
+          },
+          {
+            "precursor": "Golden Globes",
+            "accuracy": 44
+          },
+          {
+            "precursor": "LAFCA",
+            "accuracy": 8
+          },
+          {
+            "precursor": "NSFC",
+            "accuracy": 14
+          },
+          {
+            "precursor": "NYFCC",
+            "accuracy": 8
+          }
+        ]
+      },
+      {
+        "name": "Sentimental Value",
+        "probability": 23.8,
+        "precursors": [
+          "BAFTA"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 44
+          }
+        ]
+      },
+      {
+        "name": "It Was Just an Accident",
+        "probability": 14.6,
+        "precursors": [
+          "NBR"
+        ],
+        "details": [
+          {
+            "precursor": "NBR",
+            "accuracy": 27
+          }
+        ]
+      },
+      {
+        "name": "Sirat",
+        "probability": 0.5,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "The Voice of Hind Rajab",
+        "probability": 0.5,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Documentary Feature Film": [
+      {
+        "name": "Mr. Nobody Against Putin",
+        "probability": 51.4,
+        "precursors": [
+          "BAFTA"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 36
+          }
+        ]
+      },
+      {
+        "name": "The Perfect Neighbor",
+        "probability": 44.3,
+        "precursors": [
+          "Critics Choice"
+        ],
+        "details": [
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 31
+          }
+        ]
+      },
+      {
+        "name": "The Alabama Solution",
+        "probability": 1.4,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Come See Me in the Good Light",
+        "probability": 1.4,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Cutting Through Rocks",
+        "probability": 1.4,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Animated Short Film": [
+      {
+        "name": "Butterfly",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Forevergreen",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "The Girl Who Cried Pearls",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Retirement Plan",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "The Three Sisters",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Live Action Short Film": [
+      {
+        "name": "Butcher's Stain",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "A Friend of Dorothy",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Jane Austen's Period Drama",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "The Singers",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Two People Exchanging Saliva",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Visual Effects": [
+      {
+        "name": "Avatar: Fire and Ash",
+        "probability": 97.3,
+        "precursors": [
+          "BAFTA",
+          "Critics Choice",
+          "NBR"
+        ],
+        "details": [
+          {
+            "precursor": "BAFTA",
+            "accuracy": 81
+          },
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 56
+          },
+          {
+            "precursor": "NBR",
+            "accuracy": 0
+          }
+        ]
+      },
+      {
+        "name": "F1",
+        "probability": 0.7,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Jurassic World Rebirth",
+        "probability": 0.7,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "The Lost Bus",
+        "probability": 0.7,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Sinners",
+        "probability": 0.7,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Documentary Short Film": [
+      {
+        "name": "All the Empty Rooms",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Armed Only With a Camera: The Life and Death of Brent Renaud",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Children No More: Were and Are Gone",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "The Devil Is Busy",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Perfectly a Strangeness",
+        "probability": 20.0,
+        "precursors": [],
+        "details": []
+      }
+    ],
+    "Best Casting": [
+      {
+        "name": "Sinners",
+        "probability": 71.4,
+        "precursors": [
+          "Critics Choice",
+          "SAG"
+        ],
+        "details": [
+          {
+            "precursor": "Critics Choice",
+            "accuracy": 0
+          },
+          {
+            "precursor": "SAG",
+            "accuracy": 0
+          }
+        ]
+      },
+      {
+        "name": "Hamnet",
+        "probability": 7.1,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "Marty Supreme",
+        "probability": 7.1,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "One Battle After Another",
+        "probability": 7.1,
+        "precursors": [],
+        "details": []
+      },
+      {
+        "name": "The Secret Agent",
+        "probability": 7.1,
+        "precursors": [],
+        "details": []
+      }
+    ]
   }
 }

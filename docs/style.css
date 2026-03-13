@@ -456,6 +456,71 @@ main {
   color: transparent;
 }
 
+/* === Forecast Section === */
+.forecast-category {
+  margin-bottom: 24px;
+}
+
+.forecast-category h3 {
+  font-size: 0.95rem;
+  color: #d4a843;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+
+.forecast-nominee {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 8px;
+}
+
+.forecast-name {
+  width: 200px;
+  min-width: 200px;
+  font-size: 0.8rem;
+  text-align: right;
+  color: #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.forecast-bar-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forecast-bar {
+  height: 24px;
+  border-radius: 3px;
+  background: #d4a843;
+  min-width: 2px;
+  transition: width 0.3s ease;
+}
+
+.forecast-bar.frontrunner {
+  background: #d4a843;
+}
+
+.forecast-bar.other {
+  background: rgba(212, 168, 67, 0.35);
+}
+
+.forecast-pct {
+  font-size: 0.75rem;
+  color: #999;
+  min-width: 40px;
+}
+
+.forecast-precursors {
+  font-size: 0.65rem;
+  color: #666;
+  min-width: 150px;
+}
+
 /* === Toggle Row === */
 .toggle-row {
   display: flex;

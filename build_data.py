@@ -8,6 +8,7 @@ Reads CSV data from two files and computes:
 """
 
 import json
+import math
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -23,7 +24,7 @@ CSV_FILES = [
     SCRIPT_DIR / "film awards research part 1.csv",
     SCRIPT_DIR / "film awards research part 2.csv",
 ]
-OUTPUT_FILE = SCRIPT_DIR / "data.json"
+OUTPUT_FILE = SCRIPT_DIR / "docs" / "data.json"
 
 YEAR_RANGE = range(2000, 2026)  # 2000-2025 inclusive (historical)
 YEAR_RANGE_LOAD = range(2000, 2027)  # Include 2026 for predictions
@@ -255,6 +256,111 @@ CATEGORY_MAPPING = {
 }
 
 MIN_YEARS = 5  # Minimum years of data for accuracy/agreement cells
+
+# 2026 Oscar nominees (98th Academy Awards, March 15 2026)
+NOMINEES_2026 = {
+    "Best Picture": [
+        "Bugonia", "F1", "Frankenstein", "Hamnet", "Marty Supreme",
+        "One Battle After Another", "The Secret Agent", "Sentimental Value",
+        "Sinners", "Train Dreams",
+    ],
+    "Best Director": [
+        "Chloe Zhao", "Josh Safdie", "Paul Thomas Anderson",
+        "Joachim Trier", "Ryan Coogler",
+    ],
+    "Best Actor": [
+        "Timothée Chalamet", "Leonardo DiCaprio", "Ethan Hawke",
+        "Michael B. Jordan", "Wagner Moura",
+    ],
+    "Best Actress": [
+        "Jessie Buckley", "Rose Byrne", "Kate Hudson",
+        "Renate Reinsve", "Emma Stone",
+    ],
+    "Best Supporting Actor": [
+        "Benicio Del Toro", "Jacob Elordi", "Delroy Lindo",
+        "Sean Penn", "Stellan Skarsgård",
+    ],
+    "Best Supporting Actress": [
+        "Elle Fanning", "Inga Ibsdotter Lilleaas", "Amy Madigan",
+        "Wunmi Mosaku", "Teyana Taylor",
+    ],
+    "Best Adapted Screenplay": [
+        "Bugonia", "Frankenstein", "Hamnet",
+        "One Battle After Another", "Train Dreams",
+    ],
+    "Best Original Screenplay": [
+        "Blue Moon", "It Was Just an Accident", "Marty Supreme",
+        "Sentimental Value", "Sinners",
+    ],
+    "Best Animated Feature Film": [
+        "Arco", "Elio", "KPop Demon Hunters",
+        "Little Amelie or the Character of Rain", "Zootopia 2",
+    ],
+    "Best International Feature Film": [
+        "The Secret Agent", "It Was Just an Accident",
+        "Sentimental Value", "Sirat", "The Voice of Hind Rajab",
+    ],
+    "Best Documentary Feature Film": [
+        "The Alabama Solution", "Come See Me in the Good Light",
+        "Cutting Through Rocks", "Mr. Nobody Against Putin",
+        "The Perfect Neighbor",
+    ],
+    "Best Cinematography": [
+        "Frankenstein", "Marty Supreme", "One Battle After Another",
+        "Sentimental Value", "Sinners",
+    ],
+    "Best Film Editing": [
+        "F1", "Marty Supreme", "One Battle After Another",
+        "Sentimental Value", "Sinners",
+    ],
+    "Best Production Design": [
+        "Frankenstein", "Hamnet", "Marty Supreme",
+        "One Battle After Another", "Sinners",
+    ],
+    "Best Costume Design": [
+        "Avatar: Fire and Ash", "Frankenstein", "Hamnet",
+        "Marty Supreme", "Sinners",
+    ],
+    "Best Makeup and Hairstyling": [
+        "Frankenstein", "Kokuho", "Sinners",
+        "The Smashing Machine", "The Ugly Stepsister",
+    ],
+    "Best Original Score": [
+        "Bugonia", "Frankenstein", "Hamnet",
+        "One Battle After Another", "Sinners",
+    ],
+    "Best Original Song": [
+        "Dear Me", "Golden", "I Lied to You",
+        "Sweet Dreams of Joy", "Train Dreams",
+    ],
+    "Best Sound": [
+        "F1", "Frankenstein", "One Battle After Another",
+        "Sinners", "Sirat",
+    ],
+    "Best Visual Effects": [
+        "Avatar: Fire and Ash", "F1", "Jurassic World Rebirth",
+        "The Lost Bus", "Sinners",
+    ],
+    "Best Casting": [
+        "Hamnet", "Marty Supreme", "One Battle After Another",
+        "The Secret Agent", "Sinners",
+    ],
+    "Best Live Action Short Film": [
+        "Butcher's Stain", "A Friend of Dorothy",
+        "Jane Austen's Period Drama", "The Singers",
+        "Two People Exchanging Saliva",
+    ],
+    "Best Animated Short Film": [
+        "Butterfly", "Forevergreen", "The Girl Who Cried Pearls",
+        "Retirement Plan", "The Three Sisters",
+    ],
+    "Best Documentary Short Film": [
+        "All the Empty Rooms",
+        "Armed Only With a Camera: The Life and Death of Brent Renaud",
+        "Children No More: Were and Are Gone",
+        "The Devil Is Busy", "Perfectly a Strangeness",
+    ],
+}
 
 # ---------------------------------------------------------------------------
 # Name matching
@@ -793,6 +899,93 @@ def build_datasets(df: pd.DataFrame) -> dict:
         if cat_picks:
             predictions_2026[oscar_cat] = cat_picks
 
+    # -----------------------------------------------------------------------
+    # 7. Base-rate prediction model for 2026
+    # -----------------------------------------------------------------------
+    # For each Oscar category, for each actual nominee:
+    #   1. Find which precursors they won (via name matching)
+    #   2. Sum the historical accuracy of each precursor won (weighted score)
+    #   3. Nominees with no precursor wins get a small baseline score
+    #   4. Normalize across all nominees so probabilities sum to 100%
+
+    oscar_predictions_2026 = {}
+
+    for oscar_cat in CATEGORY_MAPPING:
+        nominees = NOMINEES_2026.get(oscar_cat)
+        if not nominees:
+            continue
+
+        cat_picks = predictions_2026.get(oscar_cat, {})
+        cat_accuracy = accuracy_heatmap.get(oscar_cat, {})
+
+        # Cluster 2026 precursor winners by name
+        precursor_clusters: list[dict] = []
+        for precursor_short, winner in cat_picks.items():
+            merged = False
+            for cluster in precursor_clusters:
+                if names_match(winner, cluster["name"]):
+                    cluster["precursors"].append(precursor_short)
+                    if len(winner) > len(cluster["name"]):
+                        cluster["name"] = winner
+                    merged = True
+                    break
+            if not merged:
+                precursor_clusters.append({
+                    "name": winner,
+                    "precursors": [precursor_short],
+                })
+
+        # For each nominee, find matching precursor cluster
+        scored = []
+        for nominee in nominees:
+            matched_cluster = None
+            for cluster in precursor_clusters:
+                if names_match(nominee, cluster["name"]):
+                    matched_cluster = cluster
+                    break
+
+            if matched_cluster:
+                score = 0.0
+                details = []
+                for p in matched_cluster["precursors"]:
+                    acc = cat_accuracy.get(p)
+                    if acc is None:
+                        acc = 0
+                    score += max(acc, 5)
+                    details.append({"precursor": p, "accuracy": acc})
+                scored.append({
+                    "name": nominee,
+                    "precursors": sorted(matched_cluster["precursors"]),
+                    "score": score,
+                    "details": details,
+                })
+            else:
+                # Nominee won no precursors — small baseline
+                scored.append({
+                    "name": nominee,
+                    "precursors": [],
+                    "score": 1,
+                    "details": [],
+                })
+
+        # Normalize scores to probabilities
+        total_score = sum(s["score"] for s in scored)
+        if total_score == 0:
+            continue
+
+        predictions = []
+        for s in scored:
+            prob = round(100 * s["score"] / total_score, 1)
+            predictions.append({
+                "name": s["name"],
+                "probability": prob,
+                "precursors": s["precursors"],
+                "details": s["details"],
+            })
+
+        predictions.sort(key=lambda x: -x["probability"])
+        oscar_predictions_2026[oscar_cat] = predictions
+
     return {
         "oscar_categories": oscar_categories,
         "precursor_awards": precursor_awards_sorted,
@@ -805,6 +998,7 @@ def build_datasets(df: pd.DataFrame) -> dict:
         "combinations": combination_data,
         "combinations_all": combination_all_data,
         "predictions_2026": predictions_2026,
+        "oscar_predictions_2026": oscar_predictions_2026,
     }
 
 
