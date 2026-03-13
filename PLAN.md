@@ -149,3 +149,34 @@ Then aggregate: for each observed combination, count how many times it appeared 
 - Whether there are "golden combinations" — specific sets of precursors that virtually guarantee an Oscar win.
 - Whether some combinations are misleading — e.g., winning certain precursors together but still losing the Oscar.
 - Which precursors tend to co-occur in winning runs vs. which appear in isolation.
+
+## Data Limitations & Learnings for Next Time
+
+### Missing: Film-level linkage across categories
+
+The current dataset records winners per (Award, Category, Year) but has **no shared "film" identifier** linking entries across categories. For film-level categories (Picture, Director, Editing, etc.), the winner is often the film title, so fuzzy name matching works. But for acting categories, the winner is a person name, and there's no way to programmatically link "Cillian Murphy" back to "Oppenheimer."
+
+**Impact:** We cannot do cross-category film-level analysis, e.g.:
+- "Correlate total precursor wins across all categories with total Oscars won by a film"
+- "If a film sweeps precursor acting + technical awards, does it win Best Picture?"
+- "Which films won the most precursors but lost the most Oscars?"
+
+**Fix for next time:** Add a `film` column to every row in the CSV. For acting categories, this would be the film the performance was in. For technical categories, the film. For Best Picture/Director, it's already the film. This single addition would unlock film-level aggregation across all categories.
+
+### Combinatorial explosion in cross-category combinations
+
+When we augment category-specific precursor combinations with wins from all other categories, every combination becomes unique — no two films have the same cross-category fingerprint. This makes the "Winning Precursor Combinations" table useless in all-categories mode at any threshold above 1.
+
+**Lesson:** Cross-category data works for aggregate counts (e.g., "number of precursors won → Oscar probability") but not for exact-combination analysis. If we want cross-category combination insights, we'd need to cluster or bin the combinations rather than treating each as distinct.
+
+### Name matching is fragile
+
+Fuzzy name matching (substring, parenthetical cross-match, proper noun overlap) works for most cases but can miss or incorrectly merge names. Different award shows format winner names inconsistently — some include film titles in parentheses, some don't, some use shortened names.
+
+**Fix for next time:** Standardize winner names at data entry time, or add a canonical `person_id` / `film_id` column. This would eliminate the need for fuzzy matching entirely.
+
+### Year alignment: `Year of award ceremony` is unreliable
+
+The `date_awarded` column is accurate and present for most rows, but the `Year of award ceremony` column is inconsistently populated for some awards (e.g., NBR has duplicate rows where year 2000 and 2001 both point to the same Jan 2001 ceremony). The build script compensates with date-based heuristics and fixed offsets for festivals.
+
+**Fix for next time:** Add an explicit `oscar_year` column at data entry time — the Oscar ceremony year this precursor result should map to. This eliminates the need for any alignment heuristics and prevents duplicates like the NBR issue.
