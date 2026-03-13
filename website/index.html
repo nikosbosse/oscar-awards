@@ -81,11 +81,20 @@
     <!-- Section 4: Precursor Count vs Oscar Win Probability -->
     <section class="card" id="count-section">
       <h2>Precursor Count vs Oscar Win Probability</h2>
-      <p class="subtitle">If a nominee wins N precursor awards in the corresponding category (e.g., for Best Picture: BAFTA Best Film, PGA, Critics Choice Best Picture, etc.), how likely are they to win the Oscar?</p>
+      <p class="subtitle">If a nominee wins N precursor awards, how likely are they to win the Oscar?</p>
       <div class="nav-controls">
         <button id="count-cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
         <span id="count-cat-display" class="nav-label"></span>
         <button id="count-cat-next" class="nav-btn" aria-label="Next category">&rarr;</button>
+      </div>
+      <div class="toggle-row">
+        <button id="count-mode-category" class="toggle-btn active">Corresponding category only</button>
+        <button id="count-mode-all" class="toggle-btn">All precursor categories</button>
+      </div>
+      <div class="threshold-row">
+        <label for="count-threshold">Minimum observations:</label>
+        <input type="range" id="count-threshold" min="1" max="10" value="2" step="1">
+        <span id="count-threshold-display">2</span>
       </div>
       <div id="count-chart" class="chart-container"></div>
     </section>
@@ -93,11 +102,20 @@
     <!-- Section 5: Winning Precursor Combinations -->
     <section class="card" id="combos-section">
       <h2>Winning Precursor Combinations</h2>
-      <p class="subtitle">Which specific sets of corresponding precursor category wins have historically led to Oscar victories? Each combination shows the exact precursor awards won in the matching category.</p>
+      <p class="subtitle">Which specific sets of precursor wins have historically led to Oscar victories?</p>
       <div class="nav-controls">
         <button id="combos-cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
         <span id="combos-cat-display" class="nav-label"></span>
         <button id="combos-cat-next" class="nav-btn" aria-label="Next category">&rarr;</button>
+      </div>
+      <div class="toggle-row">
+        <button id="combos-mode-category" class="toggle-btn active">Corresponding category only</button>
+        <button id="combos-mode-all" class="toggle-btn">All precursor categories</button>
+      </div>
+      <div class="threshold-row">
+        <label for="combos-threshold">Minimum times seen:</label>
+        <input type="range" id="combos-threshold" min="1" max="10" value="2" step="1">
+        <span id="combos-threshold-display">2</span>
       </div>
       <div id="combos-table" class="combos-container"></div>
     </section>

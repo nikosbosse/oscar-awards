@@ -6,6 +6,10 @@
   let currentCatIndex = 0;
   let currentCountCatIndex = 0;
   let currentCombosCatIndex = 0;
+  let countModeAll = false;
+  let combosModeAll = false;
+  let countThreshold = 2;
+  let combosThreshold = 2;
 
   const tooltip = document.getElementById("tooltip");
 
@@ -363,7 +367,8 @@
   function renderCountChart() {
     const container = document.getElementById("count-chart");
     const cat = DATA.oscar_categories[currentCountCatIndex];
-    const catData = (DATA.precursor_count || {})[cat];
+    const source = countModeAll ? DATA.precursor_count_all : DATA.precursor_count;
+    const catData = (source || {})[cat];
 
     document.getElementById("count-cat-display").textContent = cat;
 
@@ -378,7 +383,10 @@
         return;
       }
 
-      const counts = Object.keys(catData).map(Number).sort((a, b) => a - b);
+      const counts = Object.keys(catData)
+        .map(Number)
+        .filter(c => catData[String(c)].total >= countThreshold)
+        .sort((a, b) => a - b);
       const maxPct = 100;
 
       const chart = document.createElement("div");
@@ -491,7 +499,8 @@
   function renderCombosTable() {
     const container = document.getElementById("combos-table");
     const cat = DATA.oscar_categories[currentCombosCatIndex];
-    const combos = (DATA.combinations || {})[cat];
+    const source = combosModeAll ? DATA.combinations_all : DATA.combinations;
+    const combos = (source || {})[cat];
 
     document.getElementById("combos-cat-display").textContent = cat;
 
@@ -518,8 +527,8 @@
       table.appendChild(thead);
 
       const tbody = document.createElement("tbody");
-      // Show top 15 combos
-      const shown = combos.slice(0, 15);
+      // Filter by threshold
+      const shown = combos.filter(c => c.total >= combosThreshold);
 
       for (const combo of shown) {
         const tr = document.createElement("tr");
@@ -658,6 +667,48 @@
       currentCountCatIndex =
         (currentCountCatIndex + 1) % DATA.oscar_categories.length;
       renderCountChart();
+    });
+
+    // Count mode toggle
+    document.getElementById("count-mode-category").addEventListener("click", () => {
+      countModeAll = false;
+      document.getElementById("count-mode-category").classList.add("active");
+      document.getElementById("count-mode-all").classList.remove("active");
+      renderCountChart();
+    });
+    document.getElementById("count-mode-all").addEventListener("click", () => {
+      countModeAll = true;
+      document.getElementById("count-mode-all").classList.add("active");
+      document.getElementById("count-mode-category").classList.remove("active");
+      renderCountChart();
+    });
+
+    // Count threshold slider
+    document.getElementById("count-threshold").addEventListener("input", (e) => {
+      countThreshold = Number(e.target.value);
+      document.getElementById("count-threshold-display").textContent = countThreshold;
+      renderCountChart();
+    });
+
+    // Combos threshold slider
+    document.getElementById("combos-threshold").addEventListener("input", (e) => {
+      combosThreshold = Number(e.target.value);
+      document.getElementById("combos-threshold-display").textContent = combosThreshold;
+      renderCombosTable();
+    });
+
+    // Combos mode toggle
+    document.getElementById("combos-mode-category").addEventListener("click", () => {
+      combosModeAll = false;
+      document.getElementById("combos-mode-category").classList.add("active");
+      document.getElementById("combos-mode-all").classList.remove("active");
+      renderCombosTable();
+    });
+    document.getElementById("combos-mode-all").addEventListener("click", () => {
+      combosModeAll = true;
+      document.getElementById("combos-mode-all").classList.add("active");
+      document.getElementById("combos-mode-category").classList.remove("active");
+      renderCombosTable();
     });
 
     // Combos category nav

@@ -336,6 +336,70 @@ main {
   background: #4a4a6a;
 }
 
+/* === Toggle Row === */
+.toggle-row {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.toggle-btn {
+  background: #12122a;
+  color: #888;
+  border: 1px solid #333;
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggle-btn:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.toggle-btn:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+.toggle-btn.active {
+  background: rgba(212, 168, 67, 0.15);
+  color: #d4a843;
+  border-color: #d4a843;
+}
+
+.toggle-btn:hover:not(.active) {
+  background: #1a1a3a;
+  color: #bbb;
+}
+
+/* === Threshold Slider === */
+.threshold-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.threshold-row label {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.threshold-row input[type="range"] {
+  width: 120px;
+  accent-color: #d4a843;
+}
+
+.threshold-row span {
+  color: #d4a843;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 20px;
+  text-align: center;
+}
+
 /* === Bar Chart (Precursor Count) === */
 .chart-container {
   padding: 20px 0;
@@ -458,6 +522,8 @@ main {
 .combos-container {
   padding: 10px 0;
   transition: opacity 0.25s ease;
+  max-height: 600px;
+  overflow-y: auto;
 }
 
 .combos-container.fading {
