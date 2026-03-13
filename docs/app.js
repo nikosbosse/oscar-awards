@@ -135,11 +135,6 @@
       const bars = document.createElement("div");
       bars.className = "predictability-bars";
 
-      // Background track
-      const track = document.createElement("div");
-      track.className = "predictability-bar-track";
-      bars.appendChild(track);
-
       // Best precursor bar, colored by award
       const bestBar = document.createElement("div");
       bestBar.className = "predictability-bar-best";

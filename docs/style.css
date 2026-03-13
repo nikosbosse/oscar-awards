@@ -9,15 +9,15 @@
   --gold: #d4a843;
   --gold-dim: rgba(212, 168, 67, 0.15);
   --gold-glow: rgba(212, 168, 67, 0.25);
-  --bg-deep: #0a0a14;
-  --bg-card: #13132a;
-  --bg-inset: #0e0e20;
-  --bg-hover: #1a1a38;
-  --border-subtle: #1e1e3a;
-  --border-mid: #2a2a4a;
-  --text-primary: #e8e4de;
-  --text-secondary: #b0aaA0;
-  --text-muted: #777068;
+  --bg-deep: #0a0a1a;
+  --bg-card: #1a1a2e;
+  --bg-inset: #12122a;
+  --bg-hover: #1e1e3a;
+  --border-subtle: #2a2a4a;
+  --border-mid: #3a3a5a;
+  --text-primary: #e0e0e0;
+  --text-secondary: #ccc;
+  --text-muted: #999;
   --font-display: "Cormorant Garamond", "Georgia", serif;
   --font-body: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -99,7 +99,7 @@ main {
 }
 
 .card .subtitle {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.88rem;
   margin-bottom: 28px;
   line-height: 1.65;
@@ -140,13 +140,13 @@ main {
 .intro-group h3 {
   font-family: var(--font-display);
   color: var(--gold);
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-size: 1.35rem;
+  font-weight: 800;
   margin-bottom: 8px;
 }
 
 .intro-group p {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.84rem;
   line-height: 1.65;
   margin-bottom: 10px;
@@ -519,10 +519,10 @@ main {
 
 .forecast-category h3 {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.35rem;
   color: var(--gold);
   margin: 0 0 10px 0;
-  font-weight: 600;
+  font-weight: 800;
 }
 
 .forecast-nominee {
@@ -574,7 +574,7 @@ main {
 
 .forecast-precursors {
   font-size: 0.65rem;
-  color: #555;
+  color: var(--text-muted);
   min-width: 150px;
 }
 
@@ -819,7 +819,7 @@ main {
 }
 
 .combo-bar-bg {
-  background: var(--bg-inset);
+  background: transparent;
   border-radius: 4px;
   height: 20px;
   width: 100%;
@@ -909,7 +909,7 @@ main {
 
 /* === Header subtitle === */
 .header-subtitle {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 1rem;
   max-width: 700px;
   margin: 14px auto 0;
@@ -919,7 +919,7 @@ main {
 
 /* === Section Transitions === */
 .section-transition {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.88rem;
   font-style: italic;
   margin-top: 28px;
@@ -975,11 +975,11 @@ main {
 
 .predictability-tier-label {
   font-family: var(--font-display);
-  font-size: 0.9rem;
+  font-size: 1.15rem;
   color: var(--gold);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.02em;
-  margin: 24px 0 10px;
+  margin: 28px 0 10px;
   padding-left: 4px;
   padding-bottom: 6px;
   border-bottom: 1px solid var(--border-subtle);
@@ -1025,25 +1025,14 @@ main {
   align-items: center;
 }
 
-/* Background track */
-.predictability-bar-track {
-  position: absolute;
-  top: 4px;
-  left: 0;
-  right: 0;
-  height: calc(100% - 8px);
-  background: var(--bg-inset);
-  border-radius: 4px;
-}
-
 .predictability-bar-best {
   position: absolute;
   top: 4px;
   left: 0;
   height: calc(100% - 8px);
   border-radius: 4px;
-  opacity: 0.85;
-  transition: opacity 0.15s ease, filter 0.15s ease;
+  opacity: 0.9;
+  transition: opacity 0.15s ease;
   /* Entrance animation */
   animation: barGrow 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
@@ -1061,7 +1050,6 @@ main {
 
 .predictability-row:hover .predictability-bar-best {
   opacity: 1;
-  filter: brightness(1.15);
 }
 
 .predictability-annotation {
@@ -1079,7 +1067,7 @@ main {
 }
 
 .predictability-annotation .award-pct {
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 @keyframes fadeIn {
