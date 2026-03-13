@@ -3,6 +3,7 @@
 
   let DATA = null;
   let currentYearIndex = 0;
+  let heatmapMode = "accuracy"; // "accuracy" or "yearly"
   let currentCatIndex = 0;
   let currentCountCatIndex = 0;
   let currentCombosCatIndex = 0;
@@ -70,6 +71,38 @@
     }
     tooltip.style.left = x + "px";
     tooltip.style.top = y + "px";
+  }
+
+  // ── Heatmap mode switching ─────────────────────────────
+
+  function setHeatmapMode(mode) {
+    heatmapMode = mode;
+    const accBtn = document.getElementById("heatmap-mode-accuracy");
+    const yearBtn = document.getElementById("heatmap-mode-yearly");
+    const yearNav = document.getElementById("yearly-nav");
+    const accGrid = document.getElementById("accuracy-heatmap");
+    const yearGrid = document.getElementById("yearly-grid");
+    const title = document.getElementById("heatmap-title");
+    const subtitle = document.getElementById("heatmap-subtitle");
+
+    if (mode === "accuracy") {
+      accBtn.classList.add("active");
+      yearBtn.classList.remove("active");
+      yearNav.style.display = "none";
+      accGrid.style.display = "";
+      yearGrid.style.display = "none";
+      title.textContent = "Precursor Accuracy by Oscar Category";
+      subtitle.textContent = "For each precursor, the percentage of years where its winner went on to win the Oscar in the same category (2000\u20132025, minimum 5 years of data)";
+    } else {
+      yearBtn.classList.add("active");
+      accBtn.classList.remove("active");
+      yearNav.style.display = "";
+      accGrid.style.display = "none";
+      yearGrid.style.display = "";
+      title.textContent = "Awards Season Scorecard";
+      subtitle.textContent = "Compare precursor picks against Oscar winners for each year. Green = matched, Red = missed.";
+      renderYearlyGrid();
+    }
   }
 
   // ── Section 1: Accuracy Heatmap ─────────────────────────
@@ -632,6 +665,14 @@
   // ── Navigation ──────────────────────────────────────────
 
   function setupNavigation() {
+    // Heatmap mode toggle
+    document.getElementById("heatmap-mode-accuracy").addEventListener("click", () => {
+      setHeatmapMode("accuracy");
+    });
+    document.getElementById("heatmap-mode-yearly").addEventListener("click", () => {
+      setHeatmapMode("yearly");
+    });
+
     // Year nav
     document.getElementById("year-prev").addEventListener("click", () => {
       currentYearIndex =
@@ -729,7 +770,7 @@
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         // Determine which section is most visible
         const sections = [
-          { el: document.getElementById("yearly-section"), type: "year" },
+          { el: document.getElementById("accuracy-section"), type: "year" },
           { el: document.getElementById("agreement-section"), type: "cat" },
           { el: document.getElementById("count-section"), type: "countCat" },
           { el: document.getElementById("combos-section"), type: "combosCat" },
@@ -750,7 +791,7 @@
         }
 
         if (closest) {
-          if (closest.type === "year") {
+          if (closest.type === "year" && heatmapMode === "yearly") {
             if (e.key === "ArrowLeft") {
               currentYearIndex =
                 (currentYearIndex - 1 + DATA.years.length) % DATA.years.length;
