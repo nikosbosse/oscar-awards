@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can You Predict the Oscars?</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Loading overlay -->
+<div id="loading-overlay">
+  <div class="loader-content">
+    <div class="oscar-statue"></div>
+    <p class="loader-text">Loading 26 years of Oscar data...</p>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+</div>
+
+<!-- Navigation -->
+<nav id="sidebar">
+  <div class="nav-brand">
+    <span class="nav-icon">&#127942;</span>
+    <span class="nav-title">Oscar Predictor</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#hero" class="active" data-section="hero">Introduction</a></li>
+    <li><a href="#accuracy-rankings" data-section="accuracy-rankings">Accuracy Rankings</a></li>
+    <li><a href="#heatmap" data-section="heatmap">Accuracy Heatmap</a></li>
+    <li><a href="#over-time" data-section="over-time">Accuracy Over Time</a></li>
+    <li><a href="#agreement" data-section="agreement">Award Agreement</a></li>
+    <li><a href="#upsets" data-section="upsets">Upset Gallery</a></li>
+    <li><a href="#predictability" data-section="predictability">Predictability</a></li>
+    <li><a href="#consensus" data-section="consensus">Consensus Meter</a></li>
+    <li><a href="#models" data-section="models">Model Comparison</a></li>
+    <li><a href="#predictions-2026" data-section="predictions-2026">2026 Predictions</a></li>
+  </ul>
+</nav>
+
+<!-- Mobile nav toggle -->
+<button id="nav-toggle" aria-label="Toggle navigation">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- Main content -->
+<main id="content">
+
+  <!-- Section 1: Hero -->
+  <section id="hero" class="section hero-section">
+    <div class="hero-inner">
+      <p class="hero-kicker">A data story about Hollywood's biggest night</p>
+      <h1 class="hero-title">Can You Predict<br>the Oscars?</h1>
+      <p class="hero-subtitle">We analyzed <strong>26 years</strong> of precursor award data to find out which shows really predict Oscar winners — and built machine learning models to forecast the results.</p>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-number" data-target="16" data-suffix="">0</span>
+          <span class="stat-label">Award Shows</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" data-target="26" data-suffix=" years">0</span>
+          <span class="stat-label">Years of Data</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" data-target="5346" data-suffix="" data-comma="true">0</span>
+          <span class="stat-label">Records Analyzed</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" data-target="24" data-suffix="">0</span>
+          <span class="stat-label">Oscar Categories</span>
+        </div>
+      </div>
+      <a href="#accuracy-rankings" class="scroll-cta">Explore the data <span class="arrow-down">&#8595;</span></a>
+    </div>
+  </section>
+
+  <!-- Section 2: Overall Accuracy Rankings -->
+  <section id="accuracy-rankings" class="section">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2>Which Award Shows Best Predict the Oscars?</h2>
+      <p class="section-intro">Not all precursor awards are created equal. Industry guild awards — where voters overlap significantly with Oscar voters — tend to be far more predictive than critics' organizations.</p>
+      <p class="section-description">Each bar shows how often a precursor's winner matches the eventual Oscar winner, averaged across all categories where that precursor competes. The accuracy percentages come from 26 years of historical matchups (2000&ndash;2025).</p>
+    </div>
+    <div class="insight-box">Industry guilds (DGA, PGA, SAG) consistently rank highest because their voting memberships overlap substantially with Academy members&mdash;the same people who vote for guild awards also vote for Oscars. Festival awards (Cannes, Venice, etc.) score near 0% because they happen months before Oscar contenders are even released, and they reward a very different type of filmmaking.</div>
+    <div class="how-to-read">
+      <ul>
+        <li><strong>Longer bar = higher accuracy.</strong> A 60% bar means that precursor's winner matched the Oscar winner 60% of the time.</li>
+        <li>Hover over any bar to see the exact accuracy figure and number of matchups.</li>
+      </ul>
+    </div>
+    <div class="chart-container">
+      <div id="chart-accuracy-bar" class="chart"></div>
+    </div>
+  </section>
+
+  <!-- Section 3: Accuracy Heatmap -->
+  <section id="heatmap" class="section">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2>The Full Picture: Accuracy by Category</h2>
+      <p class="section-intro">Prediction accuracy varies wildly across categories. Some Oscar races are nearly locked in by precursor season; others remain stubbornly unpredictable.</p>
+      <p class="section-description">This grid maps every precursor (columns) against every Oscar category (rows). Each cell shows how often that precursor correctly predicted the Oscar winner in that specific category. Blank cells mean the precursor has no equivalent award for that category.</p>
+    </div>
+    <div class="how-to-read">
+      <ul>
+        <li><strong>Darker cells = higher accuracy.</strong> The color scale runs from light (low accuracy) to deep gold (high accuracy).</li>
+        <li><strong>Blank cells</strong> mean that precursor doesn't give an award in that Oscar category, so there's no data.</li>
+        <li>Click any cell to see the detailed year-by-year breakdown in a panel below the heatmap.</li>
+        <li>Use the dropdown filter to focus on acting, directing, writing, or technical categories.</li>
+      </ul>
+    </div>
+    <div class="insight-box">The DGA (Directors Guild) predicts Best Director roughly 85% of the time&mdash;the single strongest precursor-category link. The PGA (Producers Guild) predicts Best Picture about 73% of the time. Meanwhile, writing categories are among the hardest to predict: no single precursor exceeds 55% for Best Original Screenplay.</div>
+    <div class="controls">
+      <label for="heatmap-filter">Filter categories:</label>
+      <select id="heatmap-filter">
+        <option value="all">All Categories</option>
+        <option value="acting">Acting</option>
+        <option value="directing">Directing &amp; Picture</option>
+        <option value="writing">Writing</option>
+        <option value="technical">Technical</option>
+        <option value="other">Shorts &amp; Other</option>
+      </select>
+    </div>
+    <div class="chart-container chart-container-wide">
+      <div id="chart-heatmap" class="chart"></div>
+    </div>
+    <div id="heatmap-detail" class="detail-panel hidden">
+      <button class="detail-close" onclick="document.getElementById('heatmap-detail').classList.add('hidden')">&times;</button>
+      <div id="heatmap-detail-content"></div>
+    </div>
+  </section>
+
+  <!-- Section 4: Accuracy Over Time -->
+  <section id="over-time" class="section">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2>How Has Predictability Changed Over Time?</h2>
+      <p class="section-intro">Oscar races have gotten more unpredictable in some categories, while others remain steady. Explore the rolling accuracy of each precursor over the past two decades.</p>
+      <p class="section-description">Each line tracks a precursor's prediction accuracy using a 5-year rolling window, smoothing out year-to-year noise so you can spot meaningful trends. A rising line means that precursor is becoming more predictive; a falling line means it's losing its edge.</p>
+    </div>
+    <div class="insight-box lightbulb">Look for diverging trends: the PGA has become <em>more</em> predictive for Best Picture in recent years as its membership has grown closer to the Academy's. Meanwhile, the Golden Globes have declined as a predictor&mdash;likely reflecting the HFPA's idiosyncratic tastes diverging from mainstream Academy voting, as well as the disruption of its 2022&ndash;2023 controversy.</div>
+    <div class="how-to-read">
+      <ul>
+        <li>Each point on the line represents the accuracy over the surrounding 5-year window (e.g., a point at 2015 reflects 2013&ndash;2017).</li>
+        <li>Use the dropdown to switch between Oscar categories and see how different precursors perform for each.</li>
+        <li>Hover over any line to see the exact rolling accuracy value.</li>
+      </ul>
+    </div>
+    <div class="controls">
+      <label for="time-category">Oscar category:</label>
+      <select id="time-category"></select>
+    </div>
+    <div class="chart-container">
+      <div id="chart-over-time" class="chart"></div>
+    </div>
+  </section>
+
+  <!-- Section 5: Award Agreement Matrix -->
+  <section id="agreement" class="section">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2>When Do Award Shows Agree?</h2>
+      <p class="section-intro">Some award shows march in lockstep; others go their own way. This matrix reveals the hidden alliances between precursor awards.</p>
+      <p class="section-description">This is a pairwise agreement matrix: each cell shows how often two precursor awards picked the <em>same</em> winner for the selected Oscar category. It is not about Oscar accuracy&mdash;it's about how often two shows agree with <em>each other</em>.</p>
+    </div>
+    <div class="insight-box">High agreement between industry awards (PGA, DGA, SAG) reflects their shared voter pools&mdash;many of the same professionals vote for all three. Low agreement between industry guilds and critics' circles (NYFCC, LAFCA, NBR) reveals fundamentally different aesthetic values: guild voters reward crowd-pleasing craft, while critics often champion more adventurous or international work.</div>
+    <div class="how-to-read">
+      <ul>
+        <li><strong>Darker cells = more frequent agreement</strong> between two precursors on who should win.</li>
+        <li>The diagonal is always 100% (every show agrees with itself).</li>
+        <li>Use the category dropdown to see how alliances shift across different Oscar races.</li>
+      </ul>
+    </div>
+    <div class="controls">
+      <label for="agreement-category">Oscar category:</label>
+      <select id="agreement-category"></select>
+    </div>
+    <div class="chart-container">
+      <div id="chart-agreement" class="chart"></div>
+    </div>
+  </section>
+
+  <!-- Section 6: Upset Gallery -->
+  <section id="upsets" class="section">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2>The Upset Gallery</h2>
+      <p class="section-intro">Sometimes the Oscar goes to a nominee that <em>nobody</em> saw coming. These are the biggest surprises — ranked by how many precursors got it wrong.</p>
+      <p class="section-description">An "upset" means the Oscar winner was <strong>not</strong> the consensus frontrunner from precursor awards. The <strong>surprise meter</strong> on each card shows what percentage of precursors picked someone else&mdash;higher means more shocking. A 90% surprise means 9 out of 10 precursors predicted a different winner.</p>
+    </div>
+    <div class="insight-box">Some of the biggest upsets in Oscar history include <em>Crash</em> beating <em>Brokeback Mountain</em> for Best Picture (2006), and <em>Shakespeare in Love</em> toppling <em>Saving Private Ryan</em> (1999). These aren't just trivia&mdash;they reveal the limits of precursor data. Factors like campaign spending, late-breaking controversies, and preferential ballot mechanics can all override the precursor signal.</div>
+    <div class="controls">
+      <label for="upset-sort">Sort by:</label>
+      <select id="upset-sort">
+        <option value="surprise">Most surprising first</option>
+        <option value="year-desc">Most recent first</option>
+        <option value="year-asc">Oldest first</option>
+      </select>
+      <label for="upset-count" style="margin-left:1rem;">Show:</label>
+      <select id="upset-count">
+        <option value="12">Top 12</option>
+        <option value="25">Top 25</option>
+        <option value="50">Top 50</option>
+        <option value="all">All</option>
+      </select>
+    </div>
+    <div id="upset-cards" class="card-grid"></div>
+  </section>
+
+  <!-- Section 7: Category Predictability -->
+  <section id="predictability" class="section">
+    <div class="section-header">
+      <span class="section-number">06</span>
+      <h2>Which Categories Are Most Predictable?</h2>
+      <p class="section-intro">Best Director is nearly a sure bet if you know the DGA winner. Best Picture? Not so much. Here's how each Oscar category stacks up.</p>
+      <p class="section-description">For each Oscar category, two data points are shown: the <strong>best single precursor's accuracy</strong> (the gold dot) and the <strong>average accuracy across all precursors</strong> (the darker dot). The gap between them tells an important story.</p>
+    </div>
+    <div class="how-to-read">
+      <ul>
+        <li><strong>Gold dot</strong> = the single most accurate precursor for that category (the "best predictor").</li>
+        <li><strong>Dark dot</strong> = the average accuracy across all precursors that cover that category.</li>
+        <li>When the two dots are <strong>far apart</strong>, one dominant predictor stands out from the pack (e.g., DGA for Best Director).</li>
+        <li>When <strong>both dots are low</strong>, the category is genuinely unpredictable&mdash;no precursor has cracked it.</li>
+      </ul>
+    </div>
+    <div class="insight-box lightbulb">Categories where the gold and dark dots cluster together near the top (like Best Director) are the most "solved"&mdash;most precursors do well. Categories where both dots are low (like Best Original Screenplay or certain technical categories) are the wild cards where upsets are common and prediction models struggle most.</div>
+    <div class="chart-container">
+      <div id="chart-predictability" class="chart"></div>
+    </div>
+  </section>
+
+  <!-- Section 8: Consensus Meter -->
+  <section id="consensus" class="section">
+    <div class="section-header">
+      <span class="section-number">07</span>
+      <h2>Does Consensus Equal Certainty?</h2>
+      <p class="section-intro">When most precursors agree on a winner, how often does the Oscar follow? The relationship is surprisingly strong — but not absolute.</p>
+      <p class="section-description">The X-axis measures precursor consensus&mdash;what percentage of precursors agree on the same frontrunner. The Y-axis shows how often that frontrunner actually won the Oscar. Each point represents a specific category-year combination.</p>
+    </div>
+    <div class="how-to-read">
+      <ul>
+        <li><strong>X-axis (Consensus):</strong> the share of precursors that picked the same nominee as their winner. 100% = every precursor agreed.</li>
+        <li><strong>Y-axis (Oscar Win Rate):</strong> how often the consensus pick actually won the Oscar at that level of agreement.</li>
+        <li>Points in the <strong>upper-right</strong> are the "locks"&mdash;high consensus, high win rate. Points in the <strong>lower-left</strong> are the chaotic races.</li>
+      </ul>
+    </div>
+    <div class="insight-box">The critical threshold is around 70%: when more than 70% of precursors agree on a frontrunner, that nominee wins the Oscar the vast majority of the time. Below 50% consensus, it's essentially a coin flip&mdash;these are the races where upsets happen and pundits get humbled.</div>
+    <div class="chart-container">
+      <div id="chart-consensus" class="chart"></div>
+    </div>
+  </section>
+
+  <!-- Section 9: Model Comparison Dashboard -->
+  <section id="models" class="section">
+    <div class="section-header">
+      <span class="section-number">08</span>
+      <h2>Battle of the Prediction Models</h2>
+      <p class="section-intro">We tested eight different prediction models — from simple majority votes to gradient boosting — using leave-one-year-out cross-validation. Here's how they compare.</p>
+      <p class="section-description">Each model was evaluated using <strong>leave-one-year-out backtesting</strong>: to predict year N, the model trains on all other years and predicts year N blind. This simulates real-world forecasting and prevents overfitting. The bar chart ranks models by overall accuracy; the table below provides detailed metrics.</p>
+    </div>
+    <div class="how-to-read">
+      <ul>
+        <li><strong>Accuracy</strong> = percentage of categories where the model's top pick matched the actual Oscar winner.</li>
+        <li><strong>Brier Score</strong> = measures prediction quality (lower is better). It penalizes confident wrong predictions more harshly. Range: 0 (perfect) to 1 (worst).</li>
+        <li><strong>ECE (Expected Calibration Error)</strong> = measures whether a model's stated confidence matches reality. If a model says "80% confident" and wins 80% of the time, ECE is low (well-calibrated).</li>
+      </ul>
+    </div>
+    <div class="chart-container">
+      <div id="chart-model-accuracy" class="chart"></div>
+    </div>
+    <div id="model-table-wrapper" class="table-wrapper"></div>
+    <div class="insight-box lightbulb">The calibration chart below is crucial for trusting a model's predictions. Points that fall on the diagonal line mean the model is well-calibrated: when it says 70%, the outcome happens about 70% of the time. Points above the line mean the model is <em>underconfident</em> (wins more often than it predicts). Points below mean it's <em>overconfident</em> (wins less often than it claims).</div>
+    <div class="chart-container" style="margin-top:2rem;">
+      <div id="chart-calibration" class="chart"></div>
+    </div>
+  </section>
+
+  <!-- Section 10: 2026 Predictions -->
+  <section id="predictions-2026" class="section">
+    <div class="section-header">
+      <span class="section-number">09</span>
+      <h2>2026 Oscar Predictions</h2>
+      <p class="section-intro">Based on this year's precursor results and our best-performing models, here are the predicted Oscar winners for 2026.</p>
+      <p class="section-description">These predictions aggregate this season's precursor results through our best-performing weighted models. The confidence bar on each card reflects how strongly the models agree on the predicted winner&mdash;higher confidence means stronger consensus across both precursors and models.</p>
+    </div>
+    <div class="insight-box">Look for the split between "locks" and genuine toss-ups. Categories with confidence above 80% have strong precursor consensus and are very likely to hold. Categories below 50% are wide open&mdash;these are the races to watch on Oscar night. Click "Show model details" on any card to see which models agree and which dissent.</div>
+    <div id="prediction-cards" class="prediction-grid"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>Data covers 2000–2025 Oscar ceremonies. Analysis uses precursor award results from DGA, PGA, SAG, BAFTA, Golden Globes, Critics Choice, and 10 other award shows.</p>
+    <p class="footer-note">Built with Plotly.js. Data compiled from public award records.</p>
+  </footer>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

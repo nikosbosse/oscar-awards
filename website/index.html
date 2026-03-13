@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oscar Predictions: Precursor Analysis</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Oscar Predictions: Precursor Analysis</h1>
+  </header>
+
+  <main>
+    <!-- Introduction -->
+    <section class="card" id="intro-section">
+      <h2>About This Project</h2>
+      <p>Every year, before the Oscars, a constellation of other film industry awards &mdash; guild prizes, critics&rsquo; circles, major ceremonies, and festivals &mdash; announce their own winners. These <strong>precursor awards</strong> have historically shown predictive power for Oscar outcomes. By tracking who wins these earlier awards, we can estimate who is likely to take home the Oscar.</p>
+
+      <p>This analysis draws on <strong>5,000+ records</strong> spanning <strong>26 years</strong> of ceremony data (2000&ndash;2025), covering all <strong>24 Oscar categories</strong> and <strong>15 precursor award shows</strong>.</p>
+
+      <div class="intro-grid">
+        <div class="intro-group">
+          <h3>Industry Guilds</h3>
+          <p>DGA (Directors Guild), PGA (Producers Guild), SAG (Screen Actors Guild), WGA (Writers Guild), ACE Eddie Awards. Voted on by professionals in the relevant craft &mdash; the strongest predictors for their corresponding Oscar categories.</p>
+        </div>
+        <div class="intro-group">
+          <h3>Major Award Shows</h3>
+          <p>BAFTA, Golden Globes, Critics Choice Awards. High-profile ceremonies with broad category coverage.</p>
+        </div>
+        <div class="intro-group">
+          <h3>Critics Circles</h3>
+          <p>NYFCC, LAFCA, NSFC, National Board of Review. Smaller bodies of film critics whose picks sometimes diverge significantly from Oscar outcomes.</p>
+        </div>
+        <div class="intro-group">
+          <h3>Festivals</h3>
+          <p>Venice (Golden Lion), Cannes (Palme d&rsquo;Or), Toronto (People&rsquo;s Choice). Early signals from months before the Oscars, though with weaker predictive power overall.</p>
+        </div>
+      </div>
+
+      <p>Predictive accuracy varies widely &mdash; guild awards like the DGA (85% for Best Director) and SAG tend to be the strongest predictors, while critics circles and festivals are less reliable but still informative as part of the broader consensus picture.</p>
+    </section>
+
+    <!-- Section 1: Accuracy Heatmap -->
+    <section class="card" id="accuracy-section">
+      <h2>Precursor Accuracy by Oscar Category</h2>
+      <p class="subtitle">For each precursor, the percentage of years where its winner went on to win the Oscar in the same category (2000&ndash;2025, minimum 5 years of data)</p>
+      <div class="heatmap-container">
+        <div id="accuracy-heatmap" class="heatmap-grid"></div>
+      </div>
+    </section>
+
+    <!-- Section 2: Year-by-Year Match Grid -->
+    <section class="card" id="yearly-section">
+      <h2>Awards Season Scorecard</h2>
+      <p class="subtitle">Compare precursor picks against Oscar winners for each year. Green = matched, Red = missed.</p>
+      <div class="nav-controls">
+        <button id="year-prev" class="nav-btn" aria-label="Previous year">&larr;</button>
+        <span id="year-display" class="nav-label"></span>
+        <button id="year-next" class="nav-btn" aria-label="Next year">&rarr;</button>
+      </div>
+      <div class="heatmap-container">
+        <div id="yearly-grid" class="heatmap-grid"></div>
+      </div>
+    </section>
+
+    <!-- Section 3: Agreement Matrix -->
+    <section class="card" id="agreement-section">
+      <h2>How Often Do Precursor Awards Agree?</h2>
+      <p class="subtitle">Percentage of years where two precursor awards picked the same winner in a given category</p>
+      <div class="nav-controls">
+        <button id="cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
+        <span id="cat-display" class="nav-label"></span>
+        <button id="cat-next" class="nav-btn" aria-label="Next category">&rarr;</button>
+      </div>
+      <div class="heatmap-container">
+        <div id="agreement-matrix" class="heatmap-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
