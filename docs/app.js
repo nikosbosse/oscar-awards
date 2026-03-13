@@ -81,22 +81,20 @@
     const categories = DATA.oscar_categories;
     const heatmap = DATA.accuracy_heatmap;
 
-    // Compute best accuracy per category
+    // Compute best and second-best accuracy per category
     const rows = [];
     for (const cat of categories) {
       const catData = heatmap[cat] || {};
       const values = Object.entries(catData).filter(([, v]) => v !== null && v !== undefined);
       if (values.length === 0) continue;
 
-      let bestVal = 0;
-      let bestName = "";
-      for (const [precursor, val] of values) {
-        if (val > bestVal) {
-          bestVal = val;
-          bestName = precursor;
-        }
-      }
-      rows.push({ cat, bestVal, bestName });
+      // Sort by value descending
+      values.sort((a, b) => b[1] - a[1]);
+      const bestVal = values[0][1];
+      const bestName = values[0][0];
+      const secondVal = values.length > 1 ? values[1][1] : null;
+      const secondName = values.length > 1 ? values[1][0] : null;
+      rows.push({ cat, bestVal, bestName, secondVal, secondName });
     }
 
     // Sort by best accuracy descending
@@ -113,6 +111,7 @@
 
     const maxVal = 100;
 
+    let rowIndex = 0;
     let currentTier = -1;
     for (const row of rows) {
       // Determine tier
@@ -136,34 +135,100 @@
       const bars = document.createElement("div");
       bars.className = "predictability-bars";
 
+      // Background track
+      const track = document.createElement("div");
+      track.className = "predictability-bar-track";
+      bars.appendChild(track);
+
       // Best precursor bar, colored by award
       const bestBar = document.createElement("div");
       bestBar.className = "predictability-bar-best";
       bestBar.style.width = (row.bestVal / maxVal * 100) + "%";
       bestBar.style.background = AWARD_COLORS[row.bestName] || "#4CAF50";
+      bestBar.style.animationDelay = (rowIndex * 40) + "ms";
       bars.appendChild(bestBar);
 
-      // Annotation
+      // Annotation with colored award name
       const annotation = document.createElement("span");
       annotation.className = "predictability-annotation";
       annotation.style.left = (row.bestVal / maxVal * 100) + "%";
-      annotation.textContent = `${row.bestName} (${row.bestVal}%)`;
+      annotation.style.animationDelay = (rowIndex * 40 + 300) + "ms";
+
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "award-name";
+      nameSpan.textContent = row.bestName;
+      nameSpan.style.color = AWARD_COLORS[row.bestName] || "#4CAF50";
+      annotation.appendChild(nameSpan);
+
+      const pctSpan = document.createElement("span");
+      pctSpan.className = "award-pct";
+      pctSpan.textContent = ` ${row.bestVal}%`;
+      annotation.appendChild(pctSpan);
+
       bars.appendChild(annotation);
 
       rowEl.appendChild(bars);
 
-      // Tooltip
+      // Richer tooltip: show top 2 precursors
       rowEl.addEventListener("mouseenter", (e) => {
-        showTooltip(e,
-          `<strong>${row.cat}</strong><br>` +
-          `Best predictor: ${row.bestName} (${row.bestVal}%)`
-        );
+        let html = `<strong>${row.cat}</strong><br>` +
+          `Best: ${row.bestName} (${row.bestVal}%)`;
+        if (row.secondVal !== null) {
+          html += `<br>2nd: ${row.secondName} (${row.secondVal}%)`;
+        }
+        showTooltip(e, html);
       });
       rowEl.addEventListener("mousemove", positionTooltip);
       rowEl.addEventListener("mouseleave", hideTooltip);
 
       container.appendChild(rowEl);
+      rowIndex++;
     }
+
+    // Add 50% reference line to the bars area
+    // We need to measure after render, so defer
+    requestAnimationFrame(() => {
+      const firstRow = container.querySelector(".predictability-bars");
+      if (!firstRow) return;
+      const barsRect = firstRow.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      const barsLeft = barsRect.left - containerRect.left;
+      const barsWidth = barsRect.width;
+
+      const refLine = document.createElement("div");
+      refLine.style.cssText = `
+        position: absolute;
+        left: ${barsLeft + barsWidth * 0.5}px;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: repeating-linear-gradient(
+          to bottom,
+          transparent,
+          transparent 3px,
+          rgba(255,255,255,0.08) 3px,
+          rgba(255,255,255,0.08) 6px
+        );
+        pointer-events: none;
+        z-index: 0;
+      `;
+      container.style.position = "relative";
+      container.appendChild(refLine);
+
+      const refLabel = document.createElement("span");
+      refLabel.textContent = "50%";
+      refLabel.style.cssText = `
+        position: absolute;
+        left: ${barsLeft + barsWidth * 0.5}px;
+        top: -2px;
+        transform: translateX(-50%);
+        font-size: 0.6rem;
+        color: rgba(255,255,255,0.2);
+        pointer-events: none;
+        z-index: 0;
+      `;
+      container.appendChild(refLabel);
+    });
   }
 
   // ── 2026 Oscar Forecast ────────────────────────────────
