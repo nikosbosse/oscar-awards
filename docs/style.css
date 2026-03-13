@@ -35,9 +35,35 @@ body {
 
 /* === Header === */
 header {
-  text-align: center;
   padding: 64px 0 40px;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
   position: relative;
+}
+
+.header-logo-link {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-75%);
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  height: 40px;
+  width: auto;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  padding-right: 10px;
+}
+
+.header-logo-link:hover .header-logo {
+  opacity: 1;
 }
 
 header h1 {
@@ -458,6 +484,20 @@ main {
   padding: 40px;
   color: var(--text-muted);
 }
+
+/* === Footnote === */
+#intro-section p.footnote {
+  text-align: right;
+  font-size: 0.85rem;
+  color: gray;
+  margin-top: 26px;
+  line-height: 1.4;
+}
+
+#intro-section p.footnote a {
+  color: gold;
+}
+
 
 /* === Category Selector (single-select chips) === */
 .cat-selector {
@@ -1130,6 +1170,32 @@ main {
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* === Footer === */
+footer {
+  text-align: center;
+  padding: 48px 0 0;
+}
+
+.footer-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--gold);
+}
+
+.footer-logo {
+  height: 1.1em;
+  width: auto;
+  vertical-align: -0.1em;
 }
 
 /* === Responsive === */
