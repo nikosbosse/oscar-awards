@@ -95,3 +95,57 @@ A pairwise agreement heatmap showing how often any two precursor awards pick the
 - Only show the lower triangle (or upper) to avoid redundancy. The diagonal (100%) can be shown or omitted.
 - The category switcher should feel lightweight — arrow keys or swipe, not a full page reload. The grid animates or transitions smoothly between categories.
 - Since different categories have different sets of relevant precursors, the matrix dimensions change per category. The grid should resize gracefully.
+
+## Visualization: Precursor Count vs Oscar Win Probability
+
+A bar chart showing the relationship between how many precursor awards a nominee won and their probability of winning the Oscar.
+
+### Data derivation
+
+For each Oscar category and each year (2000–2025):
+- Collect all distinct winners across the precursor awards relevant to that category.
+- For each distinct winner, count how many precursors they won.
+- Record whether they went on to win the Oscar.
+
+Then aggregate across years: for each count N (1, 2, 3, ...), compute the fraction of people/films who won exactly N precursors and also won the Oscar.
+
+### Layout
+
+- **X-axis:** Number of precursors won (1, 2, 3, ..., up to the max observed).
+- **Y-axis:** Oscar win probability (0–100%).
+- **Bars or points** showing the probability at each count, with sample size labels (e.g., "n=12") so the user can judge statistical reliability.
+- **Category navigation:** Same left/right arrows as the agreement matrix, cycling through Oscar categories.
+
+### What this reveals
+
+- The expected strong monotonic relationship: the more precursors you win, the more likely you win the Oscar.
+- Where the "tipping point" is — at what count does winning become near-certain?
+- How this varies by category — some categories may need near-unanimity, others may be decided with just 2–3 precursors.
+
+## Visualization: Winning Precursor Combinations
+
+A view that identifies the most common specific combinations of precursors won by Oscar winners, and their historical success rates.
+
+### Data derivation
+
+For each Oscar category and each year:
+- Look at the Oscar winner and record the exact set of precursors they won (e.g., {PGA, BAFTA, Critics Choice}).
+- Also look at non-winners and their precursor sets.
+
+Then aggregate: for each observed combination, count how many times it appeared and how many times it led to an Oscar win. Focus on combinations that appeared at least 2–3 times to avoid noise.
+
+### Layout
+
+- **Category navigation:** Same left/right arrows, cycling through Oscar categories.
+- **Table or ranked list** of the most common precursor combinations, showing:
+  - The combination (e.g., "PGA + BAFTA + Critics Choice")
+  - Times observed
+  - Oscar win rate
+  - Visual indicator (bar or color) for the win rate
+- Sort by frequency or win rate.
+
+### What this reveals
+
+- Whether there are "golden combinations" — specific sets of precursors that virtually guarantee an Oscar win.
+- Whether some combinations are misleading — e.g., winning certain precursors together but still losing the Oscar.
+- Which precursors tend to co-occur in winning runs vs. which appear in isolation.

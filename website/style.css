@@ -336,6 +336,180 @@ main {
   background: #4a4a6a;
 }
 
+/* === Bar Chart (Precursor Count) === */
+.chart-container {
+  padding: 20px 0;
+  min-height: 300px;
+  transition: opacity 0.25s ease;
+}
+
+.chart-container.fading {
+  opacity: 0;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  height: 250px;
+  padding: 0 20px;
+  border-bottom: 1px solid #333;
+  position: relative;
+}
+
+.bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar-wrapper {
+  width: 100%;
+  max-width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  min-height: 2px;
+  transition: height 0.3s ease;
+}
+
+.bar-label-top {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  margin-bottom: 4px;
+}
+
+.bar-label-n {
+  font-size: 0.7rem;
+  color: #888;
+  margin-top: 2px;
+}
+
+.bar-x-label {
+  font-size: 0.8rem;
+  color: #ccc;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.chart-x-title {
+  text-align: center;
+  color: #888;
+  font-size: 0.8rem;
+  margin-top: 12px;
+}
+
+.chart-no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+  color: #666;
+}
+
+/* === Combinations Table === */
+.combos-container {
+  padding: 10px 0;
+  transition: opacity 0.25s ease;
+}
+
+.combos-container.fading {
+  opacity: 0;
+}
+
+.combos-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.combos-table th {
+  text-align: left;
+  color: #d4a843;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 1px solid #333;
+}
+
+.combos-table th:last-child,
+.combos-table td:last-child {
+  text-align: right;
+}
+
+.combos-table td {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: #ccc;
+  border-bottom: 1px solid #1e1e3a;
+}
+
+.combos-table tr:hover td {
+  background: #1e1e3a;
+}
+
+.combo-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.combo-tag {
+  background: #2a2a4a;
+  color: #ccc;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.combo-bar-bg {
+  background: #1a1a2e;
+  border-radius: 3px;
+  height: 20px;
+  width: 100%;
+  min-width: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.combo-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.combo-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.combo-bar-text {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  white-space: nowrap;
+}
+
+.combos-no-data {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
 /* === Responsive === */
 @media (max-width: 768px) {
   header h1 {

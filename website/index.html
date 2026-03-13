@@ -77,6 +77,30 @@
         <div id="agreement-matrix" class="heatmap-grid"></div>
       </div>
     </section>
+
+    <!-- Section 4: Precursor Count vs Oscar Win Probability -->
+    <section class="card" id="count-section">
+      <h2>Precursor Count vs Oscar Win Probability</h2>
+      <p class="subtitle">If a nominee wins N precursor awards in the corresponding category (e.g., for Best Picture: BAFTA Best Film, PGA, Critics Choice Best Picture, etc.), how likely are they to win the Oscar?</p>
+      <div class="nav-controls">
+        <button id="count-cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
+        <span id="count-cat-display" class="nav-label"></span>
+        <button id="count-cat-next" class="nav-btn" aria-label="Next category">&rarr;</button>
+      </div>
+      <div id="count-chart" class="chart-container"></div>
+    </section>
+
+    <!-- Section 5: Winning Precursor Combinations -->
+    <section class="card" id="combos-section">
+      <h2>Winning Precursor Combinations</h2>
+      <p class="subtitle">Which specific sets of corresponding precursor category wins have historically led to Oscar victories? Each combination shows the exact precursor awards won in the matching category.</p>
+      <div class="nav-controls">
+        <button id="combos-cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
+        <span id="combos-cat-display" class="nav-label"></span>
+        <button id="combos-cat-next" class="nav-btn" aria-label="Next category">&rarr;</button>
+      </div>
+      <div id="combos-table" class="combos-container"></div>
+    </section>
   </main>
 
   <div id="tooltip" class="tooltip"></div>

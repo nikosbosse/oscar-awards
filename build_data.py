@@ -567,6 +567,138 @@ def build_datasets(df: pd.DataFrame) -> dict:
         if cat_agreement:
             agreement_matrix[oscar_cat] = cat_agreement
 
+    # -----------------------------------------------------------------------
+    # 4. Precursor count vs Oscar win probability
+    # -----------------------------------------------------------------------
+    # For each category and year, find all distinct people/films who won at
+    # least one precursor, count how many they won, and note if they won Oscar.
+    precursor_count_data = {}
+
+    for oscar_cat, precursor_entries in CATEGORY_MAPPING.items():
+        precursor_full_names = sorted(set(aw for aw, _ in precursor_entries))
+        # Collect observations: list of (count, won_oscar) across all years
+        observations_by_count: dict[int, dict] = defaultdict(lambda: {"wins": 0, "total": 0})
+
+        for year in years:
+            oscar_winner = oscar_winners.get((oscar_cat, year))
+            if oscar_winner is None:
+                continue
+
+            # Build dict: canonical_name -> {precursors_won: set, is_oscar_winner: bool}
+            # We need to cluster names that refer to the same person/film
+            name_clusters: list[dict] = []  # [{name, precursors: set, is_oscar_winner: bool}]
+
+            for precursor_full in precursor_full_names:
+                pick, matched = get_precursor_pick(
+                    lookup, oscar_cat, precursor_full, year,
+                    oscar_winner, precursor_entries,
+                )
+                if pick is None:
+                    continue
+                short = AWARD_SHORT[precursor_full]
+
+                # Try to merge into existing cluster
+                merged = False
+                for cluster in name_clusters:
+                    if names_match(pick, cluster["name"]):
+                        cluster["precursors"].add(short)
+                        if matched:
+                            cluster["is_oscar_winner"] = True
+                        # Keep longer name as canonical
+                        if len(pick) > len(cluster["name"]):
+                            cluster["name"] = pick
+                        merged = True
+                        break
+                if not merged:
+                    name_clusters.append({
+                        "name": pick,
+                        "precursors": {short},
+                        "is_oscar_winner": matched,
+                    })
+
+            for cluster in name_clusters:
+                count = len(cluster["precursors"])
+                observations_by_count[count]["total"] += 1
+                if cluster["is_oscar_winner"]:
+                    observations_by_count[count]["wins"] += 1
+
+        # Convert to serializable format
+        cat_count_data = {}
+        for count, stats in sorted(observations_by_count.items()):
+            if stats["total"] >= 2:  # Need at least 2 observations
+                cat_count_data[str(count)] = {
+                    "win_pct": round(100 * stats["wins"] / stats["total"]),
+                    "wins": stats["wins"],
+                    "total": stats["total"],
+                }
+        if cat_count_data:
+            precursor_count_data[oscar_cat] = cat_count_data
+
+    # -----------------------------------------------------------------------
+    # 5. Winning precursor combinations
+    # -----------------------------------------------------------------------
+    # For each category, look at each year's Oscar winner and record which
+    # specific precursors they won. Aggregate common combinations.
+    combination_data = {}
+
+    for oscar_cat, precursor_entries in CATEGORY_MAPPING.items():
+        precursor_full_names = sorted(set(aw for aw, _ in precursor_entries))
+        # combo_key (frozenset as sorted tuple) -> {wins: int, total: int}
+        combo_stats: dict[tuple, dict] = defaultdict(lambda: {"wins": 0, "total": 0})
+
+        for year in years:
+            oscar_winner = oscar_winners.get((oscar_cat, year))
+            if oscar_winner is None:
+                continue
+
+            # Build clusters like above
+            name_clusters: list[dict] = []
+            for precursor_full in precursor_full_names:
+                pick, matched = get_precursor_pick(
+                    lookup, oscar_cat, precursor_full, year,
+                    oscar_winner, precursor_entries,
+                )
+                if pick is None:
+                    continue
+                short = AWARD_SHORT[precursor_full]
+                merged = False
+                for cluster in name_clusters:
+                    if names_match(pick, cluster["name"]):
+                        cluster["precursors"].add(short)
+                        if matched:
+                            cluster["is_oscar_winner"] = True
+                        if len(pick) > len(cluster["name"]):
+                            cluster["name"] = pick
+                        merged = True
+                        break
+                if not merged:
+                    name_clusters.append({
+                        "name": pick,
+                        "precursors": {short},
+                        "is_oscar_winner": matched,
+                    })
+
+            for cluster in name_clusters:
+                combo_key = tuple(sorted(cluster["precursors"]))
+                combo_stats[combo_key]["total"] += 1
+                if cluster["is_oscar_winner"]:
+                    combo_stats[combo_key]["wins"] += 1
+
+        # Convert to list, filter to combos seen at least 2 times
+        combos = []
+        for combo_key, stats in combo_stats.items():
+            if stats["total"] >= 2:
+                combos.append({
+                    "precursors": list(combo_key),
+                    "win_pct": round(100 * stats["wins"] / stats["total"]),
+                    "wins": stats["wins"],
+                    "total": stats["total"],
+                })
+        # Sort by total occurrences descending, then win_pct descending
+        combos.sort(key=lambda x: (-x["total"], -x["win_pct"]))
+        if combos:
+            combination_data[oscar_cat] = combos
+
     return {
         "oscar_categories": oscar_categories,
         "precursor_awards": precursor_awards_sorted,
@@ -574,6 +706,8 @@ def build_datasets(df: pd.DataFrame) -> dict:
         "accuracy_heatmap": accuracy_heatmap,
         "yearly_grid": yearly_grid,
         "agreement_matrix": agreement_matrix,
+        "precursor_count": precursor_count_data,
+        "combinations": combination_data,
     }
 
 
