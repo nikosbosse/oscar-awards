@@ -117,19 +117,18 @@
     <section class="card" id="count-section">
       <h2>Does Sweeping the Precursors Guarantee an Oscar?</h2>
       <p class="subtitle">If a nominee wins N precursor awards, how likely are they to win the Oscar?</p>
-      <div class="nav-controls">
-        <button id="count-cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
-        <span id="count-cat-display" class="nav-label"></span>
-        <button id="count-cat-next" class="nav-btn" aria-label="Next category">&rarr;</button>
-      </div>
-      <div class="toggle-row">
-        <button id="count-mode-category" class="toggle-btn active">Corresponding category only</button>
-        <button id="count-mode-all" class="toggle-btn">All precursor categories</button>
-      </div>
-      <div class="threshold-row">
-        <label for="count-threshold">Minimum observations:</label>
-        <input type="range" id="count-threshold" min="1" max="10" value="2" step="1">
-        <span id="count-threshold-display">2</span>
+      <div id="count-cat-selector" class="cat-selector"></div>
+      <h3 id="count-cat-title" class="cat-title"></h3>
+      <div class="controls-row">
+        <div class="toggle-row">
+          <button id="count-mode-category" class="toggle-btn active">Corresponding category only</button>
+          <button id="count-mode-all" class="toggle-btn">All precursor categories</button>
+        </div>
+        <div class="threshold-row">
+          <label for="count-threshold">Minimum observations:</label>
+          <input type="range" id="count-threshold" min="1" max="10" value="2" step="1">
+          <span id="count-threshold-display">2</span>
+        </div>
       </div>
       <div id="count-chart" class="chart-container"></div>
       <p class="section-transition">Individual precursor accuracy is useful, but the real signal comes from <em>specific combinations</em>. Some are nearly bulletproof.</p>
@@ -137,21 +136,20 @@
 
     <!-- 7. Winning precursor combinations -->
     <section class="card" id="combos-section">
-      <h2>The Combinations That (Almost) Never Lose</h2>
+      <h2>Announcing the Winners</h2>
       <p class="subtitle">Which specific sets of precursor wins have historically led to Oscar victories?</p>
-      <div class="nav-controls">
-        <button id="combos-cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
-        <span id="combos-cat-display" class="nav-label"></span>
-        <button id="combos-cat-next" class="nav-btn" aria-label="Next category">&rarr;</button>
-      </div>
-      <div class="toggle-row">
-        <button id="combos-mode-category" class="toggle-btn active">Corresponding category only</button>
-        <button id="combos-mode-all" class="toggle-btn">All precursor categories</button>
-      </div>
-      <div class="threshold-row">
-        <label for="combos-threshold">Minimum times seen:</label>
-        <input type="range" id="combos-threshold" min="1" max="10" value="2" step="1">
-        <span id="combos-threshold-display">2</span>
+      <div id="combos-cat-selector" class="cat-selector"></div>
+      <h3 id="combos-cat-title" class="cat-title"></h3>
+      <div class="controls-row">
+        <div class="toggle-row">
+          <button id="combos-mode-category" class="toggle-btn active">Corresponding category only</button>
+          <button id="combos-mode-all" class="toggle-btn">All precursor categories</button>
+        </div>
+        <div class="threshold-row">
+          <label for="combos-threshold">Minimum times seen:</label>
+          <input type="range" id="combos-threshold" min="1" max="10" value="2" step="1">
+          <span id="combos-threshold-display">2</span>
+        </div>
       </div>
       <div id="combos-table" class="combos-container"></div>
     </section>
@@ -160,11 +158,8 @@
     <section class="card" id="agreement-section">
       <h2>When the Awards Agree and When They Don&rsquo;t</h2>
       <p class="subtitle">Percentage of years where two precursor awards picked the same winner in a given category</p>
-      <div class="nav-controls">
-        <button id="cat-prev" class="nav-btn" aria-label="Previous category">&larr;</button>
-        <span id="cat-display" class="nav-label"></span>
-        <button id="cat-next" class="nav-btn" aria-label="Next category">&rarr;</button>
-      </div>
+      <div id="agreement-cat-selector" class="cat-selector"></div>
+      <h3 id="agreement-cat-title" class="cat-title"></h3>
       <div class="heatmap-container">
         <div id="agreement-matrix" class="heatmap-grid"></div>
       </div>

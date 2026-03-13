@@ -74,6 +74,32 @@
     tooltip.style.top = y + "px";
   }
 
+  // ── Category Chip Selectors ────────────────────────────
+
+  function initCatSelector(containerId, categories, activeIndex, onSelect) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    for (let i = 0; i < categories.length; i++) {
+      const chip = document.createElement("span");
+      chip.className = "cat-chip" + (i === activeIndex ? " active" : "");
+      chip.textContent = categories[i].replace("Best ", "");
+      chip.dataset.index = i;
+      chip.addEventListener("click", () => {
+        container.querySelector(".cat-chip.active")?.classList.remove("active");
+        chip.classList.add("active");
+        onSelect(i);
+      });
+      container.appendChild(chip);
+    }
+  }
+
+  function updateCatSelector(containerId, activeIndex) {
+    const container = document.getElementById(containerId);
+    container.querySelector(".cat-chip.active")?.classList.remove("active");
+    const chip = container.querySelector(`[data-index="${activeIndex}"]`);
+    if (chip) chip.classList.add("active");
+  }
+
   // ── Predictability Bar Chart ────────────────────────────
 
   function renderPredictabilityChart() {
@@ -231,8 +257,7 @@
   // Default 8 forecast categories
   const FORECAST_DEFAULT_CATS = new Set([
     "Best Picture", "Best Director", "Best Actor", "Best Actress",
-    "Best Supporting Actor", "Best Supporting Actress",
-    "Best Adapted Screenplay", "Best Original Screenplay",
+    "Best Original Screenplay",
   ]);
   let forecastActiveCats = new Set(FORECAST_DEFAULT_CATS);
 
@@ -680,7 +705,7 @@
     const cat = DATA.oscar_categories[currentCatIndex];
     const catData = DATA.agreement_matrix[cat] || {};
 
-    document.getElementById("cat-display").textContent = cat;
+    document.getElementById("agreement-cat-title").textContent = cat;
 
     // Determine which precursors have data for this category
     const precursorsInCat = Object.keys(catData);
@@ -789,7 +814,7 @@
     const source = countModeAll ? DATA.precursor_count_all : DATA.precursor_count;
     const catData = (source || {})[cat];
 
-    document.getElementById("count-cat-display").textContent = cat;
+    document.getElementById("count-cat-title").textContent = cat;
 
     container.classList.add("fading");
 
@@ -921,7 +946,7 @@
     const source = combosModeAll ? DATA.combinations_all : DATA.combinations;
     const combos = (source || {})[cat];
 
-    document.getElementById("combos-cat-display").textContent = cat;
+    document.getElementById("combos-cat-title").textContent = cat;
 
     container.classList.add("fading");
 
@@ -1038,12 +1063,17 @@
 
       table.appendChild(tbody);
 
-      const hint = document.createElement("div");
-      hint.className = "click-hint";
+      container.appendChild(table);
+
+      // Place hint outside the scrollable container
+      let hint = container.parentElement.querySelector(".combos-click-hint");
+      if (!hint) {
+        hint = document.createElement("div");
+        hint.className = "click-hint combos-click-hint";
+        container.parentElement.appendChild(hint);
+      }
       hint.textContent = "Click a row to see individual instances";
 
-      container.appendChild(hint);
-      container.appendChild(table);
       container.classList.remove("fading");
     }, 150);
   }
@@ -1070,31 +1100,7 @@
       renderYearlyGrid();
     });
 
-    // Category nav
-    document.getElementById("cat-prev").addEventListener("click", () => {
-      currentCatIndex =
-        (currentCatIndex - 1 + DATA.oscar_categories.length) %
-        DATA.oscar_categories.length;
-      renderAgreementMatrix();
-    });
-    document.getElementById("cat-next").addEventListener("click", () => {
-      currentCatIndex =
-        (currentCatIndex + 1) % DATA.oscar_categories.length;
-      renderAgreementMatrix();
-    });
-
-    // Count chart category nav
-    document.getElementById("count-cat-prev").addEventListener("click", () => {
-      currentCountCatIndex =
-        (currentCountCatIndex - 1 + DATA.oscar_categories.length) %
-        DATA.oscar_categories.length;
-      renderCountChart();
-    });
-    document.getElementById("count-cat-next").addEventListener("click", () => {
-      currentCountCatIndex =
-        (currentCountCatIndex + 1) % DATA.oscar_categories.length;
-      renderCountChart();
-    });
+    // (Category nav now handled by chip selectors)
 
     // Count mode toggle
     document.getElementById("count-mode-category").addEventListener("click", () => {
@@ -1138,18 +1144,7 @@
       renderCombosTable();
     });
 
-    // Combos category nav
-    document.getElementById("combos-cat-prev").addEventListener("click", () => {
-      currentCombosCatIndex =
-        (currentCombosCatIndex - 1 + DATA.oscar_categories.length) %
-        DATA.oscar_categories.length;
-      renderCombosTable();
-    });
-    document.getElementById("combos-cat-next").addEventListener("click", () => {
-      currentCombosCatIndex =
-        (currentCombosCatIndex + 1) % DATA.oscar_categories.length;
-      renderCombosTable();
-    });
+    // (Combos category nav now handled by chip selectors)
 
     // Keyboard nav
     document.addEventListener("keydown", (e) => {
@@ -1195,6 +1190,7 @@
               currentCatIndex =
                 (currentCatIndex + 1) % DATA.oscar_categories.length;
             }
+            updateCatSelector("agreement-cat-selector", currentCatIndex);
             renderAgreementMatrix();
           } else if (closest.type === "countCat") {
             if (e.key === "ArrowLeft") {
@@ -1205,6 +1201,7 @@
               currentCountCatIndex =
                 (currentCountCatIndex + 1) % DATA.oscar_categories.length;
             }
+            updateCatSelector("count-cat-selector", currentCountCatIndex);
             renderCountChart();
           } else if (closest.type === "combosCat") {
             if (e.key === "ArrowLeft") {
@@ -1215,6 +1212,7 @@
               currentCombosCatIndex =
                 (currentCombosCatIndex + 1) % DATA.oscar_categories.length;
             }
+            updateCatSelector("combos-cat-selector", currentCombosCatIndex);
             renderCombosTable();
           }
         }
@@ -1246,6 +1244,21 @@
     renderPredictabilityChart();
     renderAccuracyHeatmap();
     renderYearlyGrid();
+
+    // Init category chip selectors
+    initCatSelector("count-cat-selector", DATA.oscar_categories, currentCountCatIndex, (i) => {
+      currentCountCatIndex = i;
+      renderCountChart();
+    });
+    initCatSelector("combos-cat-selector", DATA.oscar_categories, currentCombosCatIndex, (i) => {
+      currentCombosCatIndex = i;
+      renderCombosTable();
+    });
+    initCatSelector("agreement-cat-selector", DATA.oscar_categories, currentCatIndex, (i) => {
+      currentCatIndex = i;
+      renderAgreementMatrix();
+    });
+
     renderCountChart();
     renderCombosTable();
     renderAgreementMatrix();

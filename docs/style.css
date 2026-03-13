@@ -459,6 +459,49 @@ main {
   color: var(--text-muted);
 }
 
+/* === Category Selector (single-select chips) === */
+.cat-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.cat-selector .cat-chip {
+  background: var(--bg-inset);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.cat-selector .cat-chip:hover {
+  background: var(--gold-glow);
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.cat-selector .cat-chip.active {
+  background: var(--gold-dim);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+
+/* === Category Title (shown below chips) === */
+.cat-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
 /* === Award Selector === */
 .award-selector {
   display: flex;
@@ -576,6 +619,20 @@ main {
   font-size: 0.65rem;
   color: var(--text-muted);
   min-width: 150px;
+}
+
+/* === Controls Row (toggle + threshold on one line) === */
+.controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.controls-row .toggle-row,
+.controls-row .threshold-row {
+  margin-bottom: 0;
 }
 
 /* === Toggle Row === */
