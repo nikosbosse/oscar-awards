@@ -478,6 +478,8 @@
 
       for (const combo of shown) {
         const tr = document.createElement("tr");
+        tr.className = "combo-row";
+        tr.style.cursor = "pointer";
 
         // Combo tags
         const tdCombo = document.createElement("td");
@@ -500,8 +502,8 @@
 
         // Win rate bar
         const tdRate = document.createElement("td");
-        const wrapper = document.createElement("div");
-        wrapper.className = "combo-bar-wrapper";
+        const bWrapper = document.createElement("div");
+        bWrapper.className = "combo-bar-wrapper";
         const barBg = document.createElement("div");
         barBg.className = "combo-bar-bg";
         const barFill = document.createElement("div");
@@ -512,12 +514,53 @@
         const barText = document.createElement("span");
         barText.className = "combo-bar-text";
         barText.textContent = `${combo.win_pct}% (${combo.wins}/${combo.total})`;
-        wrapper.appendChild(barBg);
-        wrapper.appendChild(barText);
-        tdRate.appendChild(wrapper);
+        bWrapper.appendChild(barBg);
+        bWrapper.appendChild(barText);
+        tdRate.appendChild(bWrapper);
         tr.appendChild(tdRate);
 
         tbody.appendChild(tr);
+
+        // Expandable detail row
+        const detailTr = document.createElement("tr");
+        detailTr.className = "combo-detail-row";
+        const detailTd = document.createElement("td");
+        detailTd.colSpan = 3;
+
+        const detailTable = document.createElement("table");
+        detailTable.className = "combo-detail-table";
+        const instances = combo.instances || [];
+        for (const inst of instances) {
+          const dtr = document.createElement("tr");
+          const tdYear = document.createElement("td");
+          tdYear.textContent = inst.year;
+          const tdName = document.createElement("td");
+          tdName.textContent = inst.name;
+          const tdResult = document.createElement("td");
+          tdResult.textContent = inst.won_oscar ? "Won Oscar" : "Did not win";
+          tdResult.style.color = inst.won_oscar ? "#4CAF50" : "#f44336";
+          dtr.appendChild(tdYear);
+          dtr.appendChild(tdName);
+          dtr.appendChild(tdResult);
+          detailTable.appendChild(dtr);
+        }
+        detailTd.appendChild(detailTable);
+        detailTr.appendChild(detailTd);
+        tbody.appendChild(detailTr);
+
+        // Toggle on click
+        tr.addEventListener("click", () => {
+          const isOpen = detailTr.classList.contains("open");
+          // Close all other open rows in this table
+          tbody.querySelectorAll(".combo-detail-row.open").forEach(r => {
+            r.classList.remove("open");
+            r.previousElementSibling.classList.remove("expanded");
+          });
+          if (!isOpen) {
+            detailTr.classList.add("open");
+            tr.classList.add("expanded");
+          }
+        });
       }
 
       table.appendChild(tbody);

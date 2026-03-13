@@ -504,6 +504,59 @@ main {
   white-space: nowrap;
 }
 
+/* Expandable combo rows */
+.combo-row:hover td {
+  background: #1e1e3a;
+}
+
+.combo-row.expanded td {
+  background: #1e1e3a;
+  border-bottom-color: transparent;
+}
+
+.combo-detail-row {
+  display: none;
+}
+
+.combo-detail-row.open {
+  display: table-row;
+}
+
+.combo-detail-row td {
+  padding: 0 12px 12px;
+  background: #1e1e3a;
+  border-bottom: 1px solid #333;
+}
+
+.combo-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
+}
+
+.combo-detail-table tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.combo-detail-table td {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  color: #bbb;
+  border-bottom: 1px solid #1a1a2e;
+  background: transparent;
+}
+
+.combo-detail-table td:first-child {
+  color: #d4a843;
+  font-weight: 600;
+  width: 60px;
+}
+
+.combo-detail-table td:last-child {
+  text-align: right;
+  font-weight: 600;
+}
+
 .combos-no-data {
   text-align: center;
   padding: 40px;

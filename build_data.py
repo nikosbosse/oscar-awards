@@ -643,8 +643,10 @@ def build_datasets(df: pd.DataFrame) -> dict:
 
     for oscar_cat, precursor_entries in CATEGORY_MAPPING.items():
         precursor_full_names = sorted(set(aw for aw, _ in precursor_entries))
-        # combo_key (frozenset as sorted tuple) -> {wins: int, total: int}
-        combo_stats: dict[tuple, dict] = defaultdict(lambda: {"wins": 0, "total": 0})
+        # combo_key (sorted tuple) -> {wins, total, instances}
+        combo_stats: dict[tuple, dict] = defaultdict(
+            lambda: {"wins": 0, "total": 0, "instances": []}
+        )
 
         for year in years:
             oscar_winner = oscar_winners.get((oscar_cat, year))
@@ -683,16 +685,24 @@ def build_datasets(df: pd.DataFrame) -> dict:
                 combo_stats[combo_key]["total"] += 1
                 if cluster["is_oscar_winner"]:
                     combo_stats[combo_key]["wins"] += 1
+                combo_stats[combo_key]["instances"].append({
+                    "year": year,
+                    "name": cluster["name"],
+                    "won_oscar": cluster["is_oscar_winner"],
+                })
 
         # Convert to list, filter to combos seen at least 2 times
         combos = []
         for combo_key, stats in combo_stats.items():
             if stats["total"] >= 2:
+                # Sort instances by year
+                instances = sorted(stats["instances"], key=lambda x: x["year"])
                 combos.append({
                     "precursors": list(combo_key),
                     "win_pct": round(100 * stats["wins"] / stats["total"]),
                     "wins": stats["wins"],
                     "total": stats["total"],
+                    "instances": instances,
                 })
         # Sort by total occurrences descending, then win_pct descending
         combos.sort(key=lambda x: (-x["total"], -x["win_pct"]))
