@@ -905,8 +905,37 @@ def build_datasets(df: pd.DataFrame) -> dict:
     # For each Oscar category, for each actual nominee:
     #   1. Find which precursors they won (via name matching)
     #   2. Sum the historical accuracy of each precursor won (weighted score)
-    #   3. Nominees with no precursor wins get a small baseline score
+    #   3. Nominees with no precursor wins get a baseline derived from the
+    #      historical rate at which Oscar winners had zero precursor wins
+    #      in that category, split equally among non-precursor nominees
     #   4. Normalize across all nominees so probabilities sum to 100%
+
+    # First, compute per-category: how often did the Oscar winner have
+    # zero precursor wins?
+    zero_precursor_win_rate = {}
+    for oscar_cat, precursor_entries in CATEGORY_MAPPING.items():
+        precursor_full_names = sorted(set(aw for aw, _ in precursor_entries))
+        years_with_data = 0
+        years_zero_precursors = 0
+        for year in years:
+            oscar_winner = oscar_winners.get((oscar_cat, year))
+            if oscar_winner is None:
+                continue
+            years_with_data += 1
+            # Did any precursor match the Oscar winner?
+            any_match = False
+            for precursor_full in precursor_full_names:
+                _, matched = get_precursor_pick(
+                    lookup, oscar_cat, precursor_full, year,
+                    oscar_winner, precursor_entries,
+                )
+                if matched:
+                    any_match = True
+                    break
+            if not any_match:
+                years_zero_precursors += 1
+        if years_with_data > 0:
+            zero_precursor_win_rate[oscar_cat] = years_zero_precursors / years_with_data
 
     oscar_predictions_2026 = {}
 
@@ -936,7 +965,8 @@ def build_datasets(df: pd.DataFrame) -> dict:
                 })
 
         # For each nominee, find matching precursor cluster
-        scored = []
+        has_precursors = []
+        no_precursors = []
         for nominee in nominees:
             matched_cluster = None
             for cluster in precursor_clusters:
@@ -953,20 +983,44 @@ def build_datasets(df: pd.DataFrame) -> dict:
                         acc = 0
                     score += max(acc, 5)
                     details.append({"precursor": p, "accuracy": acc})
-                scored.append({
+                has_precursors.append({
                     "name": nominee,
                     "precursors": sorted(matched_cluster["precursors"]),
                     "score": score,
                     "details": details,
                 })
             else:
-                # Nominee won no precursors — small baseline
-                scored.append({
-                    "name": nominee,
-                    "precursors": [],
-                    "score": 1,
-                    "details": [],
-                })
+                no_precursors.append(nominee)
+
+        # Compute baseline for non-precursor nominees:
+        # Use the historical rate of zero-precursor Oscar winners,
+        # split equally among non-precursor nominees.
+        dark_horse_rate = zero_precursor_win_rate.get(oscar_cat, 0.05)
+        # The dark_horse_rate represents the total probability mass for
+        # all non-precursor nominees combined. Scale precursor scores so
+        # they represent (1 - dark_horse_rate) of the total, then add
+        # baseline entries.
+        precursor_total = sum(s["score"] for s in has_precursors)
+        if precursor_total == 0 or not has_precursors:
+            # No precursor data at all — uniform
+            scored = [{"name": n, "precursors": [], "score": 1, "details": []}
+                      for n in nominees]
+        else:
+            # Scale precursor scores to represent (1 - dark_horse_rate)
+            scale = (1 - dark_horse_rate) / precursor_total if no_precursors else 1 / precursor_total
+            scored = []
+            for s in has_precursors:
+                scored.append({**s, "score": s["score"] * scale})
+
+            if no_precursors:
+                per_nominee_baseline = dark_horse_rate / len(no_precursors)
+                for nominee in no_precursors:
+                    scored.append({
+                        "name": nominee,
+                        "precursors": [],
+                        "score": per_nominee_baseline,
+                        "details": [],
+                    })
 
         # Normalize scores to probabilities
         total_score = sum(s["score"] for s in scored)
