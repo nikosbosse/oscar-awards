@@ -29,6 +29,22 @@ header h1 {
   border-bottom: 3px solid #d4a843;
 }
 
+.futuresearch-link {
+  color: #d4a843;
+  text-decoration: none;
+}
+
+.futuresearch-link:hover {
+  text-decoration: underline;
+}
+
+.inline-logo {
+  height: 1em;
+  width: auto;
+  vertical-align: -0.1em;
+  margin-right: 2px;
+}
+
 /* === Main layout === */
 main {
   max-width: 1400px;
